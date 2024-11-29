@@ -271,7 +271,7 @@ public interface DiffServ {
 	 * A 2-bit DiffServ Explicit Congestion Notification (ECN) field.
 	 * <p>
 	 * The DiffServ ECN field is a 2-bit field in the IPv4 header that is used to
-	 * support Explicit Congestion Notification (ECN). ECN is a way of notifying
+	 * settingsSupport Explicit Congestion Notification (ECN). ECN is a way of notifying
 	 * routers that a network is becoming congested. This allows routers to take
 	 * steps to avoid congestion, such as dropping packets or slowing down the
 	 * transmission of packets.

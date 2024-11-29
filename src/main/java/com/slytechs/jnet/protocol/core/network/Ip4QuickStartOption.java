@@ -31,7 +31,7 @@ import com.slytechs.jnet.protocol.core.constants.Ip4IdOptions;
  * </p>
  * <p>
  * The Quick Start option is supported by most modern operating systems.
- * However, it is important to note that not all routers support the Quick Start
+ * However, it is important to note that not all routers settingsSupport the Quick Start
  * option. As a result, it is important to check the documentation for the
  * routers that will be used to ensure that the Quick Start option is supported.
  * </p>

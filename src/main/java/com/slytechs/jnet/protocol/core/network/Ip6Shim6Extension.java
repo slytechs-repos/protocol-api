@@ -30,7 +30,7 @@ import com.slytechs.jnet.protocol.core.constants.CoreId;
  * </p>
  * <p>
  * The Shim6 extension header is a valuable tool for providing multihoming
- * support for IPv6 hosts. It allows hosts to have multiple IP addresses and to
+ * settingsSupport for IPv6 hosts. It allows hosts to have multiple IP addresses and to
  * use any of those addresses to send or receive datagrams. This can improve the
  * reliability and performance of IPv6 networks.
  * </p>

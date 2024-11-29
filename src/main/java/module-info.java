@@ -17,7 +17,7 @@
  */
 
 /**
- * Base protocol support for packet dissection, protocol classification, IP
+ * Base protocol settingsSupport for packet dissection, protocol classification, IP
  * fragment reassembly, UDP and TCP stream reassembly.
  * <p>
  * The following protocols are supported:
@@ -39,7 +39,6 @@
  */
 module com.slytechs.jnet.protocol {
 
-
 	/* Public API */
 	exports com.slytechs.jnet.protocol;
 	exports com.slytechs.jnet.protocol.pack;
@@ -48,15 +47,15 @@ module com.slytechs.jnet.protocol {
 	exports com.slytechs.jnet.protocol.core.spanning;
 	exports com.slytechs.jnet.protocol.core.network;
 	exports com.slytechs.jnet.protocol.core.transport;
-	exports com.slytechs.jnet.protocol.core.discovery;
-	exports com.slytechs.jnet.protocol.core.routing;
-	exports com.slytechs.jnet.protocol.core.redundancy;
-	exports com.slytechs.jnet.protocol.core.datacenter;
+//	exports com.slytechs.jnet.protocol.core.discovery;
+//	exports com.slytechs.jnet.protocol.core.routing;
+//	exports com.slytechs.jnet.protocol.core.redundancy;
+//	exports com.slytechs.jnet.protocol.core.datacenter;
 	exports com.slytechs.jnet.protocol.core.constants;
 	exports com.slytechs.jnet.protocol.descriptor;
 	exports com.slytechs.jnet.protocol.meta;
-	
-	requires com.slytechs.jnet.jnetruntime;
+
+	requires transitive com.slytechs.jnet.jnetruntime;
 
 	requires java.logging;
 }

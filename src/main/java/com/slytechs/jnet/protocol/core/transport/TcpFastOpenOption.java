@@ -40,7 +40,7 @@ import com.slytechs.jnet.protocol.meta.MetaResource;
  * </p>
  * <p>
  * TFO is supported by most modern operating systems and web browsers. To use
- * TFO, both the client and server must support it.
+ * TFO, both the client and server must settingsSupport it.
  * </p>
  * <p>
  * Here are some of the benefits of using TFO:

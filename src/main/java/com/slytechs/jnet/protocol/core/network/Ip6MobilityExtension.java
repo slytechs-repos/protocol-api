@@ -22,7 +22,7 @@ import com.slytechs.jnet.protocol.core.constants.CoreId;
 /**
  * IPv4 mobility extension header.
  * <p>
- * The IPv6 mobility header is an extension header that is used to support
+ * The IPv6 mobility header is an extension header that is used to settingsSupport
  * mobility for mobile nodes in IPv6 networks. The mobility header is used to
  * carry information about the mobile node's current location and its home
  * address. This information is used by the home agent to tunnel packets to the

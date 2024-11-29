@@ -30,8 +30,8 @@ import com.slytechs.jnet.protocol.core.constants.DiffServEcn;
 import com.slytechs.jnet.protocol.core.constants.Ip4Flag;
 import com.slytechs.jnet.protocol.core.constants.IpType;
 import com.slytechs.jnet.protocol.meta.Meta;
-import com.slytechs.jnet.protocol.meta.MetaResource;
 import com.slytechs.jnet.protocol.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.meta.MetaResource;
 
 /**
  * Internet Protocol Version 4 (IPv4).
@@ -146,6 +146,10 @@ public final class Ip4
 	 */
 	public int dsfieldDscpCode() {
 		return Ip4Struct.DSFIELD_DSCP_CODE.getInt(buffer());
+	}
+
+	public boolean isFragmented() {
+		return flags_MF() != 0 || fragOffset() > 0;
 	}
 
 	/**

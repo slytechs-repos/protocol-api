@@ -63,7 +63,7 @@ public final class Ip4RouterAlertOption extends Ip4Option {
 	 * <p>
 	 * The router alert option field was originally defined in RFC 2113 and is used
 	 * by protocols such as RSVP (Resource Reservation Protocol) to indicate that
-	 * the packet contains a reservation request. Routers that support RSVP will
+	 * the packet contains a reservation request. Routers that settingsSupport RSVP will
 	 * inspect the packet and, if necessary, reserve resources along the path of the
 	 * packet.
 	 * </p>
