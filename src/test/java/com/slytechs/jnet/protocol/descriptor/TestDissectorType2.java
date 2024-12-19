@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.descriptor;
+package com.slytechs.jnet.protocol.api.descriptor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,18 +33,18 @@ import com.slytechs.jnet.jnetruntime.internal.Benchmark;
 import com.slytechs.jnet.jnetruntime.util.Detail;
 import com.slytechs.jnet.jnetruntime.util.HexStrings;
 import com.slytechs.jnet.protocol.Packet;
-import com.slytechs.jnet.protocol.core.DiffServ;
-import com.slytechs.jnet.protocol.core.Ethernet;
-import com.slytechs.jnet.protocol.core.Ip4;
-import com.slytechs.jnet.protocol.core.Ip4tRouterAlertOption;
-import com.slytechs.jnet.protocol.core.Ip6;
-import com.slytechs.jnet.protocol.core.Ip6FragmentExtension;
-import com.slytechs.jnet.protocol.core.constants.CoreConstants;
-import com.slytechs.jnet.protocol.core.constants.CoreId;
-import com.slytechs.jnet.protocol.core.constants.HashType;
-import com.slytechs.jnet.protocol.core.constants.Ip4IdOptions;
-import com.slytechs.jnet.protocol.core.constants.L2FrameType;
-import com.slytechs.jnet.protocol.core.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.DiffServ;
+import com.slytechs.jnet.protocol.tcpip.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.Ip4tRouterAlertOption;
+import com.slytechs.jnet.protocol.tcpip.Ip6;
+import com.slytechs.jnet.protocol.tcpip.Ip6FragmentExtension;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpip.constants.HashType;
+import com.slytechs.jnet.protocol.tcpip.constants.Ip4IdOptions;
+import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
 import com.slytechs.test.Tests;
 
 /**

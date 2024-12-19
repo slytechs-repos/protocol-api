@@ -15,10 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.descriptor;
+package com.slytechs.jnet.protocol.api.descriptor;
 
 import static com.slytechs.jnet.jnetruntime.util.MemoryUnit.*;
-import static com.slytechs.jnet.protocol.descriptor.Type2DescriptorLayout.*;
+import static com.slytechs.jnet.protocol.api.descriptor.Type2DescriptorLayout.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.ByteBuffer;
@@ -27,7 +27,7 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
-import com.slytechs.jnet.protocol.core.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 
 /**
  * @author Sly Technologies Inc

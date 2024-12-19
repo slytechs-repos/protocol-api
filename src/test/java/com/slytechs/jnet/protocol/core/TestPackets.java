@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.core;
+package com.slytechs.jnet.protocol.tcpip;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -23,7 +23,7 @@ import java.nio.ByteOrder;
 import com.slytechs.jnet.jnetruntime.time.TimestampUnit;
 import com.slytechs.jnet.jnetruntime.util.HexStrings;
 import com.slytechs.jnet.protocol.Packet;
-import com.slytechs.jnet.protocol.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormat;
 
 /**
  * Various hex packets used in testing.

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.core;
+package com.slytechs.jnet.protocol.tcpip;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,8 +23,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.slytechs.jnet.protocol.core.constants.CoreId;
-import com.slytechs.jnet.protocol.pack.PackId;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
+import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**
  * The Class TestCoreIds.

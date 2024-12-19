@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.core;
+package com.slytechs.jnet.protocol.tcpip;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.protocol.HeaderNotFound;
-import com.slytechs.jnet.protocol.core.constants.CoreConstants;
-import com.slytechs.jnet.protocol.core.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 
 /**
  * VLAN header tests

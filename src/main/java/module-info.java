@@ -40,20 +40,21 @@
 module com.slytechs.jnet.protocol {
 
 	/* Public API */
-	exports com.slytechs.jnet.protocol;
-	exports com.slytechs.jnet.protocol.pack;
-	exports com.slytechs.jnet.protocol.core;
-	exports com.slytechs.jnet.protocol.core.link;
-	exports com.slytechs.jnet.protocol.core.spanning;
-	exports com.slytechs.jnet.protocol.core.network;
-	exports com.slytechs.jnet.protocol.core.transport;
-//	exports com.slytechs.jnet.protocol.core.discovery;
-//	exports com.slytechs.jnet.protocol.core.routing;
-//	exports com.slytechs.jnet.protocol.core.redundancy;
-//	exports com.slytechs.jnet.protocol.core.datacenter;
-	exports com.slytechs.jnet.protocol.core.constants;
-	exports com.slytechs.jnet.protocol.descriptor;
-	exports com.slytechs.jnet.protocol.meta;
+	exports com.slytechs.jnet.protocol.api.common;
+	exports com.slytechs.jnet.protocol.api.descriptor;
+	exports com.slytechs.jnet.protocol.api.meta;
+	exports com.slytechs.jnet.protocol.api.packet;
+	exports com.slytechs.jnet.protocol.api.pack;
+	exports com.slytechs.jnet.protocol.tcpip;
+	exports com.slytechs.jnet.protocol.tcpip.link;
+	exports com.slytechs.jnet.protocol.tcpip.spanning;
+	exports com.slytechs.jnet.protocol.tcpip.network;
+	exports com.slytechs.jnet.protocol.tcpip.transport;
+//	exports com.slytechs.jnet.protocol.tcpip.discovery;
+//	exports com.slytechs.jnet.protocol.tcpip.routing;
+//	exports com.slytechs.jnet.protocol.tcpip.redundancy;
+//	exports com.slytechs.jnet.protocol.tcpip.datacenter;
+	exports com.slytechs.jnet.protocol.tcpip.constants;
 
 	requires transitive com.slytechs.jnet.jnetruntime;
 

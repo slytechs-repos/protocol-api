@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.meta;
+package com.slytechs.jnet.protocol.api.meta;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -33,13 +33,13 @@ import com.slytechs.jnet.jnetruntime.util.Detail;
 import com.slytechs.jnet.jnetruntime.util.HexStrings;
 import com.slytechs.jnet.protocol.Packet;
 import com.slytechs.jnet.protocol.Payload;
-import com.slytechs.jnet.protocol.core.Ethernet;
-import com.slytechs.jnet.protocol.core.Ip4;
-import com.slytechs.jnet.protocol.core.constants.CoreConstants;
-import com.slytechs.jnet.protocol.core.constants.HashType;
-import com.slytechs.jnet.protocol.core.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.descriptor.PacketDissector;
-import com.slytechs.jnet.protocol.descriptor.Type2Descriptor;
+import com.slytechs.jnet.protocol.tcpip.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.HashType;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
 import com.slytechs.test.Tests;
 
 /**
