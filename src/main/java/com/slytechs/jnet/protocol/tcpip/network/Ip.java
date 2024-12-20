@@ -19,15 +19,15 @@ package com.slytechs.jnet.protocol.tcpip.network;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.internal.util.collection.IntArrayList;
-import com.slytechs.jnet.jnetruntime.internal.util.collection.IntList;
+import com.slytechs.jnet.platform.api.internal.util.collection.IntArrayList;
+import com.slytechs.jnet.platform.api.internal.util.collection.IntList;
 import com.slytechs.jnet.protocol.api.common.OptionsHeader;
 import com.slytechs.jnet.protocol.api.descriptor.IpfReassembly;
 import com.slytechs.jnet.protocol.api.descriptor.IpfTracking;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.IpfDescriptorType;

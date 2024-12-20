@@ -26,12 +26,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.HeaderNotFound;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.link.Arp;
 
 /**
  * @author Sly Technologies Inc
@@ -41,8 +42,8 @@ import com.slytechs.jnet.protocol.api.meta.PacketFormat;
  */
 @Tag("osi-layer2")
 @Tag("rarp")
-@Tag("rarp-reply")
-class TestRarpReplyHeader {
+@Tag("rarp-request")
+class TestRarpRequestHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -66,8 +67,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_hardwareType() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_hardwareType() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -80,8 +81,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_protocolType() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_protocolType() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -94,8 +95,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_hardwareSize() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_hardwareSize() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -108,8 +109,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_protocolSize() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_protocolSize() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -122,8 +123,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_operation() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_operation() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -132,19 +133,19 @@ class TestRarpReplyHeader {
 
 		Arp arp = packet.getHeader(new Arp());
 
-		assertEquals(4, arp.opcode());
+		assertEquals(3, arp.opcode());
 	}
 
 	@Test
-	void test_RarpReply_senderMacAddress() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_senderMacAddress() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		final byte[] EXPECTED_MAC = HexStrings.parseHexString("000c29c5f69b");
+		final byte[] EXPECTED_MAC = HexStrings.parseHexString("000c29340bde");
 
 		Arp arp = packet.getHeader(new Arp());
 
@@ -152,15 +153,15 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_senderProtocolAddress() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_senderProtocolAddress() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		final byte[] EXPECTED_IP = HexStrings.parseHexString("0a01010a");
+		final byte[] EXPECTED_IP = HexStrings.parseHexString("00000000");
 
 		Arp arp = packet.getHeader(new Arp());
 
@@ -168,8 +169,8 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_targetMacAddress() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_targetMacAddress() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
@@ -184,15 +185,15 @@ class TestRarpReplyHeader {
 	}
 
 	@Test
-	void test_RarpReply_targetProtocolAddress() throws HeaderNotFound {
-		var packet = TestPackets.RARP1_REPLY.toPacket();
+	void test_RarpRequest_targetProtocolAddress() throws HeaderNotFound {
+		var packet = TestPackets.RARP1_REQUEST.toPacket();
 		packet.setFormatter(new PacketFormat());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		final byte[] EXPECTED_IP = HexStrings.parseHexString("0a010164");
+		final byte[] EXPECTED_IP = HexStrings.parseHexString("00000000");
 
 		Arp arp = packet.getHeader(new Arp());
 

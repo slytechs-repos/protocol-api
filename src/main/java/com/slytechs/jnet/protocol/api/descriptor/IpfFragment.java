@@ -21,8 +21,8 @@ import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.tcpip.constants.IpType;
 import com.slytechs.jnet.protocol.tcpip.constants.IpfDescriptorType;
 import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;

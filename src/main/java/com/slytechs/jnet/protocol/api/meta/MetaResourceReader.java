@@ -19,10 +19,10 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import java.io.InputStream;
 
-import com.slytechs.jnet.jnetruntime.internal.json.Json;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonException;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObject;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonReader;
+import com.slytechs.jnet.platform.api.internal.json.Json;
+import com.slytechs.jnet.platform.api.internal.json.JsonException;
+import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.internal.json.JsonReader;
 
 /**
  * The Class MetaResourceReader.

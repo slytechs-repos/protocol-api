@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.jnetruntime.util.MemoryUnit.*;
+import static com.slytechs.jnet.platform.api.util.MemoryUnit.*;
 import static com.slytechs.jnet.protocol.api.descriptor.Type2DescriptorLayout.*;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.tcpip.constants;
 
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.util.Enums;
 
 /**
  * EtherType is a two-octet field in an Ethernet frame. It is used to indicate

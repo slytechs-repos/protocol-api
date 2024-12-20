@@ -24,7 +24,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.slytechs.jnet.jnetruntime.time.Timestamp;
+import com.slytechs.jnet.platform.api.time.Timestamp;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolverTuple2;
 import com.slytechs.jnet.protocol.tcpip.constants.ArpHardwareType;

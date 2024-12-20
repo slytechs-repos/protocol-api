@@ -22,26 +22,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.protocol.HeaderNotFound;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.test.Tests;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.link.Ethernet;
 
 /**
+ * VLAN header tests
+ * 
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
+ * @author Mark Bednarczyk
  *
  */
-class TestIcmp6Messages {
+@Tag("osi-layer2")
+@Tag("ethernet")
+class TestEthernetHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -54,7 +56,7 @@ class TestIcmp6Messages {
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp(TestInfo info) throws Exception {
+	void setUp() throws Exception {
 		DISSECTOR.reset();
 
 		DESC_BUFFER.clear();
@@ -62,54 +64,49 @@ class TestIcmp6Messages {
 			DESC_BUFFER.put((byte) 0);
 
 		DESC_BUFFER.clear();
-
-		Tests.displayTestName(info);
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterEach
-	void tearDown() throws Exception {
 	}
 
 	@Test
-	void ICMPv6_NEIGHBOR_SOLICITATION() {
-
-		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_SOLICITATION.toPacket();
+	void test_Ethernet_destination() throws HeaderNotFound {
+		var packet = TestPackets.VLAN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		packet.descriptor().buffer().flip();
+		var ethernet = packet.getHeader(new Ethernet());
+		
+		var EXPECTED_MAC = HexStrings.parseHexString("0060089fb1f3");
 
-		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
-		Tests.out.println(packet.toString(Detail.HIGH));
-
-		assertTrue(packet.hasHeader(CoreId.CORE_ID_ICMPv6_NEIGHBOR_SOLICITATION));
+		assertArrayEquals(EXPECTED_MAC, ethernet.dst());
 	}
 
 	@Test
-	void ICMPv6_NEIGHBOR_ADVERTISEMENT() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_ADVERTISEMENT.toPacket();
+	void test_Ethernet_source() throws HeaderNotFound {
+		var packet = TestPackets.VLAN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		packet.descriptor().buffer().flip();
-
-//		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
-//		Tests.out.println(packet.toString(Detail.TRACE));
-		Tests.out.println(packet.getHeader(new Ethernet()).toString(Detail.TRACE));
-//		Tests.out.println(packet.getHeader(new Icmp6NeighborAdvertisement()).toString(Detail.TRACE));
+		var ethernet = packet.getHeader(new Ethernet());
 		
-		
+		var EXPECTED_MAC = HexStrings.parseHexString("00400540ef24");
 
-		assertTrue(packet.hasHeader(CoreId.CORE_ID_ICMPv6_NEIGHBOR_ADVERTISEMENT));
+		assertArrayEquals(EXPECTED_MAC, ethernet.src());
+	}
+
+	@Test
+	void test_Ethernet_type() throws HeaderNotFound {
+		var packet = TestPackets.VLAN.toPacket();
+		packet.descriptor().bind(DESC_BUFFER);
+
+		DISSECTOR.dissectPacket(packet);
+		DISSECTOR.writeDescriptor(packet.descriptor());
+
+		var ethernet = packet.getHeader(new Ethernet());
+		
+		assertEquals(0x8100, ethernet.type());
 	}
 
 }

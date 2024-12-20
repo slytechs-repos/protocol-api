@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.tcpip.constants;
 
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.util.Enums;
 
 /**
  * The Enum Icmp6Type.

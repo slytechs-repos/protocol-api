@@ -3,7 +3,7 @@ package com.slytechs.jnet.protocol.tcpip.network;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.util.Registration;
+import com.slytechs.jnet.platform.api.util.Registration;
 import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
 
 /**

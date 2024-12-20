@@ -23,13 +23,13 @@ import java.util.Optional;
 import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
 
-import com.slytechs.jnet.jnetruntime.internal.json.Json;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonException;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObject;
-import com.slytechs.jnet.jnetruntime.internal.util.Reflections;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.IsAbbr;
-import com.slytechs.jnet.jnetruntime.util.IsDescription;
+import com.slytechs.jnet.platform.api.internal.json.Json;
+import com.slytechs.jnet.platform.api.internal.json.JsonException;
+import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.internal.util.Reflections;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.IsAbbr;
+import com.slytechs.jnet.platform.api.util.IsDescription;
 
 /**
  * The Class DisplayUtil.

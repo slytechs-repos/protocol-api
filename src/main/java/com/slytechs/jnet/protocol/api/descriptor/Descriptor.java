@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 
-import com.slytechs.jnet.jnetruntime.Binding;
-import com.slytechs.jnet.jnetruntime.MemoryBinding;
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.Binding;
+import com.slytechs.jnet.platform.api.MemoryBinding;
+import com.slytechs.jnet.platform.api.util.Detail;
 
 /**
  * Common base class for all descriptors.

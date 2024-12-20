@@ -20,12 +20,12 @@ package com.slytechs.jnet.protocol.tcpip.network;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.slytechs.jnet.jnetruntime.internal.util.format.BitFormat;
+import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.common.HasOption;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.DiffServDscp;

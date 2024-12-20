@@ -17,13 +17,13 @@
  */
 package com.slytechs.jnet.protocol.tcpip.transport;
 
-import static com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.jnetruntime.internal.layout.ArrayField;
-import com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout;
-import com.slytechs.jnet.jnetruntime.internal.layout.BitField;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int16be;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int8;
+import com.slytechs.jnet.platform.api.internal.layout.ArrayField;
+import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.internal.layout.BitField;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int16be;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int8;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 
 /**

@@ -19,13 +19,13 @@ package com.slytechs.jnet.protocol.tcpip.link;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.hash.Checksums;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
+import com.slytechs.jnet.platform.api.hash.Checksums;
+import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.EtherType;

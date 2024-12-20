@@ -26,10 +26,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.slytechs.jnet.protocol.HeaderNotFound;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.tcpip.link.Llc;
+import com.slytechs.jnet.protocol.tcpip.link.Snap;
 
 /**
  * VLAN header tests
@@ -40,9 +43,9 @@ import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
  *
  */
 @Tag("osi-layer2")
-@Tag("vlan")
-@Tag("tunnel")
-class TestVlanHeader {
+@Tag("llc")
+@Tag("snap")
+class TestLlcSnapHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -66,42 +69,69 @@ class TestVlanHeader {
 	}
 
 	@Test
-	void test_Vlan_priority() throws HeaderNotFound {
-		var packet = TestPackets.VLAN.toPacket();
+	void test_Llc_ssap() throws HeaderNotFound {
+		var packet = TestPackets.IEEE8023_SNAP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var vlan = packet.getHeader(new Vlan());
+		var llc = packet.getHeader(new Llc());
 
-		assertEquals(0, vlan.priority());
+		assertEquals(0xAA, llc.ssap());
 	}
 
 	@Test
-	void test_Vlan_formatIdentifier() throws HeaderNotFound {
-		var packet = TestPackets.VLAN.toPacket();
+	void test_Llc_dsap() throws HeaderNotFound {
+		var packet = TestPackets.IEEE8023_SNAP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var vlan = packet.getHeader(new Vlan());
+		var llc = packet.getHeader(new Llc());
 
-		assertEquals(0, vlan.formatIdentifier());
+		assertEquals(0xAA, llc.dsap());
 	}
 
 	@Test
-	void test_Vlan_vlanId() throws HeaderNotFound {
-		var packet = TestPackets.VLAN.toPacket();
+	void test_Llc_control() throws HeaderNotFound {
+		var packet = TestPackets.IEEE8023_SNAP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var vlan = packet.getHeader(new Vlan());
+		var llc = packet.getHeader(new Llc());
 
-		assertEquals(32, vlan.vlanId());
+		assertEquals(0x03, llc.control());
+	}
+
+	@Test
+	void test_Snap_oui() throws HeaderNotFound {
+		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+		packet.descriptor().bind(DESC_BUFFER);
+
+		DISSECTOR.dissectPacket(packet);
+		DISSECTOR.writeDescriptor(packet.descriptor());
+
+		var snap = packet.getHeader(new Snap());
+		final var EXPECTED_OUI = HexStrings.parseHexString("00000c");
+
+		assertArrayEquals(EXPECTED_OUI, snap.oui());
+	}
+
+	@Test
+	void test_Snap_pid() throws HeaderNotFound {
+		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+		packet.descriptor().bind(DESC_BUFFER);
+
+		DISSECTOR.dissectPacket(packet);
+		DISSECTOR.writeDescriptor(packet.descriptor());
+
+		var snap = packet.getHeader(new Snap());
+
+		assertEquals(0x0115, snap.pid());
 	}
 
 }

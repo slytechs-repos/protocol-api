@@ -24,7 +24,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.util.Detail;
 
 /**
  * The Interface Display.

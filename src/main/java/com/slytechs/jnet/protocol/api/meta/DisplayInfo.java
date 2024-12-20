@@ -19,9 +19,9 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import java.util.function.Function;
 
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObject;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonString;
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.internal.json.JsonString;
+import com.slytechs.jnet.platform.api.util.Detail;
 
 /**
  * The DisplayInfo.

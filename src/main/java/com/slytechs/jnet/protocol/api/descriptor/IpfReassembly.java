@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.IntSegment;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.IntSegment;
 import com.slytechs.jnet.protocol.tcpip.constants.IpfDescriptorType;
 import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;
 

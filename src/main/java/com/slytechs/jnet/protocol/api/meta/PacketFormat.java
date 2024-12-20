@@ -22,9 +22,9 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.slytechs.jnet.jnetruntime.internal.util.collection.IntArrayList;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
+import com.slytechs.jnet.platform.api.internal.util.collection.IntArrayList;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.packet.Packet;
 

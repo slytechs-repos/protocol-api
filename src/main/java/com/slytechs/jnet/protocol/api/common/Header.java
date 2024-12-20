@@ -22,17 +22,17 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
-import com.slytechs.jnet.jnetruntime.MemoryBinding;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.DetailedString;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.jnetruntime.util.ToHexdump;
+import com.slytechs.jnet.platform.api.MemoryBinding;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.DetailedString;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.ToHexdump;
 import com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.pack.HasPackId;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.pack.HasPackId;
 
 /**
  * A "reusable" protocol header that can be bound and unbound to data in memory.

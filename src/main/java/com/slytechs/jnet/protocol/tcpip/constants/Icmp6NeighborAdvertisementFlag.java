@@ -17,9 +17,9 @@
  */
 package com.slytechs.jnet.protocol.tcpip.constants;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
-import com.slytechs.jnet.jnetruntime.util.IsIntBitmask;
-import com.slytechs.jnet.jnetruntime.util.IsIntFlag;
+import com.slytechs.jnet.platform.api.util.Enums;
+import com.slytechs.jnet.platform.api.util.IsIntBitmask;
+import com.slytechs.jnet.platform.api.util.IsIntFlag;
 
 /**
  * @author Sly Technologies Inc

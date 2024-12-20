@@ -27,19 +27,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.slytechs.jnet.jnetruntime.NotFound;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonException;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.Packet;
-import com.slytechs.jnet.protocol.Payload;
-import com.slytechs.jnet.protocol.tcpip.Ethernet;
-import com.slytechs.jnet.protocol.tcpip.Ip4;
+import com.slytechs.jnet.platform.api.NotFound;
+import com.slytechs.jnet.platform.api.internal.json.JsonException;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.Payload;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
+import com.slytechs.jnet.protocol.api.packet.Packet;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.HashType;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
-import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
+import com.slytechs.jnet.protocol.tcpip.link.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.network.Ip4;
 import com.slytechs.test.Tests;
 
 /**

@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.tcpip.network;
 
-import com.slytechs.jnet.jnetruntime.util.Registration;
+import com.slytechs.jnet.platform.api.util.Registration;
 import com.slytechs.jnet.protocol.api.packet.Packet;
 
 /**

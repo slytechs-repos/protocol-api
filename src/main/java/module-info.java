@@ -37,7 +37,7 @@
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-module com.slytechs.jnet.protocol {
+module com.slytechs.jnet.protocol.api {
 
 	/* Public API */
 	exports com.slytechs.jnet.protocol.api.common;
@@ -56,7 +56,7 @@ module com.slytechs.jnet.protocol {
 //	exports com.slytechs.jnet.protocol.tcpip.datacenter;
 	exports com.slytechs.jnet.protocol.tcpip.constants;
 
-	requires transitive com.slytechs.jnet.jnetruntime;
+	requires transitive com.slytechs.jnet.platform.api;
 
 	requires java.logging;
 }

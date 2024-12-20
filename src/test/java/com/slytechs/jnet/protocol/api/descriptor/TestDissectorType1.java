@@ -29,22 +29,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.jnetruntime.internal.Benchmark;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.Packet;
-import com.slytechs.jnet.protocol.tcpip.DiffServ;
-import com.slytechs.jnet.protocol.tcpip.Ethernet;
-import com.slytechs.jnet.protocol.tcpip.Ip4;
-import com.slytechs.jnet.protocol.tcpip.Ip4tRouterAlertOption;
-import com.slytechs.jnet.protocol.tcpip.Ip6;
-import com.slytechs.jnet.protocol.tcpip.Ip6FragmentExtension;
+import com.slytechs.jnet.platform.api.internal.Benchmark;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.packet.Packet;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
-import com.slytechs.jnet.protocol.tcpip.constants.HashType;
-import com.slytechs.jnet.protocol.tcpip.constants.Ip4IdOptions;
 import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.link.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.network.DiffServ;
+import com.slytechs.jnet.protocol.tcpip.network.Ip4;
+import com.slytechs.jnet.protocol.tcpip.network.Ip4RouterAlertOption;
+import com.slytechs.jnet.protocol.tcpip.network.Ip6;
+import com.slytechs.jnet.protocol.tcpip.network.Ip6FragmentExtension;
 import com.slytechs.test.Tests;
 
 /**
@@ -53,7 +50,7 @@ import com.slytechs.test.Tests;
  * @author Mark Bednarczyk
  *
  */
-class TestDissectorType2 {
+class TestDissectorType1 {
 	/**
 	 * (Source wireshark capture and copy/paste)
 	 * 
@@ -159,7 +156,7 @@ class TestDissectorType2 {
 	@BeforeEach
 	void setUp(TestInfo info) throws Exception {
 		testName = info.getTestMethod().get().getName();
-		dissector = PacketDissector.javaDissector(PacketDescriptorType.TYPE2);
+		dissector = PacketDissector.javaDissector(PacketDescriptorType.TYPE1);
 
 		if (defaultLevel.intValue() >= displayLevel.intValue())
 			Tests.out.printf("> --- %s() ---%n", testName);
@@ -190,46 +187,39 @@ class TestDissectorType2 {
 		dissector.writeDescriptor(dsc);
 		dsc.clear();
 
-		Type2Descriptor type2 = new Type2Descriptor()
+		Type1Descriptor type1 = new Type1Descriptor()
 				.withBinding(dsc)
-				.hash(0x12345, HashType.ROUND_ROBIN)
-				.rxPort(10)
-				.txPort(15)
-				.txIgnore(1)
 
 		;
 
-		log("%s%n", type2);
+		log("%s%n", type1);
 
-		Tests.out.println(type2.toString(Detail.HIGH));
+		assertEquals(TIMESTAMP, type1.timestamp(), "timestamp");
+		assertEquals(PACKET.length, type1.captureLength(), "captureLength");
 
-		assertEquals(TIMESTAMP, type2.timestamp(), "timestamp");
-		assertEquals(PACKET.length, type2.captureLength(), "captureLength");
+		assertEquals(L2FrameType.L2_FRAME_TYPE_ETHER, type1.l2FrameType(), "l2FrameType");
 
-		assertEquals(L2FrameType.L2_FRAME_TYPE_ETHER, type2.l2FrameType(), "l2FrameType");
+		assertEquals(PACKET.length, type1.wireLength(), "wireLength");
 
-		assertEquals(PACKET.length, type2.wireLength(), "wireLength");
+		Packet packet = new Packet(type1);
+		packet.bind(PACKET);
 
-		try (Packet packet = new Packet(type2)) {
-			packet.bind(PACKET);
+		Ethernet eth = new Ethernet();
+		Ip4 ip4 = new Ip4();
+		Ip6 ip6 = new Ip6();
+		Ip4RouterAlertOption router4 = new Ip4RouterAlertOption();
+		Ip6FragmentExtension frag6 = new Ip6FragmentExtension();
 
-			Ethernet eth = new Ethernet();
-			Ip4 ip4 = new Ip4();
-			Ip6 ip6 = new Ip6();
-			Ip4tRouterAlertOption router4 = new Ip4tRouterAlertOption();
-			Ip6FragmentExtension frag6 = new Ip6FragmentExtension();
+		if (packet.hasHeader(eth)) {
+			log("ETH.type=0x%04X%n", eth.type());
+		}
 
-			if (packet.hasHeader(eth)) {
-				log("ETH.type=0x%04X%n", eth.type());
-			}
+		if (packet.hasHeader(ip4) && ip4.hasOption(router4)) {
+			log("IPv4.protocol=%d examinePacket=%s%n", ip4.protocol(), router4.examinePacket());
+		}
 
-			if (packet.hasHeader(ip4) && ip4.hasOption(router4)) {
-				log("IPv4.protocol=%d examinePacket=%s%n", ip4.protocol(), router4.examinePacket());
-			}
-
-			if (packet.hasHeader(frag6)) {
-				log("IPv6.next=%d%n", ip6.nextHeader());
-			}
+		if (packet.hasHeader(frag6)) {
+			log("IPv6.next=%d%n", ip6.nextHeader());
 		}
 	}
 
@@ -246,73 +236,64 @@ class TestDissectorType2 {
 
 		final long TIMESTAMP = System.currentTimeMillis();
 
-		Type2DissectorJavaImpl diss2 = ((Type2DissectorJavaImpl) dissector)
-//				.disableBitmaskRecording()
-//				.disableExtensionRecordingForAll()
-				.disableExtensionRecordingFor(CoreId.IPv4,
-//						Ip4OptionId.ROUTER_ALERT,
-						Ip4IdOptions.NO_OPERATION,
-						Ip4IdOptions.END_OF_OPTIONS)
+		Type1DissectorJavaImpl diss1 = ((Type1DissectorJavaImpl) dissector)
 
 		;
 
 		dissector.dissectPacket(pkt, TIMESTAMP, PACKET.length, PACKET.length);
 		dissector.writeDescriptor(desc1);
 
-		diss2.writeDescriptorUsingLayout(desc2);
+		diss1.writeDescriptor(desc2);
+		desc2.flip();
 
 //		Tests.out.printf("desc1=%s%n", HexStrings.toHexString(desc1.array(), 0, 24));
 //		Tests.out.printf("desc2=%s%n", HexStrings.toHexString(desc2.array(), 0, 24));
 
-		Type2Descriptor type2 = new Type2Descriptor()
-				.withBinding(desc2)
-				.hash(0x12345, HashType.ROUND_ROBIN)
-				.rxPort(10)
-				.txPort(15)
-				.txIgnore(1);
-		Tests.out.printf("type2=%s%n", type2.buildString(Detail.HIGH));
+		Type1Descriptor type1 = new Type1Descriptor()
+				.withBinding(desc2);
+		Tests.out.printf("type1=%s%n", type1.buildString(Detail.HIGH));
 
-		try (Packet packet = new Packet(type2)) {
-			packet.bind(PACKET);
+		Packet packet = new Packet(type1);
+		packet.bind(PACKET);
 
-			Ethernet eth = new Ethernet();
-			Ip4 ip4 = new Ip4();
-			DiffServ ip6 = new Ip6();
-			Ip4tRouterAlertOption ra4 = new Ip4tRouterAlertOption();
-			Ip6FragmentExtension frag6 = new Ip6FragmentExtension();
+		Ethernet eth = new Ethernet();
+		Ip4 ip4 = new Ip4();
+		DiffServ ip6 = new Ip6();
+		Ip4RouterAlertOption router4 = new Ip4RouterAlertOption();
+		Ip6FragmentExtension frag6 = new Ip6FragmentExtension();
 
 //		final long COUNT = 3_000_000_000l;
 //		final long COUNT = 300_000_000;
 //		final long COUNT = 30_000_000;
 //		final long COUNT = 3_000_000;
-			final long COUNT = 1;
-			long count = COUNT;
+		final long COUNT = 1;
+		long count = COUNT;
 
-			Benchmark benchmark = Benchmark.setup()
-					.reportRate(COUNT, this::logPacketsPerSecond);
+		Benchmark benchmark = Benchmark.setup()
+				.reportRate(COUNT, this::logPacketsPerSecond);
 
-			while (count-- > 0) {
-				dissector.dissectPacket(pkt.clear(), TIMESTAMP, PACKET.length, PACKET.length);
-				dissector.writeDescriptor(desc1.clear());
+		while (count-- > 0) {
+			dissector.dissectPacket(pkt.clear(), TIMESTAMP, PACKET.length, PACKET.length);
+			dissector.writeDescriptor(desc1.clear());
 
-				if (packet.hasHeader(eth)) {
-					Tests.out.println(eth);
-				}
-
-				if (packet.hasHeader(ip4)) {
-					Tests.out.println(ip4);
-				}
-
-				if (packet.hasHeader(ip4) && ip4.hasOption(ra4)) {
-					Tests.out.println(ra4);
-				}
-
-				if (packet.hasHeader(frag6)) {
-				}
+			if (packet.hasHeader(eth)) {
+				Tests.out.println(eth);
 			}
 
-			benchmark.complete();
+			if (packet.hasHeader(ip4)) {
+				Tests.out.println(ip4);
+			}
+
+			if (packet.hasHeader(ip4) && ip4.hasOption(router4)) {
+				Tests.out.println(router4);
+			}
+
+			if (packet.hasHeader(frag6)) {
+			}
 		}
 
+		benchmark.complete();
+
 	}
+
 }

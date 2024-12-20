@@ -23,12 +23,12 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObject;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObjectBuilder;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonValue;
-import com.slytechs.jnet.jnetruntime.internal.json.JsonValue.ValueType;
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.internal.json.JsonObjectBuilder;
+import com.slytechs.jnet.platform.api.internal.json.JsonValue;
+import com.slytechs.jnet.platform.api.internal.json.JsonValue.ValueType;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.Enums;
 
 /**
  * The DisplaysInfo.

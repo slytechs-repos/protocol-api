@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.tcpip.network;
 
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.util.Enums;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 
 /**

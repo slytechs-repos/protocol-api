@@ -21,8 +21,8 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.jnetruntime.internal.util.format.BitFormat;
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
+import com.slytechs.jnet.platform.api.util.Enums;
 
 /**
  * TCP flag which act as control bits.

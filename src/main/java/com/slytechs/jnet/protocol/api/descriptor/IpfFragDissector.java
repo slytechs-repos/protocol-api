@@ -21,7 +21,7 @@ import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.util.Bits;
+import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;
 import com.slytechs.jnet.protocol.tcpip.network.IpAddress;
 

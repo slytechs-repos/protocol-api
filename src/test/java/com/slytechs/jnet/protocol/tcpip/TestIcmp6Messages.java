@@ -22,26 +22,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.protocol.HeaderNotFound;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.link.Ethernet;
+import com.slytechs.test.Tests;
 
 /**
- * VLAN header tests
- * 
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
- * @author Mark Bednarczyk
  *
  */
-@Tag("osi-layer4")
-@Tag("udp")
-class TestUdpHeader {
+class TestIcmp6Messages {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -54,7 +55,7 @@ class TestUdpHeader {
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp(TestInfo info) throws Exception {
 		DISSECTOR.reset();
 
 		DESC_BUFFER.clear();
@@ -62,59 +63,54 @@ class TestUdpHeader {
 			DESC_BUFFER.put((byte) 0);
 
 		DESC_BUFFER.clear();
+
+		Tests.displayTestName(info);
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@AfterEach
+	void tearDown() throws Exception {
 	}
 
 	@Test
-	void test_Udp_checksum() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
+	void ICMPv6_NEIGHBOR_SOLICITATION() {
+
+		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_SOLICITATION.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
+		packet.setFormatter(new PacketFormat());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
-		
-		var udp = packet.getHeader(new Udp());
 
-		assertEquals(0xbc86, udp.checksum());
+		packet.descriptor().buffer().flip();
+
+		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
+		Tests.out.println(packet.toString(Detail.HIGH));
+
+		assertTrue(packet.hasHeader(CoreId.CORE_ID_ICMPv6_NEIGHBOR_SOLICITATION));
 	}
 
 	@Test
-	void test_Udp_srcPort() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
+	void ICMPv6_NEIGHBOR_ADVERTISEMENT() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_ADVERTISEMENT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
+		packet.setFormatter(new PacketFormat());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
+
+		packet.descriptor().buffer().flip();
+
+//		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
+//		Tests.out.println(packet.toString(Detail.TRACE));
+		Tests.out.println(packet.getHeader(new Ethernet()).toString(Detail.TRACE));
+//		Tests.out.println(packet.getHeader(new Icmp6NeighborAdvertisement()).toString(Detail.TRACE));
 		
-		var udp = packet.getHeader(new Udp());
-
-		assertEquals(60376, udp.srcPort());
-	}
-
-	@Test
-	void test_Udp_dstPort() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
-		packet.descriptor().bind(DESC_BUFFER);
-
-		DISSECTOR.dissectPacket(packet);
-		DISSECTOR.writeDescriptor(packet.descriptor());
 		
-		var udp = packet.getHeader(new Udp());
 
-		assertEquals(161, udp.dstPort());
-	}
-
-
-	@Test
-	void test_Udp_length() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
-		packet.descriptor().bind(DESC_BUFFER);
-
-		DISSECTOR.dissectPacket(packet);
-		DISSECTOR.writeDescriptor(packet.descriptor());
-		
-		var udp = packet.getHeader(new Udp());
-
-		assertEquals(74, udp.length());
+		assertTrue(packet.hasHeader(CoreId.CORE_ID_ICMPv6_NEIGHBOR_ADVERTISEMENT));
 	}
 
 }

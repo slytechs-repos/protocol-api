@@ -19,9 +19,9 @@ package com.slytechs.jnet.protocol.api.descriptor;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.time.Timestamp;
-import com.slytechs.jnet.jnetruntime.time.TimestampUnit;
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.time.Timestamp;
+import com.slytechs.jnet.platform.api.time.TimestampUnit;
+import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
 
 /**

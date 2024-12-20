@@ -21,10 +21,10 @@ import static com.slytechs.jnet.protocol.tcpip.constants.Icmp6NeighborAdvertisem
 
 import java.util.Set;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.util.Enums;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.Icmp6NeighborAdvertisementFlag;
 

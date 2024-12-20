@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import com.slytechs.jnet.jnetruntime.internal.ArrayUtils;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.jnetruntime.util.config.SystemProperties;
+import com.slytechs.jnet.platform.api.internal.ArrayUtils;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.config.SystemProperties;
 import com.slytechs.jnet.protocol.tcpip.link.MacAddress;
 
 /**

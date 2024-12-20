@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-import com.slytechs.jnet.jnetruntime.internal.util.format.BitFormat;
+import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.common.Frame;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;

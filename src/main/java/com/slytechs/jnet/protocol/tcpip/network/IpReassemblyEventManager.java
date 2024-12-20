@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.slytechs.jnet.jnetruntime.util.Registration;
+import com.slytechs.jnet.platform.api.util.Registration;
 
 /**
  * Manages event dispatching for IP fragment reassembly operations. Optimizes

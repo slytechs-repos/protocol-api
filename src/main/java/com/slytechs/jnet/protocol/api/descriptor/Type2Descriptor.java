@@ -22,8 +22,8 @@ import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.util.Bits;
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.util.Bits;
+import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;

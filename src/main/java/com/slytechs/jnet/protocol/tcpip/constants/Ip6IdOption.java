@@ -23,7 +23,7 @@ import static com.slytechs.jnet.protocol.tcpip.constants.CoreId.*;
 import java.util.Arrays;
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.jnetruntime.util.Enums;
+import com.slytechs.jnet.platform.api.util.Enums;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;

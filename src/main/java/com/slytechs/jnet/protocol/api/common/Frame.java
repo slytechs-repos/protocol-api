@@ -19,8 +19,8 @@ package com.slytechs.jnet.protocol.api.common;
 
 import java.util.function.LongSupplier;
 
-import com.slytechs.jnet.jnetruntime.time.Timestamp;
-import com.slytechs.jnet.jnetruntime.time.TimestampUnit;
+import com.slytechs.jnet.platform.api.time.Timestamp;
+import com.slytechs.jnet.platform.api.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;

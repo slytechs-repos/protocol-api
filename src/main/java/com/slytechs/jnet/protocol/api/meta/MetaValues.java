@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.HexStrings;
 
 /**
  * The Class MetaValues.

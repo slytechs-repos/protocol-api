@@ -17,13 +17,13 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout;
-import com.slytechs.jnet.jnetruntime.internal.layout.BitField;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int32;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int64;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Padding;
+import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.internal.layout.BitField;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int32;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int64;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Padding;
 
 /**
  * The Enum PcapLayout.

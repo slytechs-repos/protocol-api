@@ -22,7 +22,7 @@ import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import com.slytechs.jnet.jnetruntime.hash.CollisionResistantHashTable;
+import com.slytechs.jnet.platform.api.hash.CollisionResistantHashTable;
 import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
 
 /**

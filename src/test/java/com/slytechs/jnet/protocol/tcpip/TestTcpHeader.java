@@ -25,12 +25,17 @@ import java.nio.ByteOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.HeaderNotFound;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.api.meta.PacketFormat;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.tcpip.transport.Tcp;
+import com.slytechs.jnet.protocol.tcpip.transport.TcpWindowScaleOption;
+import com.slytechs.test.Tests;
 
 /**
  * VLAN header tests
@@ -40,10 +45,9 @@ import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
  * @author Mark Bednarczyk
  *
  */
-@Tag("osi-layer2")
-@Tag("llc")
-@Tag("snap")
-class TestLlcSnapHeader {
+@Tag("osi-layer4")
+@Tag("tcp")
+class TestTcpHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -56,7 +60,7 @@ class TestLlcSnapHeader {
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp(TestInfo info) throws Exception {
 		DISSECTOR.reset();
 
 		DESC_BUFFER.clear();
@@ -64,72 +68,62 @@ class TestLlcSnapHeader {
 			DESC_BUFFER.put((byte) 0);
 
 		DESC_BUFFER.clear();
+
+		Tests.out.println("---- " + info.getDisplayName() + " ----");
 	}
 
 	@Test
-	void test_Llc_ssap() throws HeaderNotFound {
-		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+	void test_Tcp_dstPort() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var llc = packet.getHeader(new Llc());
+		var tcp = packet.getHeader(new Tcp());
 
-		assertEquals(0xAA, llc.ssap());
+		assertEquals(80, tcp.destination());
 	}
 
 	@Test
-	void test_Llc_dsap() throws HeaderNotFound {
-		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+	void test_Tcp_windowSizeScaledShiftCount7() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var llc = packet.getHeader(new Llc());
+		var tcp = packet.getHeader(new Tcp());
+		Tests.out.println(tcp.toString(Detail.HIGH, new PacketFormat()));
 
-		assertEquals(0xAA, llc.dsap());
+		assertEquals(5840 << 7, tcp.windowScaled(7));
 	}
 
 	@Test
-	void test_Llc_control() throws HeaderNotFound {
-		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+	void test_Tcp_windowSizeScaledWithWScaleOptionManual() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var llc = packet.getHeader(new Llc());
+		var tcp = packet.getHeader(new Tcp());
+		var wscale = tcp.getOption(new TcpWindowScaleOption());
 
-		assertEquals(0x03, llc.control());
+		assertEquals(5840 << 7, tcp.windowScaled(wscale.shiftCount()));
 	}
 
 	@Test
-	void test_Snap_oui() throws HeaderNotFound {
-		var packet = TestPackets.IEEE8023_SNAP.toPacket();
+	void test_Tcp_windowSizeScaledWithWScaleOptionAuto() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var snap = packet.getHeader(new Snap());
-		final var EXPECTED_OUI = HexStrings.parseHexString("00000c");
+		var tcp = packet.getHeader(new Tcp());
 
-		assertArrayEquals(EXPECTED_OUI, snap.oui());
-	}
-
-	@Test
-	void test_Snap_pid() throws HeaderNotFound {
-		var packet = TestPackets.IEEE8023_SNAP.toPacket();
-		packet.descriptor().bind(DESC_BUFFER);
-
-		DISSECTOR.dissectPacket(packet);
-		DISSECTOR.writeDescriptor(packet.descriptor());
-
-		var snap = packet.getHeader(new Snap());
-
-		assertEquals(0x0115, snap.pid());
+		assertEquals(5840 << 7, tcp.windowScaled());
 	}
 
 }

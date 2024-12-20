@@ -17,16 +17,16 @@
  */
 package com.slytechs.jnet.protocol.tcpip.transport;
 
-import static com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.jnetruntime.internal.layout.ArrayField;
-import com.slytechs.jnet.jnetruntime.internal.layout.BinaryLayout;
-import com.slytechs.jnet.jnetruntime.internal.layout.BitField;
-import com.slytechs.jnet.jnetruntime.internal.layout.EnumBitField;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int16be;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int32be;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Int8;
-import com.slytechs.jnet.jnetruntime.internal.layout.PredefinedLayout.Padding;
+import com.slytechs.jnet.platform.api.internal.layout.ArrayField;
+import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.internal.layout.BitField;
+import com.slytechs.jnet.platform.api.internal.layout.EnumBitField;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int16be;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int32be;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int8;
+import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Padding;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 
 /**
@@ -85,7 +85,7 @@ public enum TcpStruct implements EnumBitField<TcpStruct> {
 
 	/** The opt win scale. */
 	OPT_WIN_SCALE(Layout.OPTION_LAYOUT, "tcp.opt.win_scale"),
-	
+
 	FLAGS_CWR(Layout.TCP_STRUCT, "tcp.flags.cwr"),
 	FLAGS_ECE(Layout.TCP_STRUCT, "tcp.flags.ece"),
 	FLAGS_URG(Layout.TCP_STRUCT, "tcp.flags.urg"),
@@ -94,8 +94,7 @@ public enum TcpStruct implements EnumBitField<TcpStruct> {
 	FLAGS_RST(Layout.TCP_STRUCT, "tcp.flags.rst"),
 	FLAGS_SYN(Layout.TCP_STRUCT, "tcp.flags.syn"),
 	FLAGS_FIN(Layout.TCP_STRUCT, "tcp.flags.fin"),
-	
-	
+
 	;
 
 	/**

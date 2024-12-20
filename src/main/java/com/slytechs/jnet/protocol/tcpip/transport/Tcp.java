@@ -19,13 +19,13 @@ package com.slytechs.jnet.protocol.tcpip.transport;
 
 import java.util.Set;
 
-import com.slytechs.jnet.jnetruntime.internal.util.format.BitFormat;
+import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.common.HasOption;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.OptionsHeader;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.packet.Packet;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.TcpFlag;

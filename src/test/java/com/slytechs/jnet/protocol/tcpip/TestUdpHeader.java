@@ -25,15 +25,12 @@ import java.nio.ByteOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.protocol.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.test.Tests;
+import com.slytechs.jnet.protocol.tcpip.transport.Udp;
 
 /**
  * VLAN header tests
@@ -44,8 +41,8 @@ import com.slytechs.test.Tests;
  *
  */
 @Tag("osi-layer4")
-@Tag("tcp")
-class TestTcpHeader {
+@Tag("udp")
+class TestUdpHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -58,7 +55,7 @@ class TestTcpHeader {
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp(TestInfo info) throws Exception {
+	void setUp() throws Exception {
 		DISSECTOR.reset();
 
 		DESC_BUFFER.clear();
@@ -66,62 +63,59 @@ class TestTcpHeader {
 			DESC_BUFFER.put((byte) 0);
 
 		DESC_BUFFER.clear();
-
-		Tests.out.println("---- " + info.getDisplayName() + " ----");
 	}
 
 	@Test
-	void test_Tcp_dstPort() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
+	void test_Udp_checksum() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
+		
+		var udp = packet.getHeader(new Udp());
 
-		var tcp = packet.getHeader(new Tcp());
-
-		assertEquals(80, tcp.destination());
+		assertEquals(0xbc86, udp.checksum());
 	}
 
 	@Test
-	void test_Tcp_windowSizeScaledShiftCount7() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
+	void test_Udp_srcPort() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
+		
+		var udp = packet.getHeader(new Udp());
 
-		var tcp = packet.getHeader(new Tcp());
-		Tests.out.println(tcp.toString(Detail.HIGH, new PacketFormat()));
-
-		assertEquals(5840 << 7, tcp.windowScaled(7));
+		assertEquals(60376, udp.srcPort());
 	}
 
 	@Test
-	void test_Tcp_windowSizeScaledWithWScaleOptionManual() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
+	void test_Udp_dstPort() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
+		
+		var udp = packet.getHeader(new Udp());
 
-		var tcp = packet.getHeader(new Tcp());
-		var wscale = tcp.getOption(new TcpWindowScaleOption());
-
-		assertEquals(5840 << 7, tcp.windowScaled(wscale.shiftCount()));
+		assertEquals(161, udp.dstPort());
 	}
 
+
 	@Test
-	void test_Tcp_windowSizeScaledWithWScaleOptionAuto() throws HeaderNotFound {
-		var packet = TestPackets.ETH_IPv4_TCP_WCALEOPT.toPacket();
+	void test_Udp_length() throws HeaderNotFound {
+		var packet = TestPackets.ETH_IPv4_UDP_SNMP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
+		
+		var udp = packet.getHeader(new Udp());
 
-		var tcp = packet.getHeader(new Tcp());
-
-		assertEquals(5840 << 7, tcp.windowScaled());
+		assertEquals(74, udp.length());
 	}
 
 }

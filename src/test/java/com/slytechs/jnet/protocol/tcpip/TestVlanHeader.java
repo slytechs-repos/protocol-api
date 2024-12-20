@@ -26,11 +26,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
+import com.slytechs.jnet.protocol.tcpip.link.Vlan;
 
 /**
  * VLAN header tests
@@ -41,8 +41,9 @@ import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
  *
  */
 @Tag("osi-layer2")
-@Tag("ethernet")
-class TestEthernetHeader {
+@Tag("vlan")
+@Tag("tunnel")
+class TestVlanHeader {
 
 	static final PacketDissector DISSECTOR = PacketDissector
 			.dissector(PacketDescriptorType.TYPE2);
@@ -66,46 +67,42 @@ class TestEthernetHeader {
 	}
 
 	@Test
-	void test_Ethernet_destination() throws HeaderNotFound {
+	void test_Vlan_priority() throws HeaderNotFound {
 		var packet = TestPackets.VLAN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var ethernet = packet.getHeader(new Ethernet());
-		
-		var EXPECTED_MAC = HexStrings.parseHexString("0060089fb1f3");
+		var vlan = packet.getHeader(new Vlan());
 
-		assertArrayEquals(EXPECTED_MAC, ethernet.dst());
+		assertEquals(0, vlan.priority());
 	}
 
 	@Test
-	void test_Ethernet_source() throws HeaderNotFound {
+	void test_Vlan_formatIdentifier() throws HeaderNotFound {
 		var packet = TestPackets.VLAN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var ethernet = packet.getHeader(new Ethernet());
-		
-		var EXPECTED_MAC = HexStrings.parseHexString("00400540ef24");
+		var vlan = packet.getHeader(new Vlan());
 
-		assertArrayEquals(EXPECTED_MAC, ethernet.src());
+		assertEquals(0, vlan.formatIdentifier());
 	}
 
 	@Test
-	void test_Ethernet_type() throws HeaderNotFound {
+	void test_Vlan_vlanId() throws HeaderNotFound {
 		var packet = TestPackets.VLAN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
-		var ethernet = packet.getHeader(new Ethernet());
-		
-		assertEquals(0x8100, ethernet.type());
+		var vlan = packet.getHeader(new Vlan());
+
+		assertEquals(32, vlan.vlanId());
 	}
 
 }

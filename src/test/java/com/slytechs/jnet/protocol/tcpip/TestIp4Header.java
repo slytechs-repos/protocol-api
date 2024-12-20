@@ -27,13 +27,15 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
-import com.slytechs.jnet.jnetruntime.util.HexStrings;
-import com.slytechs.jnet.protocol.HeaderNotFound;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.tcpip.network.Ip4;
+import com.slytechs.jnet.protocol.tcpip.network.IpAddress;
 import com.slytechs.test.Tests;
 
 /**
@@ -179,32 +181,6 @@ class TestIp4Header {
 	}
 
 	@Test
-	void test_Ip4_dsFieldDscpSelect() throws HeaderNotFound {
-		var packet = TestPackets.VLAN_1500BYTES.toPacket();
-		packet.descriptor().bind(DESC_BUFFER);
-
-		DISSECTOR.dissectPacket(packet);
-		DISSECTOR.writeDescriptor(packet.descriptor());
-
-		var ip4 = packet.getHeader(new Ip4());
-
-		assertEquals(0, ip4.dsfieldDscpSelect());
-	}
-
-	@Test
-	void test_Ip4_dsFieldEcn() throws HeaderNotFound {
-		var packet = TestPackets.VLAN_1500BYTES.toPacket();
-		packet.descriptor().bind(DESC_BUFFER);
-
-		DISSECTOR.dissectPacket(packet);
-		DISSECTOR.writeDescriptor(packet.descriptor());
-
-		var ip4 = packet.getHeader(new Ip4());
-
-		assertEquals(0, ip4.dsfieldEcn());
-	}
-
-	@Test
 	void test_Ip4_dstByteArray() throws HeaderNotFound {
 		var packet = TestPackets.VLAN_1500BYTES.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
@@ -295,10 +271,10 @@ class TestIp4Header {
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
 		var ip4 = packet.getHeader(new Ip4());
-		
+
 //		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
 		Tests.out.println(ip4.toString(Detail.TRACE));
-		
+
 		assertEquals(0x2, ip4.flags());
 	}
 

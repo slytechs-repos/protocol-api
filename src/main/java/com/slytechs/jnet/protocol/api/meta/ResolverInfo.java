@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import java.lang.reflect.AnnotatedElement;
 
-import com.slytechs.jnet.jnetruntime.internal.json.JsonArray;
+import com.slytechs.jnet.platform.api.internal.json.JsonArray;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 
 /**

@@ -17,8 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import com.slytechs.jnet.jnetruntime.time.TimestampUnit;
-import com.slytechs.jnet.jnetruntime.util.StringBuildable;
+import com.slytechs.jnet.platform.api.time.TimestampUnit;
+import com.slytechs.jnet.platform.api.util.StringBuildable;
 import com.slytechs.jnet.protocol.api.common.HeaderLookup;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;

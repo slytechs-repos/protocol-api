@@ -21,8 +21,8 @@ import java.lang.foreign.MemorySegment;
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.jnetruntime.internal.foreign.DefaultForeignDowncall;
-import com.slytechs.jnet.jnetruntime.internal.foreign.DefaultForeignInitializer;
+import com.slytechs.jnet.platform.api.internal.foreign.DefaultForeignDowncall;
+import com.slytechs.jnet.platform.api.internal.foreign.DefaultForeignInitializer;
 import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
 

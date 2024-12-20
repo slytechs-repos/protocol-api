@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.slytechs.jnet.jnetruntime.util.Detail;
+import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 
 /**

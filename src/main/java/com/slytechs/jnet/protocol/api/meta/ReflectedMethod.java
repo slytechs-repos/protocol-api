@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.slytechs.jnet.jnetruntime.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.internal.json.JsonObject;
 
 /**
  * The Class ReflectedMethod.
