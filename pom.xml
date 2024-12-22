@@ -5,11 +5,12 @@
 	
 	<parent>
 		<groupId>com.slytechs.jnet.protocol</groupId>
-		<artifactId>protocol-pack-sdk-parent</artifactId>
+		<artifactId>protocol-sdk-parent</artifactId>
 		<version>0.10.0-SNAPSHOT</version>
+		<relativePath>../protocol-sdk</relativePath>
 	</parent>
 	
-	<artifactId>protocol-pack-api</artifactId>
+	<artifactId>protocol-api</artifactId>
 	<name>Protocol SDK - API</name>
 	<description>Core prototocols and API for all protocol packs</description>
 
