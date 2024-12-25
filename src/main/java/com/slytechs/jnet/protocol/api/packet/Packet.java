@@ -21,14 +21,14 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.slytechs.jnet.platform.api.MemoryBinding;
-import com.slytechs.jnet.platform.api.time.HasTimestamp;
-import com.slytechs.jnet.platform.api.time.Timestamp;
-import com.slytechs.jnet.platform.api.time.TimestampUnit;
+import com.slytechs.jnet.platform.api.common.binding.MemoryBinding;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.DetailedString;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.ToHexdump;
+import com.slytechs.jnet.platform.api.util.time.HasTimestamp;
+import com.slytechs.jnet.platform.api.util.time.Timestamp;
+import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.common.Frame;
 import com.slytechs.jnet.protocol.api.common.HasHeader;
 import com.slytechs.jnet.protocol.api.common.Header;
@@ -211,7 +211,7 @@ public final class Packet
 	 * Clone.
 	 *
 	 * @return the packet
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#clone()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#clone()
 	 */
 	@Override
 	public Packet clone() {

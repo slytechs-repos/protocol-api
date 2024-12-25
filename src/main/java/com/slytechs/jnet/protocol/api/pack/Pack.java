@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.slytechs.jnet.platform.api.internal.util.Reflections;
+import com.slytechs.jnet.platform.api.util.Reflections;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;

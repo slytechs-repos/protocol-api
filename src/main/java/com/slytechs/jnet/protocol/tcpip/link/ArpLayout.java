@@ -17,14 +17,14 @@
  */
 package com.slytechs.jnet.protocol.tcpip.link;
 
-import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.platform.api.internal.layout.ArrayField;
-import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
-import com.slytechs.jnet.platform.api.internal.layout.BitField;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int32be;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int8;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Padding;
+import com.slytechs.jnet.platform.api.memory.layout.ArrayField;
+import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.memory.layout.BitField;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int32be;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int8;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Padding;
 
 /**
  * ARP header format layout.

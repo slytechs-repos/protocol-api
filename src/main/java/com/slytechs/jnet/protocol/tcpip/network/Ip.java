@@ -19,8 +19,8 @@ package com.slytechs.jnet.protocol.tcpip.network;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.platform.api.internal.util.collection.IntArrayList;
-import com.slytechs.jnet.platform.api.internal.util.collection.IntList;
+import com.slytechs.jnet.platform.api.util.collection.IntArrayList;
+import com.slytechs.jnet.platform.api.util.collection.IntList;
 import com.slytechs.jnet.protocol.api.common.OptionsHeader;
 import com.slytechs.jnet.protocol.api.descriptor.IpfReassembly;
 import com.slytechs.jnet.protocol.api.descriptor.IpfTracking;
@@ -217,7 +217,7 @@ public sealed class Ip
 	/**
 	 * On bind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onBind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onBind()
 	 */
 	@Override
 	protected void onBind() {

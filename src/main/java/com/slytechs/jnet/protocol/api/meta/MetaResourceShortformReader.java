@@ -23,14 +23,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonArray;
-import com.slytechs.jnet.platform.api.internal.json.JsonArrayBuilder;
-import com.slytechs.jnet.platform.api.internal.json.JsonException;
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
-import com.slytechs.jnet.platform.api.internal.json.JsonObjectBuilder;
-import com.slytechs.jnet.platform.api.internal.json.JsonString;
-import com.slytechs.jnet.platform.api.internal.json.JsonValue;
 import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.json.JsonArray;
+import com.slytechs.jnet.platform.api.util.json.JsonArrayBuilder;
+import com.slytechs.jnet.platform.api.util.json.JsonException;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonObjectBuilder;
+import com.slytechs.jnet.platform.api.util.json.JsonString;
+import com.slytechs.jnet.platform.api.util.json.JsonValue;
 import com.slytechs.jnet.protocol.api.meta.Resolver.ResolverType;
 
 /**

@@ -19,8 +19,8 @@ package com.slytechs.jnet.protocol.tcpip.link;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.platform.api.hash.Checksums;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.hash.Checksums;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;

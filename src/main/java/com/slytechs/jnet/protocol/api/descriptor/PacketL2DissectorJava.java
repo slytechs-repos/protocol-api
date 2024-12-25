@@ -22,7 +22,7 @@ import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.platform.api.time.TimestampUnit;
+import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;

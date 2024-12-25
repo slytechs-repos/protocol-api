@@ -365,7 +365,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	/**
 	 * On bind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onBind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onBind()
 	 */
 	@Override
 	protected void onBind() {
@@ -676,7 +676,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 *
 	 * @param buffer the buffer
 	 * @return the type 2 descriptor
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#withBinding(java.nio.ByteBuffer)
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#withBinding(java.nio.ByteBuffer)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -687,7 +687,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	/**
 	 * On unbind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onUnbind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onUnbind()
 	 */
 	@Override
 	protected void onUnbind() {

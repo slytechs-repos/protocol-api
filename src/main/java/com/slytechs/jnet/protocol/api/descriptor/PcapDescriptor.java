@@ -19,9 +19,9 @@ package com.slytechs.jnet.protocol.api.descriptor;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.platform.api.time.Timestamp;
-import com.slytechs.jnet.platform.api.time.TimestampUnit;
 import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.time.Timestamp;
+import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
 
 /**
@@ -100,7 +100,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#cloneTo(java.nio.ByteBuffer)
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#cloneTo(java.nio.ByteBuffer)
 	 */
 	@Override
 	public PcapDescriptor cloneTo(ByteBuffer dst) {

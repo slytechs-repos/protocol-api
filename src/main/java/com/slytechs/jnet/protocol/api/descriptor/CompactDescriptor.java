@@ -17,10 +17,10 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int64;
+import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int64;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**

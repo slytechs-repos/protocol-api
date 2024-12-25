@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.api.descriptor;
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.platform.api.time.TimestampSource;
+import com.slytechs.jnet.platform.api.util.time.TimestampSource;
 import com.slytechs.jnet.protocol.api.packet.Packet;
 import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
 import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;

@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import java.lang.reflect.AnnotatedElement;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
 
 /**
  * A factory for creating MetaInfo objects.

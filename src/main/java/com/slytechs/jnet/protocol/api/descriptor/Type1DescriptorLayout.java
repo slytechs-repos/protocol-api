@@ -17,12 +17,12 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.platform.api.internal.layout.BinaryLayout.*;
+import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
 
-import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
-import com.slytechs.jnet.platform.api.internal.layout.BitField;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int16;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int64;
+import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.memory.layout.BitField;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int16;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int64;
 
 /**
  * Type2 struct/layout definition.

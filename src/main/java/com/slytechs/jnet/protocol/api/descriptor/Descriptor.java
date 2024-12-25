@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 
-import com.slytechs.jnet.platform.api.Binding;
-import com.slytechs.jnet.platform.api.MemoryBinding;
+import com.slytechs.jnet.platform.api.common.binding.Binding;
+import com.slytechs.jnet.platform.api.common.binding.MemoryBinding;
 import com.slytechs.jnet.platform.api.util.Detail;
 
 /**
@@ -128,7 +128,7 @@ public abstract class Descriptor
 	/**
 	 * On unbind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onUnbind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onUnbind()
 	 */
 	@Override
 	protected void onUnbind() {

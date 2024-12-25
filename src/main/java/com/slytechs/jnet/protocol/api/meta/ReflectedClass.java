@@ -30,8 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonException;
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonException;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
 
 /**
  * The Class ReflectedClass.

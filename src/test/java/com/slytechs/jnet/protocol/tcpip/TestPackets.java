@@ -20,8 +20,8 @@ package com.slytechs.jnet.protocol.tcpip;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.slytechs.jnet.platform.api.time.TimestampUnit;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
 import com.slytechs.jnet.protocol.api.packet.Packet;
 

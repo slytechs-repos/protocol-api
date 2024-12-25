@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.tcpip.transport;
 
 import java.util.Set;
 
-import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
+import com.slytechs.jnet.platform.api.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.common.HasOption;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.OptionsHeader;

@@ -28,9 +28,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.platform.api.NotFound;
-import com.slytechs.jnet.platform.api.internal.json.JsonException;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.json.JsonException;
 import com.slytechs.jnet.protocol.api.common.Payload;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
 import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;

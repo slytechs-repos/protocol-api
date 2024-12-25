@@ -26,10 +26,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.slytechs.jnet.platform.api.internal.util.WeakNamedCache;
-import com.slytechs.jnet.platform.api.internal.util.collection.IntList;
-import com.slytechs.jnet.platform.api.internal.util.format.BitFormat;
 import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.WeakNamedCache;
+import com.slytechs.jnet.platform.api.util.collection.IntList;
+import com.slytechs.jnet.platform.api.util.format.BitFormat;
 
 /**
  * Base class for all meta object formats.

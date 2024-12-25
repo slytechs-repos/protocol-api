@@ -21,10 +21,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.OptionalInt;
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
-import com.slytechs.jnet.platform.api.internal.json.JsonObjectBuilder;
-import com.slytechs.jnet.platform.api.internal.json.JsonValue;
-import com.slytechs.jnet.platform.api.internal.json.JsonValue.ValueType;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonObjectBuilder;
+import com.slytechs.jnet.platform.api.util.json.JsonValue;
+import com.slytechs.jnet.platform.api.util.json.JsonValue.ValueType;
 import com.slytechs.jnet.protocol.api.meta.Meta.Formatter;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 

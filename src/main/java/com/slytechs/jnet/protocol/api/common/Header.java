@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
-import com.slytechs.jnet.platform.api.MemoryBinding;
+import com.slytechs.jnet.platform.api.common.binding.MemoryBinding;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.DetailedString;
 import com.slytechs.jnet.platform.api.util.HexStrings;
@@ -211,7 +211,7 @@ public abstract class Header extends MemoryBinding implements DetailedString, To
 	/**
 	 * On unbind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onUnbind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onUnbind()
 	 */
 	@Override
 	protected void onUnbind() {

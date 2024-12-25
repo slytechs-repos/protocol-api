@@ -22,7 +22,7 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
 
 /**
  * The Class ReflectedField.

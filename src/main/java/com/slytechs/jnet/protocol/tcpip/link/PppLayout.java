@@ -17,10 +17,10 @@
  */
 package com.slytechs.jnet.protocol.tcpip.link;
 
-import com.slytechs.jnet.platform.api.internal.layout.BinaryLayout;
-import com.slytechs.jnet.platform.api.internal.layout.BitField;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Int64be;
-import com.slytechs.jnet.platform.api.internal.layout.PredefinedLayout.Padding;
+import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
+import com.slytechs.jnet.platform.api.memory.layout.BitField;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int64be;
+import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Padding;
 
 /**
  * PPPoE header format layout definition.

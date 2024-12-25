@@ -176,7 +176,7 @@ public sealed class Icmp extends OptionsHeader
 	/**
 	 * On bind.
 	 *
-	 * @see com.slytechs.jnet.jnetruntime.MemoryBinding#onBind()
+	 * @see com.slytechs.jnet.platform.api.common.binding.jnetruntime.MemoryBinding#onBind()
 	 */
 	@Override
 	protected void onBind() {

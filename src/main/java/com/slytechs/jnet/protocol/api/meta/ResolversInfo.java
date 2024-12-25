@@ -19,11 +19,11 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import java.lang.reflect.AnnotatedElement;
 
-import com.slytechs.jnet.platform.api.internal.json.JsonArray;
-import com.slytechs.jnet.platform.api.internal.json.JsonArrayBuilder;
-import com.slytechs.jnet.platform.api.internal.json.JsonObject;
-import com.slytechs.jnet.platform.api.internal.json.JsonValue;
-import com.slytechs.jnet.platform.api.internal.json.JsonValue.ValueType;
+import com.slytechs.jnet.platform.api.util.json.JsonArray;
+import com.slytechs.jnet.platform.api.util.json.JsonArrayBuilder;
+import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.platform.api.util.json.JsonValue;
+import com.slytechs.jnet.platform.api.util.json.JsonValue.ValueType;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 
 /**

@@ -24,8 +24,8 @@ import static com.slytechs.jnet.protocol.tcpip.constants.L2FrameType.*;
 import static com.slytechs.jnet.protocol.tcpip.constants.L3FrameType.*;
 import static com.slytechs.jnet.protocol.tcpip.constants.L4FrameType.*;
 
-import com.slytechs.jnet.platform.api.time.Timestamp;
 import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.time.Timestamp;
 import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
 import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.platform.api.internal.Benchmark;
+import com.slytechs.jnet.platform.api.common.impl.Benchmark;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.packet.Packet;
