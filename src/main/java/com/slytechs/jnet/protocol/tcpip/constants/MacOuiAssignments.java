@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.slytechs.jnet.platform.api.common.settings.BooleanProperty;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.array.ArrayUtils;
-import com.slytechs.jnet.platform.api.util.config.SystemProperties;
 import com.slytechs.jnet.protocol.tcpip.link.MacAddress;
 
 /**
@@ -221,7 +221,8 @@ public final class MacOuiAssignments {
 		private void addDefaultOuiEntries() {
 			addEntry(new byte[] { 0x33,
 					0x33,
-					0x00 }, 24, "IPv6mcast", "IPv6 multicast");;
+					0x00
+			}, 24, "IPv6mcast", "IPv6 multicast");;
 		}
 
 		/**
@@ -382,12 +383,8 @@ public final class MacOuiAssignments {
 	/** The Constant OUI_MANUFACTURE_CVS. */
 	private static final String OUI_MANUFACTURE_CVS = "/ieee-oui-manufacturer-assignments.cvs";
 
-	/** The Constant OUI_LOOKUP_ENABLE_PROPERTY. */
-	public static final String OUI_LOOKUP_ENABLE_PROPERTY = "oui.lookup.enable";
-
 	/** Is the manufacturer OUI TABLE lookup enabled. */
-	private static boolean isOuiLookupEnabled = SystemProperties.boolValue(OUI_LOOKUP_ENABLE_PROPERTY,
-			true);
+	private static final BooleanProperty isOuiLookupEnabled = new BooleanProperty("oui.lookup.enable", true);
 
 	/**
 	 * Enable manufacturer oui lookup.
@@ -395,7 +392,7 @@ public final class MacOuiAssignments {
 	 * @param b the b
 	 */
 	public static void enableOuiLookup(boolean b) {
-		isOuiLookupEnabled = b;
+		isOuiLookupEnabled.setValue(b);
 
 		if (!b && OuiTable.OUI_MANUFACTURER_TABLE.isLoaded())
 			OuiTable.OUI_MANUFACTURER_TABLE.clear();
@@ -412,10 +409,9 @@ public final class MacOuiAssignments {
 			var arr = MacAddress.parseOuiMacAddress(str);
 			return MacAddress.toOuiMacAddressString(arr);
 		}
-		
+
 		if (obj instanceof MacAddress mac)
 			return MacAddress.toOuiMacAddressString(mac.toArray());
-
 
 		if (obj instanceof byte[] mac)
 			return MacAddress.toOuiMacAddressString(mac);
@@ -429,7 +425,7 @@ public final class MacOuiAssignments {
 	 * @return true, if is oui lookup enabled
 	 */
 	public static boolean isOuiLookupEnabled() {
-		return isOuiLookupEnabled;
+		return isOuiLookupEnabled.getBoolean();
 	}
 
 	/**
@@ -447,7 +443,7 @@ public final class MacOuiAssignments {
 	 *                               to not be loaded
 	 */
 	public static void loadIeeeTables() throws IllegalStateException {
-		if (!isOuiLookupEnabled || OuiTable.OUI_MANUFACTURER_TABLE.isLoaded())
+		if (!isOuiLookupEnabled.getBoolean() || OuiTable.OUI_MANUFACTURER_TABLE.isLoaded())
 			return;
 
 		try {
@@ -483,7 +479,7 @@ public final class MacOuiAssignments {
 	 *         returned instead
 	 */
 	public static Optional<OuiEntry> lookupManufacturerOui(byte[] macAddress) {
-		if (!isOuiLookupEnabled)
+		if (!isOuiLookupEnabled.getBoolean())
 			return Optional.empty();
 
 		if (!OuiTable.OUI_MANUFACTURER_TABLE.isLoaded())
@@ -535,7 +531,7 @@ public final class MacOuiAssignments {
 	 * @return the optional
 	 */
 	public static Optional<OuiEntry> reverseLookupOuiName(String ouiName) {
-		if (!isOuiLookupEnabled)
+		if (!isOuiLookupEnabled.getBoolean())
 			return Optional.empty();
 
 		if (!OuiTable.OUI_MANUFACTURER_TABLE.isLoaded())

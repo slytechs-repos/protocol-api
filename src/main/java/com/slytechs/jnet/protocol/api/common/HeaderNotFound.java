@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
-import com.slytechs.jnet.platform.api.NotFound;
+import com.slytechs.jnet.platform.api.common.NotFound;
 
 /**
  * Indicates that a requested header was not found or available.

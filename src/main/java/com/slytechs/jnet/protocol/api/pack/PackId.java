@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.pack;
 
 import java.util.Optional;
 
-import com.slytechs.jnet.platform.api.NotFound;
+import com.slytechs.jnet.platform.api.common.NotFound;
 import com.slytechs.jnet.protocol.api.descriptor.CompactDescriptor;
 
 /**
