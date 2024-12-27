@@ -22,9 +22,9 @@ import java.util.function.IntSupplier;
 import com.slytechs.jnet.platform.api.util.Enums;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6Mlr2.MulticastAddressRecord;
 
 /**

@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 
 import java.nio.ByteBuffer;
 

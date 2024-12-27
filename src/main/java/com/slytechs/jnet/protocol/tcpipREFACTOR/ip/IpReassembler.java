@@ -18,7 +18,7 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
 import com.slytechs.jnet.platform.api.util.Registration;
-import com.slytechs.jnet.protocol.api.packet.Packet;
+import com.slytechs.jnet.protocol.api.common.Packet;
 
 /**
  * @author Mark Bednarczyk

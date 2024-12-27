@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.packet;
+package com.slytechs.jnet.protocol.api.common;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -29,12 +29,7 @@ import com.slytechs.jnet.platform.api.util.ToHexdump;
 import com.slytechs.jnet.platform.api.util.time.HasTimestamp;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
-import com.slytechs.jnet.protocol.api.common.Frame;
-import com.slytechs.jnet.protocol.api.common.HasHeader;
-import com.slytechs.jnet.protocol.api.common.Header;
-import com.slytechs.jnet.protocol.api.common.HeaderLookup;
-import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
-import com.slytechs.jnet.protocol.api.common.Payload;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.Descriptor;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorType;
@@ -47,7 +42,6 @@ import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
 import com.slytechs.jnet.protocol.api.pack.PackId;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Main packet class which encapsulates raw packet data and retains reference to

@@ -17,10 +17,10 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Internet Protocol Version 6 (IPv6).

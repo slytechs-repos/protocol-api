@@ -17,15 +17,20 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor.impl;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.arp.ArpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherType.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.VlanConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.mpls.MplsConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.stp.StpConstants.*;
 
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * @author Sly Technologies Inc
@@ -208,14 +213,14 @@ public abstract class PacketL2DissectorJava extends AbstractPacketDissector {
 
 		switch (dlt) { // L2 Datalink Type
 		case L2FrameType.L2_FRAME_TYPE_ETHER:
-			if (hasRemaining(offset, CoreConstants.ETHER_HEADER_LEN)) {
+			if (hasRemaining(offset, ETHER_HEADER_LEN)) {
 				l2Type = L2FrameType.L2_FRAME_TYPE_ETHER;
 				dissectEthernet(offset);
 			}
 			break;
 
 		case L2FrameType.L2_FRAME_TYPE_NOVELL_RAW:
-			if (hasRemaining(offset, CoreConstants.ETHER_HEADER_LEN)) {
+			if (hasRemaining(offset, ETHER_HEADER_LEN)) {
 				l2Type = L2FrameType.L2_FRAME_TYPE_ETHER;
 				int first2bytes = buf.getShort(ETHER_HEADER_LEN);
 

@@ -24,7 +24,6 @@ import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
 import com.slytechs.jnet.platform.api.memory.layout.BitField;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int16be;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int8;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The Enum UdpStruct.
@@ -55,7 +54,7 @@ public enum UdpStruct implements BitField.Proxy {
 						Int16be.BITS_16.withName("udp.dstport"),
 						Int16be.BITS_16.withName("udp.length"),
 						Int16be.BITS_16.withName("udp.checksum")),
-				sequenceLayout(CoreConstants.UDP_HEADER_LEN, Int8.BITS_08).withName("udp.bytes"));
+				sequenceLayout(UdpConstants.UDP_HEADER_LEN, Int8.BITS_08).withName("udp.bytes"));
 	}
 
 	/** The Constant HEADER_BYTES. */

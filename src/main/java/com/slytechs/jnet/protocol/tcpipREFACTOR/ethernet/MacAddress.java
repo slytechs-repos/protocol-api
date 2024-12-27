@@ -15,13 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.address;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
 
 import java.nio.ByteBuffer;
 import java.util.Optional;
 
-import com.slytechs.jnet.protocol.api.address.impl.MacOuiAssignments;
-import com.slytechs.jnet.protocol.api.address.impl.MacOuiAssignments.OuiEntry;
+import com.slytechs.jnet.protocol.api.address.NetAddress;
+import com.slytechs.jnet.protocol.api.address.NetAddressType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.impl.MacOuiAssignments;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.impl.MacOuiAssignments.OuiEntry;
 
 /**
  * A MAC address.

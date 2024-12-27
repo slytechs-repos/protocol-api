@@ -19,7 +19,6 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The TCP option Fast Open (TFO) is an optional mechanism within TCP that
@@ -71,7 +70,7 @@ public class TcpFastOpenOption extends TcpOption {
 	 * Instantiates a new tcp fast open option.
 	 */
 	public TcpFastOpenOption() {
-		super(ID, CoreConstants.TCP_OPTION_KIND_FASTOPEN, CoreConstants.TCP_OPTION_LEN_FASTOPEN);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_FASTOPEN, TcpOptionConstants.TCP_OPTION_LEN_FASTOPEN);
 	}
 
 	/**

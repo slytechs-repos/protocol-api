@@ -22,9 +22,9 @@ import static com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6NeighborAdverti
 import java.util.Set;
 
 import com.slytechs.jnet.platform.api.util.Enums;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Address;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;

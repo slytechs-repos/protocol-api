@@ -17,14 +17,14 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.IcmpConstants.*;
 
 import com.slytechs.jnet.protocol.api.common.OptionsHeader;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.pack.PackId;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * The Internet Control Message Protocol (ICMP) header.

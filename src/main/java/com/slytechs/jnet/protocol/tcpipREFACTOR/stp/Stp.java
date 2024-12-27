@@ -20,8 +20,8 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.stp;
 import java.util.concurrent.locks.Lock;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * The Spanning Tree Protocol (STP).

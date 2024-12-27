@@ -17,8 +17,6 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
-
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
 /**
@@ -37,7 +35,7 @@ public class TcpNopOption extends TcpOption {
 	 * Instantiates a new tcp no option.
 	 */
 	public TcpNopOption() {
-		super(ID, TCP_OPTION_KIND_NOP, TCP_OPTION_LEN_NOP);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_NOP, TcpOptionConstants.TCP_OPTION_LEN_NOP);
 	}
 
 	/**

@@ -20,10 +20,10 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR;
 import java.util.Optional;
 
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Core protocol pack definition.

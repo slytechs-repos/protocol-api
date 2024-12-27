@@ -17,8 +17,6 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
-import com.slytechs.jnet.protocol.api.packet.Packet;
-
 /**
  * Defines methods for checking and accessing protocol headers.
  *

@@ -33,10 +33,10 @@ import com.slytechs.jnet.protocol.api.common.HasOption;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderFactory;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.api.packet.Packet;
 
 /**
  * The Class MetaPacket.

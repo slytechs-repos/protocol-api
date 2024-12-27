@@ -17,8 +17,18 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor.impl;
 
+import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.gre.GreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.IcmpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.sctp.SctpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpOptionConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.udp.UdpConstants.*;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -28,12 +38,12 @@ import java.util.function.IntConsumer;
 import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.platform.api.util.Enums;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.gre.GreConstants;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6IdNsOptions;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6Mlr2RecordType;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6NeighborAdvertisement;
@@ -52,7 +62,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpOptionId;
 public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements PacketDissectorExtension {
 
 	/** The Constant RECORD_START. */
-	private static final int RECORD_START = CoreConstants.DESC_TYPE2_BYTE_SIZE_MIN;
+	private static final int RECORD_START = DESC_TYPE2_BYTE_SIZE_MIN;
 
 	/** The Constant WORD0_1. */
 	private static final int WORD0_1 = 0;
@@ -155,13 +165,13 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 	private int calculateGreHeaderLength(short flags) {
 		int size = 4;
 
-		if ((flags & GRE_BITMASK_CHKSUM_FLAG) != 0)
+		if ((flags & GreConstants.GRE_BITMASK_CHKSUM_FLAG) != 0)
 			size += 4;
 
-		if ((flags & GRE_BITMASK_KEY_FLAG) != 0)
+		if ((flags & GreConstants.GRE_BITMASK_KEY_FLAG) != 0)
 			size += 4;
 
-		if ((flags & GRE_BITMASK_SEQ_FLAG) != 0)
+		if ((flags & GreConstants.GRE_BITMASK_SEQ_FLAG) != 0)
 			size += 4;
 
 		return size;
@@ -228,7 +238,7 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 	 * @return the int
 	 */
 	private int descriptorLength() {
-		return CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX;
+		return DESC_TYPE2_BYTE_SIZE_MAX;
 	}
 
 	/**

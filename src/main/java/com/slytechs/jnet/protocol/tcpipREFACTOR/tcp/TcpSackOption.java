@@ -20,7 +20,6 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The TCP Selective Acknowledgment (SACK) option is a TCP option that allows
@@ -72,7 +71,7 @@ public class TcpSackOption extends TcpOption {
 	 * Instantiates a new tcp selective ack option.
 	 */
 	public TcpSackOption() {
-		super(ID, CoreConstants.TCP_OPTION_KIND_SACK);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_SACK);
 	}
 
 	/**

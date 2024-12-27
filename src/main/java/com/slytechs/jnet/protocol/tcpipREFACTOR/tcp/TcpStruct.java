@@ -27,7 +27,6 @@ import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int16be;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int32be;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int8;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Padding;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The Enum TcpStruct.
@@ -136,9 +135,9 @@ public enum TcpStruct implements EnumBitField<TcpStruct> {
 						Int16be.BITS_16.withName("tcp.checksum"),
 						Int16be.BITS_16.withName("tcp.urgent_pointer")),
 
-				sequenceLayout(CoreConstants.TCP_HEADER_LEN / 1, Int8.BITS_08).withName("tcp.bytes"),
-				sequenceLayout(CoreConstants.TCP_HEADER_LEN / 2, Int16be.BITS_16).withName("tcp.shorts"),
-				sequenceLayout(CoreConstants.TCP_HEADER_LEN / 4, Int32be.BITS_32).withName("tcp.ints"));
+				sequenceLayout(TcpConstants.TCP_HEADER_LEN / 1, Int8.BITS_08).withName("tcp.bytes"),
+				sequenceLayout(TcpConstants.TCP_HEADER_LEN / 2, Int16be.BITS_16).withName("tcp.shorts"),
+				sequenceLayout(TcpConstants.TCP_HEADER_LEN / 4, Int32be.BITS_32).withName("tcp.ints"));
 
 		/** The Constant OPTION_LAYOUT. */
 		private static final BinaryLayout OPTION_LAYOUT = unionLayout(

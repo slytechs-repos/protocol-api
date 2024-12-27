@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.address.impl;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.impl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 import com.slytechs.jnet.platform.api.common.settings.BooleanProperty;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.array.ArrayUtils;
-import com.slytechs.jnet.protocol.api.address.MacAddress;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.MacAddress;
 
 /**
  * The Class IeeeOuiAssignments.

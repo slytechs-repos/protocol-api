@@ -26,7 +26,7 @@ import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.collection.IntArrayList;
 import com.slytechs.jnet.protocol.api.common.Header;
-import com.slytechs.jnet.protocol.api.packet.Packet;
+import com.slytechs.jnet.protocol.api.common.Packet;
 
 /**
  * The Class PacketFormat.

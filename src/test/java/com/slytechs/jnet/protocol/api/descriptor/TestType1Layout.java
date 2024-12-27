@@ -28,7 +28,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * @author Sly Technologies Inc
@@ -41,14 +40,14 @@ class TestType1Layout {
 	private static final int REPEAT_TIMESTAMP = 1;
 	private static final Random RANDOM = new Random();
 	private ByteBuffer buf1;
-	private ByteBuffer buf2 = ByteBuffer.allocate(CoreConstants.DESC_TYPE1_BYTE_SIZE);
+	private ByteBuffer buf2 = ByteBuffer.allocate(DescriptorConstants.DESC_TYPE1_BYTE_SIZE);
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		buf1 = ByteBuffer.allocate(CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX);
+		buf1 = ByteBuffer.allocate(DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX);
 		RANDOM.nextBytes(buf2.array());
 	}
 

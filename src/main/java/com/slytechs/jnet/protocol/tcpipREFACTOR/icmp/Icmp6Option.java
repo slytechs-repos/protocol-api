@@ -17,11 +17,11 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
-import com.slytechs.jnet.protocol.api.address.MacAddress;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.MacAddress;
 
 /**
  * @author Sly Technologies Inc

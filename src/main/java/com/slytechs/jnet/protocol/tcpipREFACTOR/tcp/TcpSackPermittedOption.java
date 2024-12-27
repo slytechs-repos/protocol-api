@@ -18,7 +18,6 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The TCP SACK-permitted option is a TCP option that indicates that the sender
@@ -74,6 +73,6 @@ public class TcpSackPermittedOption extends TcpOption {
 	 * Instantiates a new tcp selective ack option.
 	 */
 	public TcpSackPermittedOption() {
-		super(ID, CoreConstants.TCP_OPTION_KIND_SACK_PERMITTED);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_SACK_PERMITTED);
 	}
 }

@@ -17,14 +17,18 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor.impl;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpConstants.*;
 
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Bits;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
 import com.slytechs.jnet.protocol.api.core.L4FrameType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * The Class JavaDissector.

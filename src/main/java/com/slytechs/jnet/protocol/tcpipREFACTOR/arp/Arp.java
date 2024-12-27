@@ -20,10 +20,9 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.arp;
 import java.util.concurrent.locks.Lock;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Address Resolution Protocol (ARP) header.
@@ -119,7 +118,7 @@ public final class Arp extends Header {
 	 */
 	@Meta
 	public byte[] senderMacAddress() {
-		return senderMacAddress(new byte[CoreConstants.ARP_LEN_HALEN], 0);
+		return senderMacAddress(new byte[ArpConstants.ARP_LEN_HALEN], 0);
 	}
 
 	/**
@@ -140,7 +139,7 @@ public final class Arp extends Header {
 	 * @return the byte[]
 	 */
 	public byte[] senderMacAddress(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ARP_FIELD_SHA, dst, offset, CoreConstants.ARP_LEN_HALEN);
+		buffer().get(ArpConstants.ARP_FIELD_SHA, dst, offset, ArpConstants.ARP_LEN_HALEN);
 		return dst;
 	}
 
@@ -151,7 +150,7 @@ public final class Arp extends Header {
 	 */
 	@Meta
 	public byte[] senderProtocolAddress() {
-		return senderProtocolAddress(new byte[CoreConstants.ARP_LEN_PALEN], 0);
+		return senderProtocolAddress(new byte[ArpConstants.ARP_LEN_PALEN], 0);
 	}
 
 	/**
@@ -172,7 +171,7 @@ public final class Arp extends Header {
 	 * @return the byte[]
 	 */
 	public byte[] senderProtocolAddress(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ARP_FIELD_SPA, dst, offset, CoreConstants.ARP_LEN_PALEN);
+		buffer().get(ArpConstants.ARP_FIELD_SPA, dst, offset, ArpConstants.ARP_LEN_PALEN);
 		return dst;
 	}
 
@@ -183,7 +182,7 @@ public final class Arp extends Header {
 	 */
 	@Meta
 	public byte[] targetMacAddress() {
-		return targetMacAddress(new byte[CoreConstants.ARP_LEN_HALEN], 0);
+		return targetMacAddress(new byte[ArpConstants.ARP_LEN_HALEN], 0);
 	}
 
 	/**
@@ -204,7 +203,7 @@ public final class Arp extends Header {
 	 * @return the byte[]
 	 */
 	public byte[] targetMacAddress(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ARP_FIELD_THA, dst, offset, CoreConstants.ARP_LEN_HALEN);
+		buffer().get(ArpConstants.ARP_FIELD_THA, dst, offset, ArpConstants.ARP_LEN_HALEN);
 		return dst;
 	}
 
@@ -215,7 +214,7 @@ public final class Arp extends Header {
 	 */
 	@Meta
 	public byte[] targetProtocolAddress() {
-		return targetProtocolAddress(new byte[CoreConstants.ARP_LEN_PALEN], 0);
+		return targetProtocolAddress(new byte[ArpConstants.ARP_LEN_PALEN], 0);
 	}
 
 	/**
@@ -236,7 +235,7 @@ public final class Arp extends Header {
 	 * @return the byte[]
 	 */
 	public byte[] targetProtocolAddress(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ARP_FIELD_TPA, dst, offset, CoreConstants.ARP_LEN_PALEN);
+		buffer().get(ArpConstants.ARP_FIELD_TPA, dst, offset, ArpConstants.ARP_LEN_PALEN);
 		return dst;
 	}
 

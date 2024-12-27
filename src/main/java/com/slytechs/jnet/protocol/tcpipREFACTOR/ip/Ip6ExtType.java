@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.function.IntSupplier;
 
 import com.slytechs.jnet.platform.api.util.Enums;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 
 /**
  * IPv6 extension header type.

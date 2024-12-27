@@ -18,13 +18,13 @@
 package com.slytechs.jnet.protocol.api.descriptor.impl;
 
 import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
 
 import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
 import com.slytechs.jnet.platform.api.memory.layout.BitField;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int16;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int32;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int64;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 
 /**
  * Type2 struct/layout definition.
@@ -138,7 +138,7 @@ public enum Type2DescriptorLayout implements BitField.Proxy {
 						Int64.BITS_64.withName("bitmask"),
 
 						/* Word6-38 */
-						sequenceLayout(DESC_TYPE2_RECORD_MAX_COUNT, Int64.BITS_64).withName("record")
+						sequenceLayout(DescriptorConstants.DESC_TYPE2_RECORD_MAX_COUNT, Int64.BITS_64).withName("record")
 
 				),
 				sequenceLayout(32 + 6, Int32.BITS_32).withName("array")

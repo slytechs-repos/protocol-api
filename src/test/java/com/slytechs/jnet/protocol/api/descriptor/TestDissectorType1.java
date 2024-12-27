@@ -32,12 +32,11 @@ import org.junit.jupiter.api.TestInfo;
 import com.slytechs.jnet.platform.api.common.impl.Benchmark;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DissectorJavaImpl;
-import com.slytechs.jnet.protocol.api.packet.Packet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
@@ -179,7 +178,7 @@ class TestDissectorType1 {
 	void type2DissectionToJavaDescriptor() {
 		byte[] PACKET = PACKET_IP4_TCP_W_IP_OPTS;
 		ByteBuffer dsc = ByteBuffer.allocate(
-				CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+				DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 				.order(ByteOrder.nativeOrder());
 		ByteBuffer pkt = ByteBuffer.wrap(PACKET);
 
@@ -229,9 +228,9 @@ class TestDissectorType1 {
 //	@Disabled
 	void speedTestJava() {
 		byte[] PACKET = PACKET_IP4_TCP_W_IP_OPTS;
-		ByteBuffer desc1 = ByteBuffer.allocate(CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+		ByteBuffer desc1 = ByteBuffer.allocate(DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 				.order(ByteOrder.nativeOrder());
-		ByteBuffer desc2 = ByteBuffer.allocate(CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+		ByteBuffer desc2 = ByteBuffer.allocate(DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 				.order(ByteOrder.nativeOrder());
 		ByteBuffer pkt = MemorySegment.ofArray(PACKET)
 				.asByteBuffer();

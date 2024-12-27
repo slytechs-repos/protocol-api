@@ -17,10 +17,9 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.api.packet.Packet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * A builtin model of a payload. A payload may be applied to a {@link Packet} or

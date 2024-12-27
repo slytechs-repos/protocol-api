@@ -21,14 +21,13 @@ import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.hash.Checksums;
-import com.slytechs.jnet.protocol.api.address.MacAddress;
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Ethernet II protocol header.
@@ -109,8 +108,8 @@ public final class Ethernet extends Header {
 		this.isTruncated = (captureLength < wireLength);
 
 		int flags = descriptor.flags();
-		this.preambleFlag = (flags & CoreConstants.DESC_PKT_FLAG_PREAMBLE) > 0;
-		this.crcFlag = (flags & CoreConstants.DESC_PKT_FLAG_CRC) > 0 && !isTruncated;
+		this.preambleFlag = (flags & DescriptorConstants.DESC_PKT_FLAG_PREAMBLE) > 0;
+		this.crcFlag = (flags & DescriptorConstants.DESC_PKT_FLAG_CRC) > 0 && !isTruncated;
 
 		/*
 		 * Preserve the frameBuffer so we can access these outside fields and/or used to
@@ -120,10 +119,10 @@ public final class Ethernet extends Header {
 
 		int payloadLength = captureLength - (offset + length);
 		if (preambleFlag)
-			payloadLength -= CoreConstants.ETHER_FIELD_LEN_PREAMBLE;
+			payloadLength -= EtherConstants.ETHER_FIELD_LEN_PREAMBLE;
 
 		if (crcFlag)
-			payloadLength -= CoreConstants.ETHER_FIELD_LEN_CRC;
+			payloadLength -= EtherConstants.ETHER_FIELD_LEN_CRC;
 
 		return payloadLength;
 	}
@@ -171,7 +170,7 @@ public final class Ethernet extends Header {
 	 */
 	@Meta(offset = 0, length = 6)
 	public byte[] dst() {
-		return dst(new byte[CoreConstants.ETHER_FIELD_DST_LEN], 0);
+		return dst(new byte[EtherConstants.ETHER_FIELD_DST_LEN], 0);
 	}
 
 	/**
@@ -197,7 +196,7 @@ public final class Ethernet extends Header {
 	 * @see HexStrings#toMacString(byte[])
 	 */
 	public byte[] dst(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ETHER_FIELD_DST, dst, offset, CoreConstants.ETHER_FIELD_DST_LEN);
+		buffer().get(EtherConstants.ETHER_FIELD_DST, dst, offset, EtherConstants.ETHER_FIELD_DST_LEN);
 
 		return dst;
 	}
@@ -224,7 +223,7 @@ public final class Ethernet extends Header {
 	 * @return MAC address stored in the first 6 LSB bytes of the long primitive
 	 */
 	public int dstGetAsLong() {
-		return buffer().getInt(CoreConstants.ETHER_FIELD_DST);
+		return buffer().getInt(EtherConstants.ETHER_FIELD_DST);
 	}
 
 	@Meta(value = MetaType.ATTRIBUTE, abbr = "g")
@@ -285,7 +284,7 @@ public final class Ethernet extends Header {
 	 *         captured
 	 */
 	public byte[] preamble() {
-		return preamble(new byte[CoreConstants.ETHER_FIELD_LEN_PREAMBLE]);
+		return preamble(new byte[EtherConstants.ETHER_FIELD_LEN_PREAMBLE]);
 	}
 
 	/**
@@ -311,7 +310,7 @@ public final class Ethernet extends Header {
 		if (!isPreamblePresent())
 			return null;
 
-		buffer().get(0, dst, CoreConstants.ETHER_FIELD_PREAMBLE, CoreConstants.ETHER_FIELD_LEN_PREAMBLE);
+		buffer().get(0, dst, EtherConstants.ETHER_FIELD_PREAMBLE, EtherConstants.ETHER_FIELD_LEN_PREAMBLE);
 
 		return dst;
 	}
@@ -325,7 +324,7 @@ public final class Ethernet extends Header {
 	 */
 	@Meta(offset = 6, length = 6)
 	public byte[] src() {
-		return src(new byte[CoreConstants.ETHER_FIELD_SRC_LEN], 0);
+		return src(new byte[EtherConstants.ETHER_FIELD_SRC_LEN], 0);
 	}
 
 	/**
@@ -351,7 +350,7 @@ public final class Ethernet extends Header {
 	 * @return MAC address
 	 */
 	public byte[] src(byte[] dst, int offset) {
-		buffer().get(CoreConstants.ETHER_FIELD_SRC, dst, offset, CoreConstants.ETHER_FIELD_SRC_LEN);
+		buffer().get(EtherConstants.ETHER_FIELD_SRC, dst, offset, EtherConstants.ETHER_FIELD_SRC_LEN);
 
 		return dst;
 	}
@@ -369,7 +368,7 @@ public final class Ethernet extends Header {
 	 * @return MAC address stored in the first 6 LSB bytes of the long primitive
 	 */
 	public long srcGetAsLong() {
-		return buffer().getLong(CoreConstants.ETHER_FIELD_SRC) & ETHER_FIELD_SRC_MASK64;
+		return buffer().getLong(EtherConstants.ETHER_FIELD_SRC) & ETHER_FIELD_SRC_MASK64;
 	}
 
 	/**
@@ -393,7 +392,7 @@ public final class Ethernet extends Header {
 	 */
 	@Meta(formatter = Meta.Formatter.HEX_LOWERCASE_0x, offset = 12, length = 2)
 	public int type() {
-		return Short.toUnsignedInt(buffer().getShort(CoreConstants.ETHER_FIELD_TYPE));
+		return Short.toUnsignedInt(buffer().getShort(EtherConstants.ETHER_FIELD_TYPE));
 	}
 
 	/**

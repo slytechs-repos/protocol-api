@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.descriptor.impl;
 
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 
 /**
  * The Class Type1DissectorJavaImpl.
@@ -67,7 +67,7 @@ public class Type1DissectorJavaImpl extends PacketL3DissectorJava {
 		Type1DescriptorLayout.L4_FRAME_TYPE.setInt(super.l4Type, desc);
 		Type1DescriptorLayout.L4_SIZE.setInt(super.l4Size, desc);
 
-		return CoreConstants.DESC_TYPE1_BYTE_SIZE;
+		return DescriptorConstants.DESC_TYPE1_BYTE_SIZE;
 	}
 
 	/**

@@ -18,7 +18,6 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The TCP option End of List (EOL) is a special option that marks the end of
@@ -35,7 +34,7 @@ public class TcpEolOption extends TcpOption {
 	 * Instantiates a new tcp end of list option.
 	 */
 	public TcpEolOption() {
-		super(ID, CoreConstants.TCP_OPTION_KIND_EOL, CoreConstants.TCP_OPTION_LEN_EOL);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_EOL, TcpOptionConstants.TCP_OPTION_LEN_EOL);
 	}
 
 	/**

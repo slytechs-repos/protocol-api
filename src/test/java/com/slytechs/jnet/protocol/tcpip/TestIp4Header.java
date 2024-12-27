@@ -31,9 +31,9 @@ import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 import com.slytechs.test.Tests;
@@ -55,7 +55,7 @@ class TestIp4Header {
 			.dissector(PacketDescriptorType.TYPE2);
 
 	static final ByteBuffer DESC_BUFFER = ByteBuffer
-			.allocateDirect(CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+			.allocateDirect(DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 			.order(ByteOrder.nativeOrder());
 
 	/**

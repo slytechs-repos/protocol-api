@@ -17,11 +17,9 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
-
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
 /**
  * The TCP window scale option is a TCP option that allows the sender and
@@ -69,7 +67,7 @@ public class TcpWindowScaleOption extends TcpOption {
 	 * Instantiates a new tcp window scale option.
 	 */
 	public TcpWindowScaleOption() {
-		super(ID, TCP_OPTION_KIND_WIN_SCALE, TCP_OPTION_LEN_WIN_SCALE);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_WIN_SCALE, TcpOptionConstants.TCP_OPTION_LEN_WIN_SCALE);
 	}
 
 	/**
@@ -122,6 +120,6 @@ public class TcpWindowScaleOption extends TcpOption {
 	 */
 	@Meta
 	public int shiftCount() {
-		return Byte.toUnsignedInt(buffer().get(TCP_OPTION_FIELD_DATA));
+		return Byte.toUnsignedInt(buffer().get(TcpOptionConstants.TCP_OPTION_FIELD_DATA));
 	}
 }

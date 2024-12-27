@@ -17,12 +17,9 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
-
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * Base header class for all TCP options.
@@ -222,7 +219,7 @@ public class TcpOption extends Header {
 	 * @return the tcp option
 	 */
 	public TcpOption kind(int newKind) {
-		buffer().put(CoreConstants.TCP_OPTION_FIELD_KIND, (byte) newKind);
+		buffer().put(TcpOptionConstants.TCP_OPTION_FIELD_KIND, (byte) newKind);
 
 		return this;
 	}
@@ -267,7 +264,7 @@ public class TcpOption extends Header {
 	public int length() {
 		return ((length != -1)
 				? length
-				: Byte.toUnsignedInt(buffer().get(TCP_OPTION_FIELD_LENGTH)));
+				: Byte.toUnsignedInt(buffer().get(TcpOptionConstants.TCP_OPTION_FIELD_LENGTH)));
 	}
 
 	/**
@@ -307,7 +304,7 @@ public class TcpOption extends Header {
 	 * @param newLength new unsigned 8-bit length field value, in units of bytes
 	 */
 	public void length(int newLength) {
-		buffer().put(TCP_OPTION_FIELD_LENGTH, (byte) kind);
+		buffer().put(TcpOptionConstants.TCP_OPTION_FIELD_LENGTH, (byte) kind);
 	}
 
 }

@@ -17,13 +17,14 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
+import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
 
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.HashType;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
@@ -32,8 +33,6 @@ import com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * The Class Type2Descriptor.
@@ -85,7 +84,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 */
 	@Override
 	public int byteSize() {
-		return (recordCount() << 2) + CoreConstants.DESC_TYPE2_BYTE_SIZE_MIN;
+		return (recordCount() << 2) + DESC_TYPE2_BYTE_SIZE_MIN;
 	}
 
 	/**
@@ -131,7 +130,7 @@ public class Type2Descriptor extends PacketDescriptor {
 		if (index >= count)
 			throw new IndexOutOfBoundsException();
 
-		return buffer().getInt((index << 2) + CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX);
+		return buffer().getInt((index << 2) + DESC_TYPE2_BYTE_SIZE_MAX);
 	}
 
 	/**
@@ -320,8 +319,9 @@ public class Type2Descriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeaderExtension(int, int, int,
-	 *      int, com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
+	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeaderExtension(int,
+	 *      int, int, int,
+	 *      com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
 	 */
 	@Override
 	public boolean lookupHeaderExtension(int headerId, int extId, int depth, int recordIndexHint,
@@ -385,7 +385,7 @@ public class Type2Descriptor extends PacketDescriptor {
 //		return RECORD.getInt(buffer(), index);
 
 		// TODO: Faster implementation
-		return buffer().getLong(CoreConstants.DESC_TYPE2_BYTE_SIZE_MIN + (index * DESC_TYPE2_RECORD_BYTE_SIZE));
+		return buffer().getLong(DESC_TYPE2_BYTE_SIZE_MIN + (index * DESC_TYPE2_RECORD_BYTE_SIZE));
 	}
 
 	/**

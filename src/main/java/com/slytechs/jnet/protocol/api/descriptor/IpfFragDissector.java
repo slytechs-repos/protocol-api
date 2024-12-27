@@ -17,7 +17,10 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
 
 import java.nio.ByteBuffer;
 

@@ -19,8 +19,8 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
 import com.slytechs.jnet.protocol.api.common.HasOption;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * IPv6 hop-by-hop extension header.

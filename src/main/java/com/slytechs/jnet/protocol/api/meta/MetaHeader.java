@@ -28,9 +28,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
-import com.slytechs.jnet.protocol.api.packet.Packet;
 
 /**
  * The Class MetaHeader.

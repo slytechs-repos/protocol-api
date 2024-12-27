@@ -17,8 +17,8 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
+import static com.slytechs.jnet.protocol.api.core.CoreId.*;
 import static com.slytechs.jnet.protocol.api.pack.ProtocolPackTable.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId.*;
 
 import java.util.Arrays;
 import java.util.function.IntSupplier;
@@ -28,9 +28,9 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
 import com.slytechs.jnet.protocol.api.common.Other;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * IPv4 option header ID constants.

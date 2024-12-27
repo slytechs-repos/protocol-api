@@ -31,13 +31,13 @@ import com.slytechs.jnet.platform.api.common.NotFound;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.json.JsonException;
+import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.common.Payload;
 import com.slytechs.jnet.protocol.api.core.HashType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.packet.Packet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
 import com.slytechs.test.Tests;
@@ -131,7 +131,7 @@ class TestMetaHeader {
 	void setUp() throws Exception {
 		byte[] PACKET = PACKET_ETH;
 		ByteBuffer descriptorData = ByteBuffer.allocate(
-				CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+				DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 				.order(ByteOrder.nativeOrder());
 		ByteBuffer packetData = ByteBuffer.wrap(PACKET);
 

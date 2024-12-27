@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.pack;
 
 import static com.slytechs.jnet.protocol.api.pack.PackId.*;
 
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 
 /**
  * Protocol pack definitions. A protocol pack contains a number of protocol ID

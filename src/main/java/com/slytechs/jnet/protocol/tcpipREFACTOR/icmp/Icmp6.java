@@ -17,9 +17,9 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * The Internet Control Message Protocol (ICMP) version 6 header.

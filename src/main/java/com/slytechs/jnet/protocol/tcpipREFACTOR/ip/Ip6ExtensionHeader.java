@@ -18,8 +18,8 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Base class for all IPv6 extension headers with no options.

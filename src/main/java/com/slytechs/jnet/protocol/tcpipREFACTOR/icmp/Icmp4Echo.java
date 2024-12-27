@@ -17,12 +17,12 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.IcmpConstants.*;
 
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
 /**
  * The ICMP version 4 echo message header.

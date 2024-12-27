@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 
 /**
  * IPv6 identity extension header.

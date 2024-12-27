@@ -19,7 +19,6 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The TCP MSS option is a TCP option that specifies the maximum segment size
@@ -75,7 +74,7 @@ public class TcpMssOption extends TcpOption {
 	 * Instantiates a new tcp MSS option.
 	 */
 	public TcpMssOption() {
-		super(ID, CoreConstants.TCP_OPTION_KIND_MSS, CoreConstants.TCP_OPTION_LEN_MSS);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_MSS, TcpOptionConstants.TCP_OPTION_LEN_MSS);
 	}
 
 	/**

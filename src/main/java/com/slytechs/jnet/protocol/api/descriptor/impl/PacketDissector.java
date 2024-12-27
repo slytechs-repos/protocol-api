@@ -21,9 +21,9 @@ import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.time.TimestampSource;
+import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.packet.Packet;
 
 /**
  * A packet dissector which records the state of the packet. A dissectors

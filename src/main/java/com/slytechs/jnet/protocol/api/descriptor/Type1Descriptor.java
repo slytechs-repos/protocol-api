@@ -17,12 +17,11 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
+import static com.slytechs.jnet.protocol.api.core.CoreId.*;
 import static com.slytechs.jnet.protocol.api.core.L2FrameType.*;
 import static com.slytechs.jnet.protocol.api.core.L3FrameType.*;
 import static com.slytechs.jnet.protocol.api.core.L4FrameType.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId.*;
 
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
@@ -32,7 +31,11 @@ import com.slytechs.jnet.protocol.api.core.L4FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.LlcConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.SnapConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.VlanConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.mpls.MplsConstants;
 
 /**
  * The Class Type1Descriptor.
@@ -44,7 +47,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 public class Type1Descriptor extends PacketDescriptor {
 
 	/** Length in bytes of type1 descriptor. */
-	public static final int LENGTH = CoreConstants.DESC_TYPE1_BYTE_SIZE;
+	public static final int LENGTH = DescriptorConstants.DESC_TYPE1_BYTE_SIZE;
 
 	/**
 	 * Instantiates a new type 1 descriptor.
@@ -84,16 +87,16 @@ public class Type1Descriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeader(int, int,
-	 *      com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
+	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeader(int,
+	 *      int, com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
 	 */
 	@Override
 	public boolean lookupHeader(int id, int depth, HeaderDescriptor descriptor) {
 		if (id == CORE_ID_VLAN) {
 			if (depth < vlanCount()) {
-				int offset = ETHER_HEADER_LEN + depth * VLAN_HEADER_LEN;
+				int offset = EtherConstants.ETHER_HEADER_LEN + depth * VlanConstants.VLAN_HEADER_LEN;
 
-				return descriptor.assign(id, depth, offset, VLAN_HEADER_LEN, type());
+				return descriptor.assign(id, depth, offset, VlanConstants.VLAN_HEADER_LEN, type());
 			}
 
 			return false;
@@ -101,9 +104,9 @@ public class Type1Descriptor extends PacketDescriptor {
 
 		if (id == CORE_ID_MPLS) {
 			if (depth < mplsCount()) {
-				int offset = ETHER_HEADER_LEN + depth * MPLS_HEADER_LEN;
+				int offset = EtherConstants.ETHER_HEADER_LEN + depth * MplsConstants.MPLS_HEADER_LEN;
 
-				return descriptor.assign(id, depth, offset, MPLS_HEADER_LEN, type());
+				return descriptor.assign(id, depth, offset, MplsConstants.MPLS_HEADER_LEN, type());
 			}
 
 			return false;
@@ -117,9 +120,11 @@ public class Type1Descriptor extends PacketDescriptor {
 
 		return switch (id) {
 
-		case CORE_ID_ETHER -> l2(L2_FRAME_TYPE_ETHER, id, 0, ETHER_HEADER_LEN, descriptor);
-		case CORE_ID_LLC -> l2(L2_FRAME_TYPE_LLC, id, ETHER_HEADER_LEN, LLC_HEADER_LEN, descriptor);
-		case CORE_ID_SNAP -> l2(L2_FRAME_TYPE_SNAP, id, ETHER_HEADER_LEN + LLC_HEADER_LEN, SNAP_HEADER_LEN, descriptor);
+		case CORE_ID_ETHER -> l2(L2_FRAME_TYPE_ETHER, id, 0, EtherConstants.ETHER_HEADER_LEN, descriptor);
+		case CORE_ID_LLC -> l2(L2_FRAME_TYPE_LLC, id, EtherConstants.ETHER_HEADER_LEN, LlcConstants.LLC_HEADER_LEN,
+				descriptor);
+		case CORE_ID_SNAP -> l2(L2_FRAME_TYPE_SNAP, id, EtherConstants.ETHER_HEADER_LEN + LlcConstants.LLC_HEADER_LEN,
+				SnapConstants.SNAP_HEADER_LEN, descriptor);
 
 		case CORE_ID_IPv4 -> l3(L3_FRAME_TYPE_IPv4, id, descriptor);
 		case CORE_ID_IPv6 -> l3(L3_FRAME_TYPE_IPv6, id, descriptor);
@@ -289,8 +294,9 @@ public class Type1Descriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeaderExtension(int, int, int,
-	 *      int, com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
+	 * @see com.slytechs.jnet.protocol.api.common.HeaderLookup#lookupHeaderExtension(int,
+	 *      int, int, int,
+	 *      com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor)
 	 */
 	@Override
 	public boolean lookupHeaderExtension(int headerId, int extId, int depth, int recordIndexHint,

@@ -22,10 +22,9 @@ import static com.slytechs.jnet.protocol.api.pack.ProtocolPackTable.*;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * TCP header option ID constants.
@@ -36,28 +35,28 @@ public enum TcpOptionId implements HeaderOptionInfo, PackId {
 	OPTION(254, "OPT", TcpOption::new),
 
 	/** The eol. */
-	EOL(CoreConstants.TCP_OPTION_KIND_EOL, "EOL", TcpEolOption::new),
+	EOL(TcpOptionConstants.TCP_OPTION_KIND_EOL, "EOL", TcpEolOption::new),
 
 	/** The nop. */
-	NOP(CoreConstants.TCP_OPTION_KIND_NOP, "NOP", TcpNopOption::new),
+	NOP(TcpOptionConstants.TCP_OPTION_KIND_NOP, "NOP", TcpNopOption::new),
 
 	/** The mss. */
-	MSS(CoreConstants.TCP_OPTION_KIND_MSS, "MSS", TcpMssOption::new),
+	MSS(TcpOptionConstants.TCP_OPTION_KIND_MSS, "MSS", TcpMssOption::new),
 
 	/** The win scale. */
-	WIN_SCALE(CoreConstants.TCP_OPTION_KIND_WIN_SCALE, "WIN", TcpWindowScaleOption::new),
+	WIN_SCALE(TcpOptionConstants.TCP_OPTION_KIND_WIN_SCALE, "WIN", TcpWindowScaleOption::new),
 
 	/** The sack. */
-	SACK_PERMITTED(CoreConstants.TCP_OPTION_KIND_SACK_PERMITTED, "SACK_PERM", TcpSackPermittedOption::new),
+	SACK_PERMITTED(TcpOptionConstants.TCP_OPTION_KIND_SACK_PERMITTED, "SACK_PERM", TcpSackPermittedOption::new),
 
 	/** The sack. */
-	SACK(CoreConstants.TCP_OPTION_KIND_SACK, "SACK", TcpSackOption::new),
+	SACK(TcpOptionConstants.TCP_OPTION_KIND_SACK, "SACK", TcpSackOption::new),
 
 	/** The timestamp. */
-	TIMESTAMP(CoreConstants.TCP_OPTION_KIND_TIMESTAMP, "TS", TcpTimestampOption::new),
+	TIMESTAMP(TcpOptionConstants.TCP_OPTION_KIND_TIMESTAMP, "TS", TcpTimestampOption::new),
 
 	/** The fastopen. */
-	FASTOPEN(CoreConstants.TCP_OPTION_KIND_FASTOPEN, "FAST", TcpFastOpenOption::new),
+	FASTOPEN(TcpOptionConstants.TCP_OPTION_KIND_FASTOPEN, "FAST", TcpFastOpenOption::new),
 
 	;
 

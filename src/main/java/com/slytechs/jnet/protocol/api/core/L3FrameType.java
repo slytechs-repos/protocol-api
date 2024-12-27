@@ -23,7 +23,6 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
 import com.slytechs.jnet.protocol.api.common.Other;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
 
 /**

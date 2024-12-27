@@ -18,9 +18,9 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ppp;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * PPP (Point-to-Point Protocol) header implementation.

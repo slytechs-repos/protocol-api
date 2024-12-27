@@ -17,8 +17,6 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
-
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
@@ -72,7 +70,7 @@ public class TcpTimestampOption extends TcpOption {
 	 * Instantiates a new tcp timestamp option.
 	 */
 	public TcpTimestampOption() {
-		super(ID, TCP_OPTION_KIND_TIMESTAMP, TCP_OPTION_LEN_TIMESTAMP);
+		super(ID, TcpOptionConstants.TCP_OPTION_KIND_TIMESTAMP, TcpOptionConstants.TCP_OPTION_LEN_TIMESTAMP);
 	}
 
 	/**

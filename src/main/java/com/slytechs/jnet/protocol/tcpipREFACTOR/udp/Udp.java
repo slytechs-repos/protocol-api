@@ -18,8 +18,8 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.udp;
 
 import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * User Datagram Protocol (UDP).

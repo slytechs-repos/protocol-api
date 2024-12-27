@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Test;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.arp.Arp;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * @author Sly Technologies Inc
@@ -49,7 +49,7 @@ class TestRarpReplyHeader {
 			.dissector(PacketDescriptorType.TYPE2);
 
 	static final ByteBuffer DESC_BUFFER = ByteBuffer
-			.allocateDirect(CoreConstants.DESC_TYPE2_BYTE_SIZE_MAX)
+			.allocateDirect(DescriptorConstants.DESC_TYPE2_BYTE_SIZE_MAX)
 			.order(ByteOrder.nativeOrder());
 
 	/**

@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.api.core.CoreId;
 
 /**
  * Interface for all ICMP Echo messages.

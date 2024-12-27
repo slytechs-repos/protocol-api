@@ -17,9 +17,9 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 
+import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Address;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 
