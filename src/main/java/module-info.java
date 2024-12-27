@@ -66,4 +66,7 @@ module com.slytechs.jnet.protocol.api {
 	/* Used for loading protocol packs on the class path */
 	uses com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
 
+	provides com.slytechs.jnet.protocol.api.pack.ProtocolModuleService with
+			com.slytechs.jnet.protocol.api.pack.impl.CoreModuleService;
+
 }
