@@ -748,13 +748,59 @@ public enum TestPackets {
 			+ "6000000000203afffe80000000000000020086fffe0580dafe80000000000000026097fffe0769ea"
 			+ "870068bd00000000fe80000000000000026097fffe0769ea01010000860580da"
 			+ ";v6.pcap#3"),
-	
+
 	ETH_IPv6_ICMPv6_NEIGHBOR_ADVERTISEMENT(""
 			+ "0000860580da0060970769ea86dd"
 			+ "6000000000183afffe80000000000000026097fffe0769eafe80000000000000020086fffe0580da"
 			+ "8800afa5c0000000fe80000000000000026097fffe0769ea"
 			+ ";v6.pcap#4"),
+
+	/**
+	 * Sample ETH_IPX_SPX packet with SPX protocol inside. Frame: ETH_IPX_SPX: Checksum: 0xFFFF,
+	 * Length: 96 bytes Src Network: 0x00000002, Node: 00:40:05:40:ef:24, Socket:
+	 * 0x4003 Dst Network: 0x00000001, Node: 00:60:08:9f:b1:f3, Socket: 0x1234 Type:
+	 * SPX (5)
+	 */
+	IPX_SPX(""
+			+ "FFFF" // Checksum
+			+ "0060" // Length (96 bytes)
+			+ "00" // Transport Control
+			+ "05" // Type (SPX)
+			+ "00000001" // Dst Network
+			+ "0060089fb1f3" // Dst Node
+			+ "1234" // Dst Socket
+			+ "00000002" // Src Network
+			+ "00400540ef24" // Src Node
+			+ "4003" // Src Socket
+			+ "00000000" // SPX payload
+			+ ";sample-ipx-spx.cap#1"),
 	
+	/**
+	 * IPX packet encapsulated in Ethernet frame
+	 * Ethernet II:
+	 *   Src: 00:40:05:40:ef:24, Dst: 00:60:08:9f:b1:f3, Type: IPX (0x8137)
+	 * IPX:
+	 *   Checksum: 0xFFFF, Length: 96 bytes, Type: SPX (5)
+	 *   Dst Network: 0x00000001, Node: 00:60:08:9f:b1:f3, Socket: 0x1234
+	 *   Src Network: 0x00000002, Node: 00:40:05:40:ef:24, Socket: 0x4003
+	 */
+	ETH_IPX_SPX(""
+	        + "0060089fb1f3"  // Eth Dst
+	        + "00400540ef24"  // Eth Src  
+	        + "8137"          // Eth Type (IPX)
+	        + "FFFF"          // IPX Checksum
+	        + "0060"          // IPX Length 
+	        + "00"            // Transport Control
+	        + "05"            // IPX Type (SPX)
+	        + "00000001"      // Dst Network
+	        + "0060089fb1f3"  // Dst Node
+	        + "1234"          // Dst Socket
+	        + "00000002"      // Src Network
+	        + "00400540ef24"  // Src Node
+	        + "4003"          // Src Socket
+//			+ "00000000" // SPX payload
+	        + ";eth-ipx-spx.cap#1"),
+
 	;
 
 	/** The array. */

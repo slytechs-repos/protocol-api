@@ -38,6 +38,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6Type;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4IdOptions;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6IdOption;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxType;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ppp.PppProtocol;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpFlag;
 
@@ -152,6 +153,9 @@ public @interface Resolver {
 
 		/** PPP protocol type */
 		PPP_PROTOCOL(PppProtocol::resolveProtocol),
+		
+		/** IPX protocol type */
+		IPX_TYPE(IpxType::resolveType),
 
 		;
 

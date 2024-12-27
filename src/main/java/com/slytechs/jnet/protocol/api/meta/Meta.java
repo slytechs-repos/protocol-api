@@ -75,7 +75,7 @@ public @interface Meta {
 
 		/** The I pv 6 ADDRESS. */
 		IPv6_ADDRESS(MetaValues::ip6Address),
-
+		
 		/** The hex lowercase. */
 		HEX_LOWERCASE(MetaValues::hexLowercase),
 

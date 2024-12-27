@@ -59,6 +59,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6HostIdentityExtension;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6IdOption;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6RoutingExtension;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Shim6Extension;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.Ipx;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ppp.Ppp;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.Tcp;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpOptionId;
@@ -118,7 +119,7 @@ public enum CoreId implements HeaderInfo, PackId {
 	MPLS,
 
 	/** The ipx. */
-	IPX,
+	IPX(Ipx::new),
 
 	/** The gre. */
 	GRE,

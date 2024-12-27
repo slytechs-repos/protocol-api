@@ -24,6 +24,7 @@ import com.slytechs.jnet.protocol.api.common.HeaderInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
 import com.slytechs.jnet.protocol.api.common.Other;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
 
 /**
  * Layer3 frame type table, used by common descriptor types.
@@ -33,7 +34,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
  */
 public enum L3FrameType implements HeaderInfo, IntSupplier {
 	IPv4(CoreId.CORE_ID_IPv4, Ip4::new),
-	IPv6(CoreId.CORE_ID_IPv4, Ip4::new),
+	IPv6(CoreId.CORE_ID_IPv4, Ip6::new),
 	IPX(CoreId.CORE_ID_IPv4, Ip4::new),
 	OTHER(0, Other::new),
 

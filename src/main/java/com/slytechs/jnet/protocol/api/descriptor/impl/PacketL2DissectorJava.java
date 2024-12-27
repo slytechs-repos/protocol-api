@@ -225,11 +225,11 @@ public abstract class PacketL2DissectorJava extends AbstractPacketDissector {
 				int first2bytes = buf.getShort(ETHER_HEADER_LEN);
 
 				/*
-				 * In raw mode, IPX follows immediately 802.3 header instead of LLC/SNAP but 1st
+				 * In raw mode, ETH_IPX_SPX follows immediately 802.3 header instead of LLC/SNAP but 1st
 				 * two bytes must be 0xFFFF
 				 */
 				if (first2bytes == IPX_FIELD_VALUE_CHECKSUM)
-					dissectIpx(ETHER_HEADER_LEN); // Sets L3Type to IPX...
+					dissectIpx(ETHER_HEADER_LEN); // Sets L3Type to ETH_IPX_SPX...
 			}
 			break;
 

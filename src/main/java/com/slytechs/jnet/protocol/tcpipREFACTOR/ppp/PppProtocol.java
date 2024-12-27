@@ -311,7 +311,7 @@ public enum PppProtocol {
 	/** AppleTalk Control Protocol */
 	public static final int APPLETALK_CONTROL_PROTOCOL = 0x8029;
 
-	/** Novell IPX Control Protocol */
+	/** Novell ETH_IPX_SPX Control Protocol */
 	public static final int NOVELL_IPX_CONTROL_PROTOCOL = 0x802b;
 
 	/** Bridging NCP Protocol */
