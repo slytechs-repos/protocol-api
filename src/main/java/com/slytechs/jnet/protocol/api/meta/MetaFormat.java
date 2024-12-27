@@ -198,8 +198,7 @@ public abstract class MetaFormat extends Format implements MetaDomain {
 
 		return VAR_REPLACEMENT_PATTERN
 				.matcher(summaryFormat)
-				.replaceAll(r ->
-				{
+				.replaceAll(r -> {
 					if (r.group(1) != null) {
 						int argLen = (r.group(2) == null) || r.group(2).isBlank()
 								? r.group(1).length()
@@ -244,6 +243,22 @@ public abstract class MetaFormat extends Format implements MetaDomain {
 
 	private final static String VAR_CENTER_CHAR = "-";
 
+	private static String normalizeSwitchFormatString(MetaElement element, String format) {
+		if (format != null
+				&& format.contains("@")
+				&& element instanceof MetaField field
+				&& field.getParentHeader() instanceof MetaHeader header) {
+			String classPath = header.getTarget().getClass().getPackageName();
+			
+			format = format.replaceFirst("@", "@" + classPath + ".");
+			
+			return format;
+
+		} else {
+			return format;
+		}
+	}
+
 	/**
 	 * Builds the display args.
 	 *
@@ -283,6 +298,8 @@ public abstract class MetaFormat extends Format implements MetaDomain {
 			var bitsFormat = matcher.group(4);
 			var bitsOffChar = matcher.group(6);
 			var switchFormat = matcher.group(8);
+
+			switchFormat = normalizeSwitchFormatString(element, switchFormat);
 
 			MetaField selected = null;
 			if (element instanceof MetaField field)
@@ -389,7 +406,7 @@ public abstract class MetaFormat extends Format implements MetaDomain {
 			}
 
 			return selected.get();
-		} catch (IllegalArgumentException | Error  e2) {
+		} catch (IllegalArgumentException | Error e2) {
 			throw e2;
 		}
 	}
