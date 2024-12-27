@@ -32,16 +32,18 @@ import org.junit.jupiter.api.TestInfo;
 import com.slytechs.jnet.platform.api.common.impl.Benchmark;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.protocol.api.core.L2FrameType;
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
+import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DissectorJavaImpl;
 import com.slytechs.jnet.protocol.api.packet.Packet;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.tcpip.link.Ethernet;
-import com.slytechs.jnet.protocol.tcpip.network.DiffServ;
-import com.slytechs.jnet.protocol.tcpip.network.Ip4;
-import com.slytechs.jnet.protocol.tcpip.network.Ip4RouterAlertOption;
-import com.slytechs.jnet.protocol.tcpip.network.Ip6;
-import com.slytechs.jnet.protocol.tcpip.network.Ip6FragmentExtension;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4RouterAlertOption;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6FragmentExtension;
 import com.slytechs.test.Tests;
 
 /**

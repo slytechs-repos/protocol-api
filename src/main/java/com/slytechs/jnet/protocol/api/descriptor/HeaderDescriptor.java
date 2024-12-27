@@ -17,8 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.pack.PackId;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
 
 /**
  * A header descriptor. A header descriptor defines the current state of a

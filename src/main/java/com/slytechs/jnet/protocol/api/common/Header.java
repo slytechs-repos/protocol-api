@@ -28,7 +28,7 @@ import com.slytechs.jnet.platform.api.util.DetailedString;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.ToHexdump;
 import com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;

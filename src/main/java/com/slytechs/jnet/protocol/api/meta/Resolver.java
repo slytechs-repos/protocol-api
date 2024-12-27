@@ -25,21 +25,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
+import com.slytechs.jnet.protocol.api.address.impl.MacOuiAssignments;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolverTuple2;
-import com.slytechs.jnet.protocol.tcpip.constants.ArpHardwareType;
-import com.slytechs.jnet.protocol.tcpip.constants.ArpOp;
-import com.slytechs.jnet.protocol.tcpip.constants.EtherType;
-import com.slytechs.jnet.protocol.tcpip.constants.Icmp4Code;
-import com.slytechs.jnet.protocol.tcpip.constants.Icmp4Type;
-import com.slytechs.jnet.protocol.tcpip.constants.Icmp6Mlr2RecordType;
-import com.slytechs.jnet.protocol.tcpip.constants.Icmp6Type;
-import com.slytechs.jnet.protocol.tcpip.constants.Ip4IdOptions;
-import com.slytechs.jnet.protocol.tcpip.constants.Ip6IdOption;
-import com.slytechs.jnet.protocol.tcpip.constants.IpType;
-import com.slytechs.jnet.protocol.tcpip.constants.MacOuiAssignments;
-import com.slytechs.jnet.protocol.tcpip.constants.TcpFlag;
-import com.slytechs.jnet.protocol.tcpip.link.PppProtocol;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.arp.ArpHardwareType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.arp.ArpOp;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp4Code;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp4Type;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6Mlr2RecordType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.Icmp6Type;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4IdOptions;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6IdOption;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ppp.PppProtocol;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpFlag;
 
 /**
  * Resolves field values to human readable representations. For example IP

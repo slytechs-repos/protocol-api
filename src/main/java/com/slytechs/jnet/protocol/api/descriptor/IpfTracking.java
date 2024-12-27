@@ -18,7 +18,7 @@
 package com.slytechs.jnet.protocol.api.descriptor;
 
 import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.protocol.tcpip.constants.IpfDescriptorType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
 
 /**
  * Ip fragmentation descriptor. A fragmentation descriptor provides information

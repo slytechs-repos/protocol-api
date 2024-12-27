@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissector;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
-import com.slytechs.jnet.protocol.tcpip.network.DiffServ;
-import com.slytechs.jnet.protocol.tcpip.network.Ip6;
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
 
 /**
  * VLAN header tests

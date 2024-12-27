@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.api.pack;
 import java.util.Optional;
 
 import com.slytechs.jnet.platform.api.common.NotFound;
-import com.slytechs.jnet.protocol.api.descriptor.CompactDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.impl.CompactDescriptor;
 
 /**
  * A unique 32-bit protocol ID or a 32-bit record and a box class. A protocol

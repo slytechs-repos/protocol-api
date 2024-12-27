@@ -17,13 +17,14 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
 
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Bits;
-import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;
-import com.slytechs.jnet.protocol.tcpip.network.IpAddress;
+import com.slytechs.jnet.protocol.api.core.L3FrameType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 
 /**
  * An IP fragment dissector which generates a IpfFragment descriptor for further
@@ -52,7 +53,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	private final byte[] ip6_dst = new byte[IpAddress.IPv6_ADDRESS_SIZE];
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDissector#writeDescriptor(java.nio.ByteBuffer)
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector#writeDescriptor(java.nio.ByteBuffer)
 	 */
 	@Override
 	public int writeDescriptor(ByteBuffer buffer) {
@@ -87,7 +88,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketL2DissectorJava#dissectIp(int)
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectIp(int)
 	 */
 	@Override
 	protected void dissectIp(int offset) {
@@ -178,7 +179,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDissector#reset()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector#reset()
 	 */
 	@Override
 	public void reset() {
@@ -186,7 +187,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketL2DissectorJava#addRecord(int,
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#addRecord(int,
 	 *      int, int)
 	 */
 	@Override
@@ -195,14 +196,14 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketL2DissectorJava#destroyDissector()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#destroyDissector()
 	 */
 	@Override
 	protected void destroyDissector() {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketL2DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
 	 *      int, int, int)
 	 */
 	@Override
@@ -210,7 +211,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketL2DissectorJava#dissectIpx(int)
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectIpx(int)
 	 */
 	@Override
 	protected void dissectIpx(int offset) {

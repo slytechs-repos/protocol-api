@@ -32,9 +32,9 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;
 import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.common.Other;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissectorExtension;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDissectorExtension.DissectorExtensionFactory;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension.DissectorExtensionFactory;
 
 /**
  * A protocol pack information and instance.

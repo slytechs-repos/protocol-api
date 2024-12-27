@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.api.common;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor;
-import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 
 /**

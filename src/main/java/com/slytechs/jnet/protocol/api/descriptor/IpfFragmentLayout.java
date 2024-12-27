@@ -18,14 +18,14 @@
 package com.slytechs.jnet.protocol.api.descriptor;
 
 import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
 
 import com.slytechs.jnet.platform.api.memory.layout.ArrayField;
 import com.slytechs.jnet.platform.api.memory.layout.BinaryLayout;
 import com.slytechs.jnet.platform.api.memory.layout.BitField;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int16;
 import com.slytechs.jnet.platform.api.memory.layout.PredefinedLayout.Int8;
-import com.slytechs.jnet.protocol.tcpip.network.IpAddress;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 
 /**
  * The Enum IpfLayout structure for a IpfDescriptor type.

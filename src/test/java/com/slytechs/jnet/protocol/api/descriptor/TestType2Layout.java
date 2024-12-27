@@ -18,7 +18,7 @@
 package com.slytechs.jnet.protocol.api.descriptor;
 
 import static com.slytechs.jnet.platform.api.util.MemoryUnit.*;
-import static com.slytechs.jnet.protocol.api.descriptor.Type2DescriptorLayout.*;
+import static com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.ByteBuffer;
@@ -27,7 +27,8 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
+import com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * @author Sly Technologies Inc

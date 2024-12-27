@@ -22,7 +22,7 @@ import static com.slytechs.jnet.protocol.api.pack.PackId.*;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderFactory;
 import com.slytechs.jnet.protocol.api.common.HeaderInfo;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * A factory for creating PackHeader objects.

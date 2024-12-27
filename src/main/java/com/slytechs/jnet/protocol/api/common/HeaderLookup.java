@@ -17,8 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
-import com.slytechs.jnet.protocol.api.descriptor.CompactDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.impl.CompactDescriptor;
 
 /**
  * Interface which defines specific lookup operations within a descriptor for

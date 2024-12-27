@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.platform.api.util.HexStrings;
-import com.slytechs.jnet.protocol.tcpip.network.IpAddress;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 
 /**
  * @author Sly Technologies Inc

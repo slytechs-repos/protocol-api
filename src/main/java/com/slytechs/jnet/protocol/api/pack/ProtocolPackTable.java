@@ -19,7 +19,7 @@ package com.slytechs.jnet.protocol.api.pack;
 
 import static com.slytechs.jnet.protocol.api.pack.PackId.*;
 
-import com.slytechs.jnet.protocol.tcpip.constants.CoreId;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId;
 
 /**
  * Protocol pack definitions. A protocol pack contains a number of protocol ID
@@ -141,7 +141,7 @@ public enum ProtocolPackTable implements PackId {
 	private static final String CORE_MODULE = "com.slytechs.jnet.protocol";
 	
 	/** The Constant CORE_PACK. */
-	private static final String CORE_PACK   = "com.slytechs.jnet.protocol.tcpip.CorePackDefinition";
+	private static final String CORE_PACK   = "com.slytechs.jnet.protocol.tcpipREFACTOR.CorePackDefinition";
 	
 	/** The Constant WEB_MODULE. */
 	private static final String WEB_MODULE = "com.slytechs.jnet.protocol.web";

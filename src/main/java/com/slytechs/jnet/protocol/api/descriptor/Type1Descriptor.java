@@ -17,20 +17,22 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor;
 
-import static com.slytechs.jnet.protocol.api.descriptor.Type1DescriptorLayout.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.CoreConstants.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.CoreId.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.L2FrameType.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.L3FrameType.*;
-import static com.slytechs.jnet.protocol.tcpip.constants.L4FrameType.*;
+import static com.slytechs.jnet.protocol.api.core.L2FrameType.*;
+import static com.slytechs.jnet.protocol.api.core.L3FrameType.*;
+import static com.slytechs.jnet.protocol.api.core.L4FrameType.*;
+import static com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants.*;
+import static com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreId.*;
 
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
-import com.slytechs.jnet.protocol.tcpip.constants.CoreConstants;
-import com.slytechs.jnet.protocol.tcpip.constants.L2FrameType;
-import com.slytechs.jnet.protocol.tcpip.constants.L3FrameType;
-import com.slytechs.jnet.protocol.tcpip.constants.L4FrameType;
-import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.core.L2FrameType;
+import com.slytechs.jnet.protocol.api.core.L3FrameType;
+import com.slytechs.jnet.protocol.api.core.L4FrameType;
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.constants.CoreConstants;
 
 /**
  * The Class Type1Descriptor.
@@ -158,7 +160,7 @@ public class Type1Descriptor extends PacketDescriptor {
 	 * Byte size.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#byteSize()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#byteSize()
 	 */
 	@Override
 	public int byteSize() {
@@ -169,7 +171,7 @@ public class Type1Descriptor extends PacketDescriptor {
 	 * Timestamp.
 	 *
 	 * @return the long
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#timestamp()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#timestamp()
 	 */
 	@Override
 	public long timestamp() {
@@ -180,18 +182,18 @@ public class Type1Descriptor extends PacketDescriptor {
 	 * Capture length.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#captureLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#captureLength()
 	 */
 	@Override
 	public int captureLength() {
-		return CAPLEN.getUnsignedShort(buffer());
+		return Type1DescriptorLayout.CAPLEN.getUnsignedShort(buffer());
 	}
 
 	/**
 	 * Wire length.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#wireLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#wireLength()
 	 */
 	@Override
 	public int wireLength() {
@@ -245,7 +247,7 @@ public class Type1Descriptor extends PacketDescriptor {
 	 * @param toAppendTo the b
 	 * @param detail     the detail
 	 * @return the string builder
-	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
+	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
 	 *      com.slytechs.jnet.jnetruntime.util.Detail)
 	 */
 	@Override

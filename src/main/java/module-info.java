@@ -45,24 +45,25 @@ module com.slytechs.jnet.protocol.api {
 	exports com.slytechs.jnet.protocol.api.meta;
 	exports com.slytechs.jnet.protocol.api.packet;
 	exports com.slytechs.jnet.protocol.api.pack;
-	exports com.slytechs.jnet.protocol.tcpip;
-	exports com.slytechs.jnet.protocol.tcpip.link;
-	exports com.slytechs.jnet.protocol.tcpip.spanning;
-	exports com.slytechs.jnet.protocol.tcpip.network;
-	exports com.slytechs.jnet.protocol.tcpip.transport;
-//	exports com.slytechs.jnet.protocol.tcpip.discovery;
-//	exports com.slytechs.jnet.protocol.tcpip.routing;
-//	exports com.slytechs.jnet.protocol.tcpip.redundancy;
-//	exports com.slytechs.jnet.protocol.tcpip.datacenter;
-	exports com.slytechs.jnet.protocol.tcpip.constants;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ppp;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.stp;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
+//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.discovery;
+//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.routing;
+//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.redundancy;
+//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.datacenter;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.constants;
+
+	/* Private API */
+	exports com.slytechs.jnet.protocol.api.pack.impl to
+			com.slytechs.jnet.protocol.tcpip;
 
 	requires transitive com.slytechs.jnet.platform.api;
-
 	requires java.logging;
 
+	/* Used for loading protocol packs on the class path */
 	uses com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
-
-	provides com.slytechs.jnet.protocol.api.pack.ProtocolModuleService
-			with com.slytechs.jnet.protocol.tcpip.impl.TcpipModuleService;
 
 }
