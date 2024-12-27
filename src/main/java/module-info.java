@@ -17,8 +17,8 @@
  */
 
 /**
- * Base protocol settingsSupport for packet dissection, protocol classification, IP
- * fragment reassembly, UDP and TCP stream reassembly.
+ * Base protocol settingsSupport for packet dissection, protocol classification,
+ * IP fragment reassembly, UDP and TCP stream reassembly.
  * <p>
  * The following protocols are supported:
  * </p>
@@ -59,4 +59,10 @@ module com.slytechs.jnet.protocol.api {
 	requires transitive com.slytechs.jnet.platform.api;
 
 	requires java.logging;
+
+	uses com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
+
+	provides com.slytechs.jnet.protocol.api.pack.ProtocolModuleService
+			with com.slytechs.jnet.protocol.tcpip.impl.TcpipModuleService;
+
 }

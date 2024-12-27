@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import com.slytechs.jnet.platform.api.util.Reflections;
@@ -44,6 +45,16 @@ import com.slytechs.jnet.protocol.tcpip.constants.PacketDescriptorType;
  * @param <E> the element type
  */
 public abstract class Pack<E extends Enum<? extends HeaderInfo>> {
+
+	public static List<ProtocolModule> listServiceModules() {
+		var serviceModules = ServiceLoader.load(ProtocolModuleService.class)
+				.stream()
+				.map(s -> s.get())
+				.flatMap(s -> s.listModules().stream())
+				.toList();
+
+		return serviceModules;
+	}
 
 	/**
 	 * An empty protocol pack used as place holder.
@@ -492,10 +503,15 @@ public abstract class Pack<E extends Enum<? extends HeaderInfo>> {
 		if (packTable[protocolPackTable.ordinal()].isPackLoaded())
 			return true;
 
-		String moduleName = protocolPackTable.getPackModuleName();
-		String className = protocolPackTable.getPackClassName();
+		/* Use ProtocolModuleService SPI to locate available all modules */
+		var serviceModules = listServiceModules();
+		Pack<?> pack = serviceModules.stream()
+				.filter(m -> m.isAvailable()) // Make sure its not a placeholder
+				.filter(m -> protocolPackTable.equals(m.packId()))
+				.map(m -> (Pack<?>) m.loadPack())
+				.findAny()
+				.orElse(null);
 
-		Pack<?> pack = loadPackClass(moduleName, className);
 		if (pack == null)
 			return false;
 
@@ -516,12 +532,14 @@ public abstract class Pack<E extends Enum<? extends HeaderInfo>> {
 	}
 
 	/**
-	 * Load pack class.
+	 * Load pack class. Deprecated, replaced by ProtocolModuleService SPI loader.
 	 *
 	 * @param moduleName the module name
 	 * @param className  the class name
 	 * @return the pack
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static Pack<?> loadPackClass(String moduleName, String className) {
 		try {
 

@@ -79,6 +79,9 @@ public enum ProtocolPackTable implements PackId {
 	OPTS("options"),
 
 	/** The media. */
+	TCPIP("tcpip"),
+
+	/** The media. */
 	MEDIA("media"),
 
 	/** The web. */
@@ -109,25 +112,28 @@ public enum ProtocolPackTable implements PackId {
 	public static final int PACK_ID_OPTIONS   = 1  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_MEDIA. */
-	public static final int PACK_ID_MEDIA     = 2  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_TCPIP     = 2  << PACK_SHIFT_PACK;
+	
+	/** The Constant PACK_ID_MEDIA. */
+	public static final int PACK_ID_MEDIA     = 3  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_WEB. */
-	public static final int PACK_ID_WEB       = 3  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_WEB       = 4  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_TELCO. */
-	public static final int PACK_ID_TELCO     = 4  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_TELCO     = 5  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_LTE. */
-	public static final int PACK_ID_LTE       = 5  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_LTE       = 6  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_DB. */
-	public static final int PACK_ID_DB        = 6  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_DB        = 7  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_MS. */
-	public static final int PACK_ID_MS        = 7  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_MS        = 8  << PACK_SHIFT_PACK;
 	
 	/** The Constant PACK_ID_AAA. */
-	public static final int PACK_ID_AAA       = 8  << PACK_SHIFT_PACK;
+	public static final int PACK_ID_AAA       = 9  << PACK_SHIFT_PACK;
 	// @formatter:on
 
 	/** The Constant CORE_MODULE. */
