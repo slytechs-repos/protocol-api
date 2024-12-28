@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.protocol.api.meta.Meta;
+import com.slytechs.jnet.protocol.api.meta.MetaException;
 
 /**
  * The Class ReflectedMethod.
@@ -33,7 +35,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class ReflectedMethod extends ReflectedMember {
+public class ReflectedMethod extends ReflectedMember {
 	
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ReflectedMethod.class.getPackageName());
@@ -122,7 +124,7 @@ class ReflectedMethod extends ReflectedMember {
 	 * @param target the target
 	 * @param args   the args
 	 * @return the value
-	 * @see com.slytechs.jnet.protocol.api.meta.ReflectedMember#getValue(java.lang.Object,
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember#getValue(java.lang.Object,
 	 *      java.lang.Object[])
 	 */
 	@Override
@@ -144,7 +146,7 @@ class ReflectedMethod extends ReflectedMember {
 	 *
 	 * @param target the target
 	 * @param args   the args
-	 * @see com.slytechs.jnet.protocol.api.meta.ReflectedMember#setValue(java.lang.Object,
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember#setValue(java.lang.Object,
 	 *      java.lang.Object[])
 	 */
 	@Override
@@ -164,7 +166,7 @@ class ReflectedMethod extends ReflectedMember {
 	 * Gets the value type.
 	 *
 	 * @return the value type
-	 * @see com.slytechs.jnet.protocol.api.meta.ReflectedMember#getValueType()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember#getValueType()
 	 */
 	@Override
 	public Class<?> getValueType() {
@@ -175,7 +177,7 @@ class ReflectedMethod extends ReflectedMember {
 	 * Gets the member.
 	 *
 	 * @return the member
-	 * @see com.slytechs.jnet.protocol.api.meta.ReflectedMember#getMember()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember#getMember()
 	 */
 	@Override
 	protected Member getMember() {
@@ -183,7 +185,7 @@ class ReflectedMethod extends ReflectedMember {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.ReflectedMember#isClassMethod()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember#isClassMethod()
 	 */
 	@Override
 	public boolean isClassMethod() {

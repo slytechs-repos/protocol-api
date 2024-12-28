@@ -15,13 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
 /**
  * Map based meta context.
@@ -66,7 +66,7 @@ public class MapMetaContext
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the v
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#get(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -95,7 +95,7 @@ public class MapMetaContext
 	 * Capacity.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#capacity()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#capacity()
 	 */
 	@Override
 	public int capacity() {
@@ -126,7 +126,7 @@ public class MapMetaContext
 	 * Size.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#size()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
 	 */
 	@Override
 	public int size() {
@@ -140,7 +140,7 @@ public class MapMetaContext
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -152,7 +152,7 @@ public class MapMetaContext
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

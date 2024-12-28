@@ -27,6 +27,13 @@ import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.collection.IntArrayList;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
+import com.slytechs.jnet.protocol.api.meta.impl.DisplaysInfo;
+import com.slytechs.jnet.protocol.api.meta.impl.Global;
+import com.slytechs.jnet.protocol.api.meta.impl.MapMetaContext;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaPath;
 
 /**
  * The Class PacketFormat.
@@ -113,7 +120,7 @@ public final class PacketFormat extends MetaFormat {
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {
@@ -127,7 +134,7 @@ public final class PacketFormat extends MetaFormat {
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -452,7 +459,7 @@ public final class PacketFormat extends MetaFormat {
 	 * @param toAppendTo the to append to
 	 * @param detail     the detail
 	 * @return the string builder
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaFormat#formatMeta(com.slytechs.jnet.protocol.api.meta.MetaElement,
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaFormat#formatMeta(com.slytechs.jnet.protocol.api.meta.impl.MetaElement,
 	 *      java.lang.StringBuilder, Detail)
 	 */
 	@Override
@@ -561,7 +568,7 @@ public final class PacketFormat extends MetaFormat {
 	 * Name.
 	 *
 	 * @return the string
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#name()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#name()
 	 */
 	@Override
 	public String name() {
@@ -572,7 +579,7 @@ public final class PacketFormat extends MetaFormat {
 	 * Parent.
 	 *
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#parent()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#parent()
 	 */
 	@Override
 	public MetaDomain parent() {

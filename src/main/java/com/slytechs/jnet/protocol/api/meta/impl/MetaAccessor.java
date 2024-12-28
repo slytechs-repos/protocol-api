@@ -15,11 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
+
+import com.slytechs.jnet.protocol.api.meta.MetaField;
 
 /**
- * The Interface MetaInfoType.
+ * The Interface MetaAccessor.
  */
-public interface MetaInfoType {
+public interface MetaAccessor {
+
+	/**
+	 * Gets the field.
+	 *
+	 * @param path the path
+	 * @return the field
+	 */
+	MetaField getField(MetaPath path);
 
 }

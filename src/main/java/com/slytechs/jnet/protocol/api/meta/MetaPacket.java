@@ -34,7 +34,12 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderFactory;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
+import com.slytechs.jnet.protocol.api.meta.impl.Global;
+import com.slytechs.jnet.protocol.api.meta.impl.MapMetaContext;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
+import com.slytechs.jnet.protocol.api.meta.impl.ReflectedClass;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
 
@@ -253,7 +258,7 @@ public final class MetaPacket
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the v
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#get(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -269,7 +274,7 @@ public final class MetaPacket
 	 * Size.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#size()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
 	 */
 	@Override
 	public int size() {
@@ -324,7 +329,7 @@ public final class MetaPacket
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -340,7 +345,7 @@ public final class MetaPacket
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

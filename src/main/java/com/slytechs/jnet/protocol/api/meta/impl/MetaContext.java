@@ -15,11 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+
+import com.slytechs.jnet.protocol.api.meta.MetaField;
 
 /**
  * The Interface MetaContext.
@@ -179,7 +181,7 @@ public interface MetaContext extends MetaDomain {
 			 * Capacity.
 			 *
 			 * @return the int
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#capacity()
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#capacity()
 			 */
 			@Override
 			default int capacity() {
@@ -193,7 +195,7 @@ public interface MetaContext extends MetaDomain {
 			 * @param <V> the value type
 			 * @param key the key
 			 * @return the v
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#get(java.lang.Object)
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
 			 */
 			@Override
 			default <K, V> V get(K key) {
@@ -205,7 +207,7 @@ public interface MetaContext extends MetaDomain {
 			 *
 			 * @param name the name
 			 * @return the field
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#getField(java.lang.String)
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#getField(java.lang.String)
 			 */
 			@Override
 			default MetaField getField(String name) {
@@ -220,7 +222,7 @@ public interface MetaContext extends MetaDomain {
 			 * @param key  the key
 			 * @param func the func
 			 * @return the or compute
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#getOrCompute(java.lang.Object,
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#getOrCompute(java.lang.Object,
 			 *      java.util.function.Function)
 			 */
 			@Override
@@ -232,7 +234,7 @@ public interface MetaContext extends MetaDomain {
 			 * Remaining.
 			 *
 			 * @return the int
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#remaining()
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#remaining()
 			 */
 			@Override
 			default int remaining() {
@@ -246,7 +248,7 @@ public interface MetaContext extends MetaDomain {
 			 * @param <V>   the value type
 			 * @param key   the key
 			 * @param value the value
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#set(java.lang.Object,
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#set(java.lang.Object,
 			 *      java.lang.Object)
 			 */
 			@Override
@@ -258,7 +260,7 @@ public interface MetaContext extends MetaDomain {
 			 * Size.
 			 *
 			 * @return the int
-			 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#size()
+			 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
 			 */
 			@Override
 			default int size() {

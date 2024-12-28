@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,10 @@ import com.slytechs.jnet.platform.api.util.Reflections;
 import com.slytechs.jnet.platform.api.util.json.Json;
 import com.slytechs.jnet.platform.api.util.json.JsonException;
 import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.protocol.api.meta.Display;
+import com.slytechs.jnet.protocol.api.meta.Displays;
+import com.slytechs.jnet.protocol.api.meta.MetaException;
+import com.slytechs.jnet.protocol.api.meta.MetaFormat;
 
 /**
  * The Class DisplayUtil.
@@ -38,7 +42,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-final class DisplayUtil {
+public final class DisplayUtil {
 
 	/**
 	 * The Replacing.

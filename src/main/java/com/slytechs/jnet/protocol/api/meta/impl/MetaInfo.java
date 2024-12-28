@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.OptionalInt;
@@ -25,6 +25,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
 import com.slytechs.jnet.platform.api.util.json.JsonObjectBuilder;
 import com.slytechs.jnet.platform.api.util.json.JsonValue;
 import com.slytechs.jnet.platform.api.util.json.JsonValue.ValueType;
+import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.Formatter;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 
@@ -44,7 +45,7 @@ public class MetaInfo implements Comparable<MetaInfo>, MetaInfoType {
 	 * @param jsonDefaults the json defaults
 	 * @return the meta info
 	 */
-	static MetaInfo parse(AnnotatedElement element, String name, JsonObject jsonDefaults) {
+	public static MetaInfo parse(AnnotatedElement element, String name, JsonObject jsonDefaults) {
 
 		if (!element.isAnnotationPresent(Meta.class) && jsonDefaults == null)
 			throw new IllegalArgumentException("Meta resource or direct annotation not found [%s]"
@@ -196,7 +197,7 @@ public class MetaInfo implements Comparable<MetaInfo>, MetaInfoType {
 	 *
 	 * @return the abbr
 	 */
-	protected String abbr() {
+	public String abbr() {
 		return abbr;
 	}
 
@@ -315,7 +316,7 @@ public class MetaInfo implements Comparable<MetaInfo>, MetaInfoType {
 	/**
 	 * @param intRefResolver
 	 */
-	void linkIntReferenceResolver(IntMetaResolver intRefResolver) {
+	public void linkIntReferenceResolver(IntMetaResolver intRefResolver) {
 		if (metaAnnotation != null) {
 			if (metaAnnotation.offset() == -1)
 				this.byteOffset = intRefResolver.toIntSuplier(metaAnnotation.offsetRef());

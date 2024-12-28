@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 
 import com.slytechs.jnet.platform.api.util.json.JsonException;
 import com.slytechs.jnet.platform.api.util.json.JsonObject;
+import com.slytechs.jnet.protocol.api.meta.Meta;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
 /**
  * The Class ReflectedClass.
@@ -40,14 +42,14 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class ReflectedClass extends ReflectedComponent {
+public class ReflectedClass extends ReflectedComponent {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ReflectedClass.class.getPackageName());
 
 	private static final Function<Class<?>, ReflectedClass> STORAGE = cl -> Global.compute(cl, ReflectedClass::parse);
 
-	static ReflectedClass parse(Class<?> cl) {
+	public static ReflectedClass parse(Class<?> cl) {
 
 		ReflectedClass sup = getReflectedParentClass(cl);
 
@@ -69,14 +71,14 @@ class ReflectedClass extends ReflectedComponent {
 		return STORAGE.apply(supCl);
 	}
 
-	static ReflectedClass parseClassAndMerge(Class<?> cl, ReflectedClass parentReflectedClass) {
+	public static ReflectedClass parseClassAndMerge(Class<?> cl, ReflectedClass parentReflectedClass) {
 
 		ReflectedClass unmerged = parseClassNoMerge(cl);
 
 		return mergeReflectedClasses(parentReflectedClass, unmerged, unmerged.getMetaType(MetaInfo.class));
 	}
 
-	static ReflectedClass mergeReflectedClasses(ReflectedClass baseClass, ReflectedClass subClass, MetaInfo metaInfo) {
+	public static ReflectedClass mergeReflectedClasses(ReflectedClass baseClass, ReflectedClass subClass, MetaInfo metaInfo) {
 		Map<String, ReflectedMember> rm1 = baseClass.fieldsMap;
 		Map<String, ReflectedMember> rm2 = subClass.fieldsMap;
 
@@ -104,7 +106,7 @@ class ReflectedClass extends ReflectedComponent {
 	 * @param cl the cl
 	 * @return the reflected class
 	 */
-	static ReflectedClass parseClassNoMerge(Class<?> cl) {
+	public static ReflectedClass parseClassNoMerge(Class<?> cl) {
 		JsonObject jsonConf = null;
 		JsonObject jsonFields = null;
 
@@ -136,7 +138,7 @@ class ReflectedClass extends ReflectedComponent {
 	 * @return the json object
 	 * @throws JsonException the json exception
 	 */
-	static JsonObject readMetaResource(String resourceName) throws JsonException {
+	public static JsonObject readMetaResource(String resourceName) throws JsonException {
 		JsonObject conf = new MetaResourceShortformReader(resourceName)
 				.toJsonObj();
 

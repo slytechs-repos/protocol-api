@@ -15,10 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.common;
+package com.slytechs.jnet.protocol.api.common.impl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
 
 /**
  * The Class ReflectedHeaderSupplier.
@@ -27,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class ReflectedHeaderSupplier implements HeaderSupplier {
+public class ReflectedHeaderSupplier implements HeaderSupplier {
 
 	/** The module name. */
 	private final String moduleName;

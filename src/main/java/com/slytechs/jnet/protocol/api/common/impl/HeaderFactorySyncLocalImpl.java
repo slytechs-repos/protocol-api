@@ -15,10 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.common;
+package com.slytechs.jnet.protocol.api.common.impl;
 
 import static com.slytechs.jnet.protocol.api.pack.PackId.*;
 
+import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.common.HeaderFactory;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**
@@ -28,7 +30,7 @@ import com.slytechs.jnet.protocol.api.pack.PackId;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class HeaderFactorySyncLocalImpl implements HeaderFactory {
+public class HeaderFactorySyncLocalImpl implements HeaderFactory {
 
 	/** The allocator. */
 	private final HeaderFactory allocator = HeaderFactory.newInstance();

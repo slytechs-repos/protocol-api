@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.Objects;
 
@@ -70,7 +70,7 @@ public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
 	 * Name.
 	 *
 	 * @return the string
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#name()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#name()
 	 */
 	@Override
 	public final String name() {
@@ -81,7 +81,7 @@ public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
 	 * Parent.
 	 *
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#parent()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#parent()
 	 */
 	@Override
 	public final MetaDomain parent() {

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +31,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
 import com.slytechs.jnet.platform.api.util.json.JsonObjectBuilder;
 import com.slytechs.jnet.platform.api.util.json.JsonString;
 import com.slytechs.jnet.platform.api.util.json.JsonValue;
+import com.slytechs.jnet.protocol.api.meta.Resolver;
 import com.slytechs.jnet.protocol.api.meta.Resolver.ResolverType;
 
 /**
@@ -60,7 +61,7 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 	 *
 	 * @param sourceJsonObj the source json obj
 	 * @return the json object
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaResourceReader#process(com.slytechs.jnet.jnetruntime.internal.json.JsonObject)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaResourceReader#process(com.slytechs.jnet.jnetruntime.internal.json.JsonObject)
 	 */
 	@Override
 	protected JsonObject process(JsonObject sourceJsonObj) {

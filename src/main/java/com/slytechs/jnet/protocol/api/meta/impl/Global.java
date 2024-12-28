@@ -15,17 +15,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.function.Function;
 
 /**
  * The Class Global.
  */
-class Global extends MapMetaContext {
+public class Global extends MapMetaContext {
 
 	/** The Constant GLOBAL_STATIC_CTX. */
-	static final Global GLOBAL_STATIC_CTX = new Global();
+	public static final Global GLOBAL_STATIC_CTX = new Global();
 
 	/**
 	 * Instantiates a new global.

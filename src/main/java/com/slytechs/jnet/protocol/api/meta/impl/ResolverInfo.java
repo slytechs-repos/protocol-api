@@ -15,41 +15,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.lang.reflect.AnnotatedElement;
 
 import com.slytechs.jnet.platform.api.util.json.JsonArray;
-import com.slytechs.jnet.platform.api.util.json.JsonArrayBuilder;
-import com.slytechs.jnet.platform.api.util.json.JsonObject;
-import com.slytechs.jnet.platform.api.util.json.JsonValue;
-import com.slytechs.jnet.platform.api.util.json.JsonValue.ValueType;
+import com.slytechs.jnet.protocol.api.meta.MetaValue;
+import com.slytechs.jnet.protocol.api.meta.Resolver;
+import com.slytechs.jnet.protocol.api.meta.Resolvers;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 
 /**
- * The ResolversInfo.
+ * The Class ResolverInfo.
  *
- * @param resolvers a list of value resolvers
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
+ * @author Mark Bednarczyk
  */
-public record ResolversInfo(ValueResolver... resolvers) implements MetaInfoType {
+public class ResolverInfo implements MetaInfoType {
 
 	/**
 	 * Parses the.
 	 *
-	 * @param element      the element
-	 * @param name         the name
-	 * @param jsonDefaults the json defaults
-	 * @return the resolvers info
+	 * @param element   the element
+	 * @param name      the name
+	 * @param jsonArray the json array
+	 * @return the resolver info
 	 */
-	static ResolversInfo parse(AnnotatedElement element, String name, JsonObject jsonDefaults) {
-		JsonValue jsonValue = null;
-		if (jsonDefaults != null)
-			jsonValue = jsonDefaults.get("resolver");
-
-		if (jsonValue != null)
-			return parseJson(jsonValue);
+	static ResolverInfo parse(AnnotatedElement element, String name, JsonArray jsonArray) {
+		if (jsonArray != null)
+			return parseJson(jsonArray);
 
 		return parseAnnotations(element);
 	}
@@ -58,9 +53,9 @@ public record ResolversInfo(ValueResolver... resolvers) implements MetaInfoType 
 	 * Parses the annotations.
 	 *
 	 * @param element the element
-	 * @return the resolvers info
+	 * @return the resolver info
 	 */
-	private static ResolversInfo parseAnnotations(AnnotatedElement element) {
+	private static ResolverInfo parseAnnotations(AnnotatedElement element) {
 		Resolvers multiple = element.getAnnotation(Resolvers.class);
 		Resolver single = element.getAnnotation(Resolver.class);
 
@@ -71,40 +66,48 @@ public record ResolversInfo(ValueResolver... resolvers) implements MetaInfoType 
 			for (int i = 0; i < resolversAnnotation.length; i++)
 				resolvers[i] = resolversAnnotation[i].value().getResolver();
 
-			return new ResolversInfo(resolvers);
+			return new ResolverInfo(resolvers);
 
 		} else if (single != null)
-			return new ResolversInfo(single.value().getResolver());
+			return new ResolverInfo(single.value().getResolver());
 
-		return new ResolversInfo();
+		return new ResolverInfo();
 	}
 
 	/**
 	 * Parses the json.
 	 *
-	 * @param jsonValue the json value
-	 * @return the resolvers info
+	 * @param jsonArray the json array
+	 * @return the resolver info
 	 */
-	private static ResolversInfo parseJson(JsonValue jsonValue) {
-
-		JsonArray jsonArray;
-		if (jsonValue.getValueType() == ValueType.ARRAY) {
-			jsonArray = (JsonArray) jsonValue;
-		} else {
-			jsonArray = new JsonArrayBuilder()
-					.add(jsonValue)
-					.build();
-		}
-
+	private static ResolverInfo parseJson(JsonArray jsonArray) {
 		ValueResolver[] resolvers = new ValueResolver[jsonArray.size()];
-
 		for (int i = 0; i < jsonArray.size(); i++) {
-			resolvers[i] = Resolver.ResolverType
-					.valueOf(jsonArray.getString(i))
-					.getResolver();
+
 		}
 
-		return new ResolversInfo(resolvers);
-
+		return new ResolverInfo(resolvers);
 	}
+
+	/** The resolvers. */
+	private final ValueResolver[] resolvers;
+
+	/**
+	 * Instantiates a new resolver info.
+	 *
+	 * @param resolvers the resolvers
+	 */
+	private ResolverInfo(ValueResolver... resolvers) {
+		this.resolvers = resolvers;
+	}
+
+	/**
+	 * Gets the value resolvers.
+	 *
+	 * @return the value resolvers
+	 */
+	public ValueResolver[] getValueResolvers() {
+		return resolvers;
+	}
+
 }

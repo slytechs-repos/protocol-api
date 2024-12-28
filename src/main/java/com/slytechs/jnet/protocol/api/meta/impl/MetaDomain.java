@@ -15,10 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.Optional;
 import java.util.function.Function;
+
+import com.slytechs.jnet.protocol.api.meta.MetaField;
 
 /**
  * A meta domain. A domain is a namespace which may contains ATV pairs. A

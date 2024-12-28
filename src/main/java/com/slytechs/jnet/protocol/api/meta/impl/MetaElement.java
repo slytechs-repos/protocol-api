@@ -15,10 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
 /**
  * The Class MetaElement.
@@ -120,7 +120,7 @@ public abstract class MetaElement
 	 * Name.
 	 *
 	 * @return the string
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#name()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#name()
 	 */
 	@Override
 	public final String name() {
@@ -149,7 +149,7 @@ public abstract class MetaElement
 	 * Parent.
 	 *
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#parent()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#parent()
 	 */
 	@Override
 	public MetaDomain parent() {
@@ -169,7 +169,7 @@ public abstract class MetaElement
 				+ " [name=" + name() + "]";
 	}
 
-	void setIntReferenceResolver(IntMetaResolver intRefResolver) {
+	public void setIntReferenceResolver(IntMetaResolver intRefResolver) {
 		var meta = this.meta.getMetaType(MetaInfo.class);
 
 		meta.linkIntReferenceResolver(intRefResolver);

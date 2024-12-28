@@ -15,12 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.common;
+package com.slytechs.jnet.protocol.api.common.impl;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
+import com.slytechs.jnet.protocol.api.common.Header;
+import com.slytechs.jnet.protocol.api.common.HeaderFactory;
 import com.slytechs.jnet.protocol.api.pack.Pack;
+import com.slytechs.jnet.protocol.api.pack.PackHeaderFactory;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
 
@@ -31,7 +34,7 @@ import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class HeaderFactoryAllocator implements HeaderFactory {
+public class HeaderFactoryAllocator implements HeaderFactory {
 
 	/** The table. */
 	@SuppressWarnings("unchecked")
@@ -66,7 +69,7 @@ class HeaderFactoryAllocator implements HeaderFactory {
 		if (entry == null || entry.get() == null) {
 			int packId = PackId.decodePackId(id);
 
-			entry = table[ordinal] = new WeakReference<>(new PackHeaderFactory(packId, pack.toArray()));
+			entry = table[ordinal] = new WeakReference<HeaderFactory>(new PackHeaderFactory());
 		}
 
 		return entry.get();
@@ -78,7 +81,8 @@ class HeaderFactoryAllocator implements HeaderFactory {
 	 * @param primaryId   the primary id
 	 * @param extensionId the extension id
 	 * @return the extension
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderFactory#getExtension(int, int)
+	 * @see com.slytechs.jnet.protocol.api.common.HeaderFactory#getExtension(int,
+	 *      int)
 	 */
 	@Override
 	public Header getExtension(int primaryId, int extensionId) {

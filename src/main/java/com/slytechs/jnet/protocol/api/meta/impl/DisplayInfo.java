@@ -15,13 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.function.Function;
 
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.json.JsonObject;
 import com.slytechs.jnet.platform.api.util.json.JsonString;
+import com.slytechs.jnet.protocol.api.meta.Display;
 
 /**
  * The DisplayInfo.

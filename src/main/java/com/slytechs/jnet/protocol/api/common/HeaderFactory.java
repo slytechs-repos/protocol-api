@@ -17,6 +17,9 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
+import com.slytechs.jnet.protocol.api.common.impl.HeaderFactoryAllocator;
+import com.slytechs.jnet.protocol.api.common.impl.HeaderFactorySyncLocalImpl;
+
 /**
  * A factory for creating Header objects based on numerical IDs.
  *

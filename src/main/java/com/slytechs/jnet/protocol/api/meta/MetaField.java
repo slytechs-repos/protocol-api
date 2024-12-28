@@ -24,6 +24,12 @@ import java.util.stream.Stream;
 
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
+import com.slytechs.jnet.protocol.api.meta.impl.DisplaysInfo;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
+import com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember;
+import com.slytechs.jnet.protocol.api.meta.impl.ResolversInfo;
 
 /**
  * The Class MetaField.
@@ -150,7 +156,7 @@ public final class MetaField extends MetaElement {
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -165,7 +171,7 @@ public final class MetaField extends MetaElement {
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

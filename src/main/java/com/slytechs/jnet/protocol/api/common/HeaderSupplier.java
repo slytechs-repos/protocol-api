@@ -17,6 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
+import com.slytechs.jnet.protocol.api.common.impl.ReflectedHeaderSupplier;
+
 /**
  * A functional interface to allocate a new instance of a protocol header.
  *

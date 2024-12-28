@@ -15,9 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
-import com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped;
+import com.slytechs.jnet.protocol.api.meta.LookupField;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
 /**
  * The Class AbstractMetaMapped.
@@ -57,7 +58,7 @@ public abstract class AbstractMetaMapped extends AbstractMetaContext implements 
 	 * Capacity.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#capacity()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#capacity()
 	 */
 	@Override
 	public int capacity() {
@@ -71,7 +72,7 @@ public abstract class AbstractMetaMapped extends AbstractMetaContext implements 
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the v
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#get(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -83,7 +84,7 @@ public abstract class AbstractMetaMapped extends AbstractMetaContext implements 
 	 * Size.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaContext.MetaMapped#size()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
 	 */
 	@Override
 	public int size() {

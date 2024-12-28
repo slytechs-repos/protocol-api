@@ -24,6 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueFormatter;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaValues;
 
 /**
  * The Interface Meta.
