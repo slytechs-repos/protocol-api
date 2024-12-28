@@ -17,35 +17,43 @@
  */
 package com.slytechs.jnet.protocol.api.address;
 
-import java.util.function.IntSupplier;
-
 /**
- * A constant network address type.
+ * Enumeration defining various types of network addresses. This enum provides
+ * constants representing common address types such as IPv4, IPv6, MAC, and
+ * more. Each type can be represented as an integer value corresponding to its
+ * ordinal position.
+ * 
+ * <p>
+ * Implements {@link java.util.function.IntSupplier} to supply the ordinal value
+ * as an integer.
+ * </p>
+ * 
+ * @author Sly Technologies Inc.
  */
-public enum NetAddressType implements IntSupplier {
+public enum NetAddressType implements java.util.function.IntSupplier {
 
-	/** The ip4. */
+	/** IPv4 address type. */
 	IPv4,
 
-	/** The ip6. */
+	/** IPv6 address type. */
 	IPv6,
 
-	/** The mac. */
+	/** MAC (Media Access Control) address type. */
 	MAC,
 
-	/** The mac64. */
+	/** MAC-64 (64-bit MAC) address type. */
 	MAC64,
 
-	/** The ipx. */
+	/** IPX (Internetwork Packet Exchange) address type. */
 	IPX,
 
-	/** The appletalk. */
-	APPLETALK,;
+	/** AppleTalk address type. */
+	APPLETALK;
 
 	/**
-	 * Gets the as int.
+	 * Returns the ordinal value of the address type as an integer.
 	 *
-	 * @return the as int
+	 * @return the ordinal value of this address type
 	 * @see java.util.function.IntSupplier#getAsInt()
 	 */
 	@Override

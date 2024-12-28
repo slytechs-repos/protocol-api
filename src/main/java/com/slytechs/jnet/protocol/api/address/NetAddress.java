@@ -18,44 +18,45 @@
 package com.slytechs.jnet.protocol.api.address;
 
 /**
- * An address interface implemented by all defined core-protocol-pack network
- * addresses.
- *
+ * Interface representing a network address. This interface is implemented by
+ * all core-protocol-pack network addresses, providing uniform methods to access
+ * address details such as type, binary representation, and size.
+ * 
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
 public interface NetAddress {
 
 	/**
-	 * A type of address.
+	 * Retrieves the type of this network address.
 	 *
 	 * @return the address type constant
 	 */
 	NetAddressType type();
 
 	/**
-	 * A binary representation of this address.
+	 * Returns a binary representation of this address.
 	 * <p>
-	 * The length of the returned array depends on type of of address implementing
-	 * this interface and its native address size in bytes.
+	 * The length of the returned array depends on the type of address implementing
+	 * this interface and its native size in bytes.
 	 *
 	 * @return an array containing this address
 	 */
 	byte[] toArray();
 
 	/**
-	 * Address size in bits.
+	 * Retrieves the size of this address in bits.
 	 *
-	 * @return number of bits
+	 * @return the number of bits in the address
 	 */
 	default int bitSize() {
 		return byteSize() << 3;
 	}
 
 	/**
-	 * Address size in bytes.
+	 * Retrieves the size of this address in bytes.
 	 *
-	 * @return the number of bytes
+	 * @return the number of bytes in the address
 	 */
 	int byteSize();
 }
