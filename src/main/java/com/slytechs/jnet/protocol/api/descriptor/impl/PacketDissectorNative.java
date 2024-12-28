@@ -87,10 +87,13 @@ public class PacketDissectorNative extends AbstractPacketDissector {
 
 	private final MemorySegment address;
 
+	private final PacketDescriptorType descriptorType;
+
 	/**
 	 * Instantiates a new native dissector.
 	 */
 	public PacketDissectorNative(PacketDescriptorType type) {
+		this.descriptorType = type;
 		this.address = pkt_allocate_dissector.invokeObj(type.getAsInt());
 	}
 
@@ -168,4 +171,11 @@ public class PacketDissectorNative extends AbstractPacketDissector {
 		return true;
 	}
 
+	/**
+	 * @see com.slytechs.jnet.protocol.api.descriptor.Dissector#descriptorType()
+	 */
+	@Override
+	public PacketDescriptorType descriptorType() {
+		return descriptorType;
+	}
 }

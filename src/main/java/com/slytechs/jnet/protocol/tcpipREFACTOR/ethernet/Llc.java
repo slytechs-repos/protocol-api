@@ -22,6 +22,7 @@ import java.util.concurrent.locks.Lock;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.impl.LlcLayout;
 
 /**
  * Logical Link Control header (LLC).

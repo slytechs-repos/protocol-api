@@ -18,19 +18,43 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.sctp;
 
 /**
+ * Interface defining constants for the Stream Control Transmission Protocol
+ * (SCTP). SCTP is a transport-layer protocol used for message-oriented
+ * communication with support for multihoming and multistreaming.
  * 
- *
+ * <p>
+ * These constants include header lengths and field offsets specific to SCTP
+ * packet headers.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class SctpConstants {
+public interface SctpConstants {
 
-    public static final int SCTP_HEADER_LEN = 12;
-    public static final int SCTP_FIELD_SRC_PORT = 0;
-    public static final int SCTP_FIELD_DST_PORT = 2;
-    public static final int SCTP_FIELD_VERIFICATION_TAG = 4;
-    public static final int SCTP_FIELD_CHECKSUM = 8;
+	/**
+	 * Length of the SCTP header in bytes.
+	 */
+	int SCTP_HEADER_LEN = 12;
 
-    private SctpConstants() {
-    }
+	/**
+	 * Offset of the Source Port field in the SCTP header.
+	 */
+	int SCTP_FIELD_SRC_PORT = 0;
+
+	/**
+	 * Offset of the Destination Port field in the SCTP header.
+	 */
+	int SCTP_FIELD_DST_PORT = 2;
+
+	/**
+	 * Offset of the Verification Tag field in the SCTP header.
+	 */
+	int SCTP_FIELD_VERIFICATION_TAG = 4;
+
+	/**
+	 * Offset of the Checksum field in the SCTP header.
+	 */
+	int SCTP_FIELD_CHECKSUM = 8;
+
 }

@@ -27,6 +27,7 @@ import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.impl.Ip4Struct;
 
 /**
  * Internet Protocol Version 4 (IPv4).
@@ -240,7 +241,7 @@ public final class Ip4
 	 */
 	@Override
 	public byte[] dst(byte[] dst, int offset) {
-		buffer().get(Ip4Constants.IPv4_FIELD_DST, dst, offset, Ip4Constants.IPv4_FIELD_DST_LEN);
+		buffer().get(IpConstants.IPv4_FIELD_DST, dst, offset, IpConstants.IPv4_FIELD_DST_LEN);
 
 		return dst;
 	}
@@ -407,7 +408,7 @@ public final class Ip4
 		final int optLen = headerLength();
 
 		return new Iterator<Ip4Option>() {
-			int off = Ip4Constants.IPv4_HEADER_LEN;
+			int off = IpConstants.IPv4_HEADER_LEN;
 
 			@Override
 			public boolean hasNext() {
@@ -496,7 +497,7 @@ public final class Ip4
 	public byte[] src(byte[] dst, int offset) {
 		byte[] debug = new byte[20];
 		buffer().get(0, debug);
-		buffer().get(Ip4Constants.IPv4_FIELD_SRC, dst, offset, Ip4Constants.IPv4_FIELD_SRC_LEN);
+		buffer().get(IpConstants.IPv4_FIELD_SRC, dst, offset, IpConstants.IPv4_FIELD_SRC_LEN);
 
 		return dst;
 	}

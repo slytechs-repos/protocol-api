@@ -18,20 +18,20 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
 
 import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
 
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorType;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.impl.IpfFragmentLayout;
 
 /**
- * An IP fragment dissector which generates a IpfFragment descriptor for further
- * IPF reassembly and tracking.
+ * An IP fragment dissector which generates a IpfFragmentDescriptor descriptor
+ * for further IPF reassembly and tracking.
  * 
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
@@ -223,6 +223,14 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	@Override
 	protected boolean isDissectionSuccess() {
 		return ipIsFrag;
+	}
+
+	/**
+	 * @see com.slytechs.jnet.protocol.api.descriptor.Dissector#descriptorType()
+	 */
+	@Override
+	public DescriptorType<?> descriptorType() {
+		return IpfDescriptorType.IPF_FRAG;
 	}
 
 }

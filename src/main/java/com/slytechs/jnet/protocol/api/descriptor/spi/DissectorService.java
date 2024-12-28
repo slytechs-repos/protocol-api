@@ -20,26 +20,63 @@ package com.slytechs.jnet.protocol.api.descriptor.spi;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import com.slytechs.jnet.protocol.api.descriptor.Descriptor;
+import com.slytechs.jnet.protocol.api.descriptor.DescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.Dissector;
+import com.slytechs.jnet.protocol.api.descriptor.impl.CachedDissectorService;
 
 /**
- * 
- *
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
 public interface DissectorService {
 
-	static List<Dissector> listDissectors() {
+	static DissectorService cached() {
+		return CachedDissectorService.CACHED_SERVICE.get();
+	}
+
+	static List<Dissector> mergeAllServices() {
 
 		var dissectors = ServiceLoader.load(DissectorService.class)
 				.stream()
-				.flatMap(s -> s.get().getDissectors().stream())
+				.flatMap(s -> s.get().listDissectors().stream())
 				.toList();
 
 		return dissectors;
 	}
 
-	List<Dissector> getDissectors();
+	static <T extends Dissector> List<T> mergeServicesByType(Class<T> dissectorClass) {
 
+		@SuppressWarnings("unchecked")
+		var dissectors = ServiceLoader.load(DissectorService.class)
+				.stream()
+				.flatMap(s -> s.get().listDissectors().stream())
+				.filter(d -> dissectorClass.isAssignableFrom(d.getClass()))
+				.map(d -> (T) d)
+				.toList();
+
+		return dissectors;
+	}
+
+	List<Dissector> listDissectors();
+
+	default <T extends Dissector> List<T> listByType(Class<T> dissectorClass) {
+		@SuppressWarnings("unchecked")
+		var dissectors = listDissectors().stream()
+				.filter(d -> dissectorClass.isAssignableFrom(d.getClass()))
+				.map(d -> (T) d)
+				.toList();
+
+		return dissectors;
+	}
+
+	default <T extends Dissector> List<T> listByType(DescriptorType<? extends Descriptor> type, Class<T> dissectorClass) {
+		@SuppressWarnings("unchecked")
+		var dissectors = listDissectors().stream()
+				.filter(d -> dissectorClass.isAssignableFrom(d.getClass()))
+				.map(d -> (T) d)
+				.toList();
+
+		return dissectors;
+	}
 }

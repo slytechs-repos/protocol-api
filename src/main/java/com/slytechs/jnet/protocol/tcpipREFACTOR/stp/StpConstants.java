@@ -18,11 +18,23 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.stp;
 
 /**
+ * Interface defining constants for the Spanning Tree Protocol (STP). STP is a
+ * network protocol that ensures a loop-free topology for Ethernet networks. It
+ * prevents broadcast storms caused by network loops and is a fundamental part
+ * of network design.
  * 
- *
+ * <p>
+ * This interface includes constants related to the structure of STP headers.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class StpConstants {
-	public static final int STP_HEADER_LEN = 35;
+public interface StpConstants {
+
+	/**
+	 * Length of the STP header in bytes.
+	 */
+	int STP_HEADER_LEN = 35;
+
 }

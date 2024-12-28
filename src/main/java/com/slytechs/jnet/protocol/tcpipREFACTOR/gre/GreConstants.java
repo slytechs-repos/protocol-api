@@ -18,14 +18,38 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.gre;
 
 /**
+ * Interface defining constants for Generic Routing Encapsulation (GRE). GRE is
+ * a tunneling protocol that encapsulates various network layer protocols within
+ * virtual point-to-point connections.
  * 
- *
+ * <p>
+ * These constants include header lengths and bitmasks for various GRE features,
+ * such as checksums, keys, and sequence numbers.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class GreConstants {
-	public static final int GRE_HEADER_LEN = 2;
-	public static final int GRE_BITMASK_CHKSUM_FLAG = 0;
-	public static final int GRE_BITMASK_KEY_FLAG = 0;
-	public static final int GRE_BITMASK_SEQ_FLAG = 0;
+public interface GreConstants {
+
+	/**
+	 * Length of the GRE header in bytes.
+	 */
+	int GRE_HEADER_LEN = 2;
+
+	/**
+	 * Bitmask for the GRE checksum flag.
+	 */
+	int GRE_BITMASK_CHKSUM_FLAG = 0;
+
+	/**
+	 * Bitmask for the GRE key flag.
+	 */
+	int GRE_BITMASK_KEY_FLAG = 0;
+
+	/**
+	 * Bitmask for the GRE sequence number flag.
+	 */
+	int GRE_BITMASK_SEQ_FLAG = 0;
+
 }

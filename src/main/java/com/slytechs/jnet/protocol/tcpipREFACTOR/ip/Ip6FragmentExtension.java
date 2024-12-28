@@ -18,6 +18,7 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
 import com.slytechs.jnet.protocol.api.core.CoreId;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpFragment;
 
 /**
  * IPv6 fragmentation extension header.
@@ -131,7 +132,7 @@ public final class Ip6FragmentExtension extends Ip6ExtensionHeader implements Ip
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpFragment#hasDoNotFragment()
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpFragment#hasDoNotFragment()
 	 */
 	@Override
 	public boolean hasDoNotFragment() {

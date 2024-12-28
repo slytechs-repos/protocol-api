@@ -44,7 +44,7 @@ public class TcpipDissectorService implements DissectorService {
 	 * @see com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService#listDissector()
 	 */
 	@Override
-	public List<Dissector> getDissectors() {
+	public List<Dissector> listDissectors() {
 
 		List<Dissector> DISSECTORS = List.of(
 

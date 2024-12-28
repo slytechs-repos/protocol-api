@@ -18,19 +18,42 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.udp;
 
 /**
+ * Interface defining constants for the User Datagram Protocol (UDP). UDP is a
+ * core protocol of the Internet Protocol Suite, enabling connectionless
+ * communication between applications.
  * 
- *
+ * <p>
+ * This interface includes constants for UDP header fields and their offsets.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class UdpConstants {
+public interface UdpConstants {
 
-    public static final int UDP_HEADER_LEN = 8;
-    public static final int UDP_FIELD_SRC_PORT = 0;
-    public static final int UDP_FIELD_DST_PORT = 2;
-    public static final int UDP_FIELD_LENGTH = 4;
-    public static final int UDP_FIELD_CHECKSUM = 6;
+	/**
+	 * Length of the UDP header in bytes.
+	 */
+	int UDP_HEADER_LEN = 8;
 
-    private UdpConstants() {
-    }
+	/**
+	 * Offset of the Source Port field in the UDP header.
+	 */
+	int UDP_FIELD_SRC_PORT = 0;
+
+	/**
+	 * Offset of the Destination Port field in the UDP header.
+	 */
+	int UDP_FIELD_DST_PORT = 2;
+
+	/**
+	 * Offset of the Length field in the UDP header.
+	 */
+	int UDP_FIELD_LENGTH = 4;
+
+	/**
+	 * Offset of the Checksum field in the UDP header.
+	 */
+	int UDP_FIELD_CHECKSUM = 6;
+
 }

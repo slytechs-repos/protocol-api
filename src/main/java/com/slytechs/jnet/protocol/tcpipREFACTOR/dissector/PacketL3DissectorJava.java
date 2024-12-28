@@ -17,8 +17,6 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpConstants.*;

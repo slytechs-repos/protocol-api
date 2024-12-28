@@ -36,4 +36,6 @@ public interface Dissector {
 	 */
 	int dissect(ByteBuffer buffer, int offset);
 
+	DescriptorType<?> descriptorType();
+
 }

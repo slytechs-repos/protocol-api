@@ -18,18 +18,38 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
 
 /**
+ * Interface defining constants for Subnetwork Access Protocol (SNAP). SNAP is a
+ * protocol used in the Logical Link Control (LLC) sublayer to provide
+ * extensibility and support for various network layer protocols.
  * 
- *
+ * <p>
+ * These constants include field offsets, header lengths, and specific SNAP
+ * types used in network data processing.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class SnapConstants {
+public interface SnapConstants {
 
-	public static final int SNAP_HEADER_LEN = 5;
-	public static final int SNAP_FIELD_TYPE = 3;
-	public static final int SNAP_FIELD_OUI = 0;
-	public static final int SNAP_TYPE_ETHER = 4;
+	/**
+	 * Length of the SNAP header in bytes.
+	 */
+	int SNAP_HEADER_LEN = 5;
 
-	private SnapConstants() {
-	}
+	/**
+	 * Offset of the Type field in the SNAP header.
+	 */
+	int SNAP_FIELD_TYPE = 3;
+
+	/**
+	 * Offset of the Organizationally Unique Identifier (OUI) field.
+	 */
+	int SNAP_FIELD_OUI = 0;
+
+	/**
+	 * EtherType value for Ethernet SNAP frames.
+	 */
+	int SNAP_TYPE_ETHER = 4;
+
 }

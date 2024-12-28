@@ -18,38 +18,127 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
 
 /**
+ * Interface defining constants for the Transmission Control Protocol (TCP). TCP
+ * is a core protocol of the Internet Protocol Suite, providing reliable,
+ * ordered, and error-checked delivery of data between applications.
  * 
- *
+ * <p>
+ * This interface includes constants for TCP header fields and flags used in TCP
+ * packet structures.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class TcpConstants {
+public interface TcpConstants {
 
-	/* Header constants */
-	public static final int TCP_HEADER_LEN = 20;
-	public static final int TCP_FIELD_IHL = 12;
-	public static final int TCP_FIELD_SRC = 0;
-	public static final int TCP_FIELD_DST = 2;
-	public static final int TCP_FIELD_SEQ = 4;
-	public static final int TCP_FIELD_ACK = 8;
-	public static final int TCP_FIELD_OFFSET = 12;
-	public static final int TCP_FIELD_FLAGS = 13;
-	public static final int TCP_FIELD_WINDOW = 14;
-	public static final int TCP_FIELD_CHECKSUM = 16;
-	public static final int TCP_FIELD_URGENT = 18;
+	/* Header Constants */
+
+	/**
+	 * Length of the TCP header in bytes.
+	 */
+	int TCP_HEADER_LEN = 20;
+
+	/**
+	 * Offset of the Internet Header Length (IHL) field in the TCP header.
+	 */
+	int TCP_FIELD_IHL = 12;
+
+	/**
+	 * Offset of the Source Port field in the TCP header.
+	 */
+	int TCP_FIELD_SRC = 0;
+
+	/**
+	 * Offset of the Destination Port field in the TCP header.
+	 */
+	int TCP_FIELD_DST = 2;
+
+	/**
+	 * Offset of the Sequence Number field in the TCP header.
+	 */
+	int TCP_FIELD_SEQ = 4;
+
+	/**
+	 * Offset of the Acknowledgment Number field in the TCP header.
+	 */
+	int TCP_FIELD_ACK = 8;
+
+	/**
+	 * Offset of the Data Offset field in the TCP header.
+	 */
+	int TCP_FIELD_OFFSET = 12;
+
+	/**
+	 * Offset of the Flags field in the TCP header.
+	 */
+	int TCP_FIELD_FLAGS = 13;
+
+	/**
+	 * Offset of the Window Size field in the TCP header.
+	 */
+	int TCP_FIELD_WINDOW = 14;
+
+	/**
+	 * Offset of the Checksum field in the TCP header.
+	 */
+	int TCP_FIELD_CHECKSUM = 16;
+
+	/**
+	 * Offset of the Urgent Pointer field in the TCP header.
+	 */
+	int TCP_FIELD_URGENT = 18;
 
 	/* TCP Flags */
-	public static final int TCP_FLAG_FIN = 0x01;
-	public static final int TCP_FLAG_SYN = 0x02;
-	public static final int TCP_FLAG_RST = 0x04;
-	public static final int TCP_FLAG_PSH = 0x08;
-	public static final int TCP_FLAG_ACK = 0x10;
-	public static final int TCP_FLAG_URG = 0x20;
-	public static final int TCP_FLAG_ECE = 0x40;
-	public static final int TCP_FLAG_CWR = 0x80;
-	public static final int TCP_FLAG_ECN = 0x40;
-	public static final int TCP_FLAG_CONG = 0x80;
 
-	private TcpConstants() {
-	}
+	/**
+	 * FIN (Finish) flag.
+	 */
+	int TCP_FLAG_FIN = 0x01;
+
+	/**
+	 * SYN (Synchronize) flag.
+	 */
+	int TCP_FLAG_SYN = 0x02;
+
+	/**
+	 * RST (Reset) flag.
+	 */
+	int TCP_FLAG_RST = 0x04;
+
+	/**
+	 * PSH (Push) flag.
+	 */
+	int TCP_FLAG_PSH = 0x08;
+
+	/**
+	 * ACK (Acknowledgment) flag.
+	 */
+	int TCP_FLAG_ACK = 0x10;
+
+	/**
+	 * URG (Urgent) flag.
+	 */
+	int TCP_FLAG_URG = 0x20;
+
+	/**
+	 * ECE (Explicit Congestion Notification Echo) flag.
+	 */
+	int TCP_FLAG_ECE = 0x40;
+
+	/**
+	 * CWR (Congestion Window Reduced) flag.
+	 */
+	int TCP_FLAG_CWR = 0x80;
+
+	/**
+	 * ECN (Explicit Congestion Notification) flag.
+	 */
+	int TCP_FLAG_ECN = 0x40;
+
+	/**
+	 * Congestion flag.
+	 */
+	int TCP_FLAG_CONG = 0x80;
+
 }

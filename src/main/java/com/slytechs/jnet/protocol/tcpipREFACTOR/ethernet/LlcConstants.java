@@ -18,22 +18,58 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
 
 /**
+ * Interface defining constants for Logical Link Control (LLC) protocol. LLC is
+ * a sublayer of the Data Link Layer (Layer 2) in the OSI model, responsible for
+ * framing and error checking for various network protocols.
  * 
- *
+ * <p>
+ * These constants include field offsets, header lengths, and specific LLC frame
+ * types.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class LlcConstants {
+public interface LlcConstants {
 
-    public static final int LLC_HEADER_LEN = 3;
-    public static final int LLC_FIELD_DSAP = 0;
-    public static final int LLC_FIELD_SSAP = 1;
-    public static final int LLC_FIELD_CONTROL = 2;
-    public static final int LLC_TYPE_FRAME = 3;
-    public static final int LLC_TYPE_SNAP = 0xAA;
-    public static final int LLC_TYPE_NETWARE = 0xFF;
-    public static final int LLC_TYPE_STP = 0x42;
+	/**
+	 * Length of the LLC header in bytes.
+	 */
+	int LLC_HEADER_LEN = 3;
 
-    private LlcConstants() {
-    }
+	/**
+	 * Offset of the Destination Service Access Point (DSAP) field.
+	 */
+	int LLC_FIELD_DSAP = 0;
+
+	/**
+	 * Offset of the Source Service Access Point (SSAP) field.
+	 */
+	int LLC_FIELD_SSAP = 1;
+
+	/**
+	 * Offset of the Control field in the LLC header.
+	 */
+	int LLC_FIELD_CONTROL = 2;
+
+	/**
+	 * Frame type for standard LLC frames.
+	 */
+	int LLC_TYPE_FRAME = 3;
+
+	/**
+	 * SNAP frame type indicating Subnetwork Access Protocol.
+	 */
+	int LLC_TYPE_SNAP = 0xAA;
+
+	/**
+	 * NetWare frame type for Novell NetWare protocols.
+	 */
+	int LLC_TYPE_NETWARE = 0xFF;
+
+	/**
+	 * Spanning Tree Protocol (STP) frame type.
+	 */
+	int LLC_TYPE_STP = 0x42;
+
 }

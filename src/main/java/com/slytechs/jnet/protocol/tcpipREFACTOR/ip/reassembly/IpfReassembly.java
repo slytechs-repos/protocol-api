@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.IntSegment;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.impl.IpfReassemblyLayout;
 
 /**
  * Ip fragmentation descriptor. A fragmentation descriptor provides information
@@ -35,7 +35,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
-public class IpfReassembly extends Ipfdescriptor {
+public class IpfReassembly extends IpfDescriptor {
 
 	private static class Record implements IntSegment {
 

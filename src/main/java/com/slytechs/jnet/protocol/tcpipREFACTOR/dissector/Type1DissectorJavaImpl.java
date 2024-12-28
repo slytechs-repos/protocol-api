@@ -19,6 +19,7 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 
 import java.nio.ByteBuffer;
 
+import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
 
@@ -224,6 +225,14 @@ public class Type1DissectorJavaImpl extends PacketL3DissectorJava {
 	 */
 	@Override
 	protected void dissectTcpOptions(int offset, int tcpHeaderLenth) {
+	}
+
+	/**
+	 * @see com.slytechs.jnet.protocol.api.descriptor.Dissector#descriptorType()
+	 */
+	@Override
+	public PacketDescriptorType descriptorType() {
+		return PacketDescriptorType.TYPE1;
 	}
 
 }

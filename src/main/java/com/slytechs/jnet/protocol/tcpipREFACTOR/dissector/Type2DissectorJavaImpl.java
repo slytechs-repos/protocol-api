@@ -21,8 +21,6 @@ import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.gre.GreConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.icmp.IcmpConstants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
-import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ipx.IpxConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.sctp.SctpConstants.*;
@@ -878,4 +876,11 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 		return descriptorLength();
 	}
 
+	/**
+	 * @see com.slytechs.jnet.protocol.api.descriptor.Dissector#descriptorType()
+	 */
+	@Override
+	public PacketDescriptorType descriptorType() {
+		return PacketDescriptorType.TYPE2;
+	}
 }

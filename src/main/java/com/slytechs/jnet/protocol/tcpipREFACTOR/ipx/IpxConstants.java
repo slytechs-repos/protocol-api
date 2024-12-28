@@ -18,16 +18,28 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ipx;
 
 /**
+ * Interface defining constants for the Internetwork Packet Exchange (IPX)
+ * protocol. IPX is a network layer protocol used primarily in Novell NetWare
+ * networks.
  * 
- *
+ * <p>
+ * These constants include header lengths and field values specific to IPX
+ * protocol operations.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class IpxConstants {
+public interface IpxConstants {
 
-    public static final int IPX_HEADER_LEN = 30;
-    public static final int IPX_FIELD_VALUE_CHECKSUM = 0;
+	/**
+	 * Length of the IPX header in bytes.
+	 */
+	int IPX_HEADER_LEN = 30;
 
-    private IpxConstants() {
-    }
+	/**
+	 * Field value for the IPX checksum.
+	 */
+	int IPX_FIELD_VALUE_CHECKSUM = 0;
+
 }

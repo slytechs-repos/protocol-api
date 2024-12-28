@@ -26,9 +26,12 @@ import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfReassembly;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfTracking;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.impl.Ip4Struct;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.impl.Ip6Layout;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfDescriptorType;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfReassembly;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfTrackingDescriptor;
 
 /**
  * Internet Protocol base definition.
@@ -88,9 +91,9 @@ public sealed class Ip
 	@Meta(MetaType.ATTRIBUTE)
 	public byte[] dst() {
 		if (version == 4) {
-			return dst(new byte[Ip4Constants.IPv4_FIELD_SRC_LEN], 0);
+			return dst(new byte[IpConstants.IPv4_FIELD_SRC_LEN], 0);
 		} else {
-			return dst(new byte[Ip6Constants.IPv6_FIELD_SRC_LEN], 0);
+			return dst(new byte[IpConstants.IPv6_FIELD_SRC_LEN], 0);
 
 		}
 	}
@@ -137,9 +140,9 @@ public sealed class Ip
 	 */
 	public byte[] dst(byte[] dst, int offset) {
 		if (version == 4)
-			buffer().get(Ip4Constants.IPv4_FIELD_DST, dst, offset, Ip4Constants.IPv4_FIELD_DST_LEN);
+			buffer().get(IpConstants.IPv4_FIELD_DST, dst, offset, IpConstants.IPv4_FIELD_DST_LEN);
 		else
-			buffer().get(Ip6Constants.IPv6_FIELD_DST, dst, offset, Ip6Constants.IPv6_FIELD_DST_LEN);
+			buffer().get(IpConstants.IPv6_FIELD_DST, dst, offset, IpConstants.IPv6_FIELD_DST_LEN);
 
 		return dst;
 	}
@@ -181,8 +184,8 @@ public sealed class Ip
 	 *
 	 * @return the ipf tracking descriptor
 	 */
-	public final IpfTracking getIpfTrackingDescriptor() {
-		return (IpfTracking) super.descriptor().peekDescriptor(IpfDescriptorType.IPF_TRACKING);
+	public final IpfTrackingDescriptor getIpfTrackingDescriptor() {
+		return (IpfTrackingDescriptor) super.descriptor().peekDescriptor(IpfDescriptorType.IPF_TRACKING);
 	}
 
 	/**
@@ -277,9 +280,9 @@ public sealed class Ip
 	@Meta(MetaType.ATTRIBUTE)
 	public byte[] src() {
 		if (version == 4)
-			return src(new byte[Ip4Constants.IPv4_FIELD_SRC_LEN], 0);
+			return src(new byte[IpConstants.IPv4_FIELD_SRC_LEN], 0);
 		else
-			return src(new byte[Ip6Constants.IPv6_FIELD_SRC_LEN], 0);
+			return src(new byte[IpConstants.IPv6_FIELD_SRC_LEN], 0);
 	}
 
 	/**
@@ -324,9 +327,9 @@ public sealed class Ip
 	 */
 	public byte[] src(byte[] dst, int offset) {
 		if (version == 4)
-			buffer().get(Ip4Constants.IPv4_FIELD_SRC, dst, offset, Ip4Constants.IPv4_FIELD_SRC_LEN);
+			buffer().get(IpConstants.IPv4_FIELD_SRC, dst, offset, IpConstants.IPv4_FIELD_SRC_LEN);
 		else
-			buffer().get(Ip6Constants.IPv6_FIELD_SRC, dst, offset, Ip6Constants.IPv6_FIELD_SRC_LEN);
+			buffer().get(IpConstants.IPv6_FIELD_SRC, dst, offset, IpConstants.IPv6_FIELD_SRC_LEN);
 
 		return dst;
 	}

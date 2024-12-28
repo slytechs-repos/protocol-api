@@ -18,13 +18,33 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
 
 /**
+ * Interface defining constants for Virtual LAN (VLAN) tagging in Ethernet
+ * frames. VLAN tagging allows network administrators to segregate and manage
+ * network traffic by embedding VLAN IDs into Ethernet frame headers.
  * 
- *
+ * <p>
+ * These constants include field offsets, lengths, and header sizes used in
+ * VLAN-tagged Ethernet frames.
+ * </p>
+ * 
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class VlanConstants {
-    public static final int VLAN_HEADER_LEN = 4;
-    public static final int VLAN_FIELD_TYPE = 2;
-    public static final int VLAN_FIELD_LEN_TCI = 2;
+public interface VlanConstants {
+
+	/**
+	 * Length of the VLAN header in bytes.
+	 */
+	int VLAN_HEADER_LEN = 4;
+
+	/**
+	 * Offset of the Ethernet Type field in the VLAN header.
+	 */
+	int VLAN_FIELD_TYPE = 2;
+
+	/**
+	 * Length of the Tag Control Information (TCI) field in bytes.
+	 */
+	int VLAN_FIELD_LEN_TCI = 2;
+
 }
