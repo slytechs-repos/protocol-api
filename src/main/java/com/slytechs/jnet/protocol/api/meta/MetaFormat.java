@@ -383,7 +383,7 @@ public abstract class MetaFormat extends Format implements MetaDomain {
 					len = Integer.parseInt(matcher.group(4));
 
 				} else if (matcher.group(5) != null) {
-					String type = null;
+					String type = matcher.group(5);
 
 					return (T) switch (type) {
 					case "byte" -> selected.readNumberFromHeader(byte.class, index);

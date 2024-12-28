@@ -25,6 +25,7 @@ import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.Dissector;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type1DissectorJavaImpl;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type2DissectorJavaImpl;
 

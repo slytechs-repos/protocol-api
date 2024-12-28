@@ -20,7 +20,6 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
 
 /**

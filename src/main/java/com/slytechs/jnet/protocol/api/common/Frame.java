@@ -22,7 +22,7 @@ import java.util.function.LongSupplier;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.core.CoreId;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;

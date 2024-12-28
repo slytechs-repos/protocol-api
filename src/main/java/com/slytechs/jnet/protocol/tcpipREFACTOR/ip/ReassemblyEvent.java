@@ -8,7 +8,7 @@ import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.ReassemblyContext.FragmentAge
  * Enhanced event class for IP reassembly operations with detailed timing and
  * state information.
  */
-class ReassemblyEvent {
+public class ReassemblyEvent {
 	private final ReassemblyContext.FragmentEventType type;
 	private final FragmentKey key;
 	private final String details;

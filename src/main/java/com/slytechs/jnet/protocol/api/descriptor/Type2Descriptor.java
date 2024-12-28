@@ -28,7 +28,6 @@ import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.HashType;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
@@ -80,7 +79,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * Byte size.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#byteSize()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#byteSize()
 	 */
 	@Override
 	public int byteSize() {
@@ -91,7 +90,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * Capture length.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#captureLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#captureLength()
 	 */
 	@Override
 	public int captureLength() {
@@ -248,7 +247,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * L 2 frame type.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#l2FrameType()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#l2FrameType()
 	 */
 	@Override
 	public int l2FrameType() {
@@ -437,7 +436,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * Timestamp.
 	 *
 	 * @return the long
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#timestamp()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#timestamp()
 	 */
 	@Override
 	public long timestamp() {
@@ -450,7 +449,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * @param b      the b
 	 * @param detail the detail
 	 * @return the string builder
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
 	 *      com.slytechs.jnet.jnetruntime.util.Detail)
 	 */
 	@Override
@@ -666,7 +665,7 @@ public class Type2Descriptor extends PacketDescriptor {
 	 * Wire length.
 	 *
 	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#wireLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#wireLength()
 	 */
 	@Override
 	public int wireLength() {

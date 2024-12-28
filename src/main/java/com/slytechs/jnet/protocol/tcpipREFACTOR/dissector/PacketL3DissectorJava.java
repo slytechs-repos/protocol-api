@@ -29,7 +29,6 @@ import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
 import com.slytechs.jnet.protocol.api.core.L4FrameType;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 
 /**
  * The Class JavaDissector.

@@ -23,7 +23,6 @@ import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PcapDescriptorLayout;
 
 /**
@@ -49,7 +48,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#captureLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#captureLength()
 	 */
 	@Override
 	public int captureLength() {
@@ -65,7 +64,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#timestamp()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#timestamp()
 	 */
 	@Override
 	public long timestamp() {
@@ -78,7 +77,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	 * @param b      the b
 	 * @param detail the detail
 	 * @return the string builder
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#buildDetailedString(java.lang.StringBuilder,
 	 *      com.slytechs.jnet.jnetruntime.util.Detail)
 	 */
 	@Override
@@ -94,7 +93,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#wireLength()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#wireLength()
 	 */
 	@Override
 	public int wireLength() {
@@ -118,7 +117,7 @@ public final class PcapDescriptor extends PacketDescriptor {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor#byteSize()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor#byteSize()
 	 */
 	@Override
 	public int byteSize() {

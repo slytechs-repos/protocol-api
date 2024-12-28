@@ -40,6 +40,7 @@
 module com.slytechs.jnet.protocol.api {
 
 	/* Public API */
+	exports com.slytechs.jnet.protocol.api.address;
 	exports com.slytechs.jnet.protocol.api.common;
 	exports com.slytechs.jnet.protocol.api.descriptor;
 	exports com.slytechs.jnet.protocol.api.meta;
@@ -50,10 +51,10 @@ module com.slytechs.jnet.protocol.api {
 	exports com.slytechs.jnet.protocol.tcpipREFACTOR.stp;
 	exports com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
 	exports com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
-//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.discovery;
-//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.routing;
-//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.redundancy;
-//	exports com.slytechs.jnet.protocol.tcpipREFACTOR.datacenter;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
+	exports com.slytechs.jnet.protocol.tcpipREFACTOR.udp;
 
 	/* Private API */
 	exports com.slytechs.jnet.protocol.api.pack.impl to

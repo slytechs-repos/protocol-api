@@ -18,7 +18,6 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
 
 import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.protocol.api.descriptor.Descriptor;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
 
 /**

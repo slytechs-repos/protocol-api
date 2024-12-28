@@ -24,7 +24,7 @@ import com.slytechs.jnet.platform.api.util.hash.Checksums;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
+import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
@@ -99,7 +99,7 @@ public final class Ethernet extends Header {
 	 * @param length     the length
 	 * @return the int
 	 * @see com.slytechs.jnet.protocol.api.common.Header#calcPayloadLength(java.nio.ByteBuffer,
-	 *      com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor, int, int)
+	 *      com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor, int, int)
 	 */
 	@Override
 	protected int calcPayloadLength(ByteBuffer packet, PacketDescriptor descriptor, int offset, int length) {

@@ -26,7 +26,6 @@ import java.util.stream.IntStream;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.IntSegment;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
-import com.slytechs.jnet.protocol.api.descriptor.Descriptor;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
 
 /**

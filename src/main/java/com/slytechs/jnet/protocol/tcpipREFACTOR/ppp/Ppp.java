@@ -44,9 +44,6 @@ public final class Ppp extends Header {
 		return "";
 	}
 
-	/** Standard PPP header length */
-	private static final int HEADER_LEN = 4;
-
 	/**
 	 * Instantiates a new PPP header.
 	 */
