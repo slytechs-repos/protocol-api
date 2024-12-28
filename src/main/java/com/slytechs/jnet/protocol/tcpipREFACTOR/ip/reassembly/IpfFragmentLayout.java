@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
 
 import static com.slytechs.jnet.platform.api.memory.layout.BinaryLayout.*;
 import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;

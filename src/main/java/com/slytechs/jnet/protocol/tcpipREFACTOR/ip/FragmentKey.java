@@ -3,7 +3,7 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 /**
  * Key class for identifying and tracking IP fragments. Used as the lookup key

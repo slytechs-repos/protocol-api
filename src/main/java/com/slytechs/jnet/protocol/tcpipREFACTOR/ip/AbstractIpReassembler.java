@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 import com.slytechs.jnet.platform.api.util.hash.CollisionResistantHashTable;
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 /**
  * Abstract base class for IP fragment reassembly implementations. Provides

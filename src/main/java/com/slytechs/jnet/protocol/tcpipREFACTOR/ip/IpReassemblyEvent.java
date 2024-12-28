@@ -17,7 +17,7 @@
  */
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 /**
  * @author Mark Bednarczyk

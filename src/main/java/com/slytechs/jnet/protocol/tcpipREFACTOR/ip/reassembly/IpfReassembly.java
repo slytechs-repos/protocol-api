@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import java.util.stream.IntStream;
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.IntSegment;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
+import com.slytechs.jnet.protocol.api.descriptor.Descriptor;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpfDescriptorType;
 
 /**

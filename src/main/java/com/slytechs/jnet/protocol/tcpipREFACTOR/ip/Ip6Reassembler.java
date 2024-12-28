@@ -1,6 +1,6 @@
 package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 /**
  * IPv6 specific packet fragment reassembly implementation.

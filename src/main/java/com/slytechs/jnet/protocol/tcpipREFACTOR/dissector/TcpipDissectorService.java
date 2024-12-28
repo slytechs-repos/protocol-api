@@ -21,9 +21,9 @@ import java.util.List;
 
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.Dissector;
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragDissector;
 import com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorNative;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragDissector;
 
 /**
  * 

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
 
 import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;

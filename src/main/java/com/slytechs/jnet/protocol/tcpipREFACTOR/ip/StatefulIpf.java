@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
 
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 public interface StatefulIpf {
 	void handleIpf(

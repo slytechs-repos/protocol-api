@@ -20,10 +20,10 @@ package com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
 import java.util.function.Supplier;
 
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorType;
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
-import com.slytechs.jnet.protocol.api.descriptor.IpfReassembly;
-import com.slytechs.jnet.protocol.api.descriptor.IpfTracking;
-import com.slytechs.jnet.protocol.api.descriptor.Ipfdescriptor;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfReassembly;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfTracking;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.Ipfdescriptor;
 
 /**
  * The Enum IpfDescriptorType.

@@ -4,7 +4,7 @@ import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Registration;
-import com.slytechs.jnet.protocol.api.descriptor.IpfFragment;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragment;
 
 /**
  * Main IP fragment reassembly system interface. Handles both IPv4 and IPv6
