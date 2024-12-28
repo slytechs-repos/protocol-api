@@ -34,7 +34,7 @@ import com.slytechs.jnet.protocol.api.descriptor.Type1Descriptor;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-class PacketDissectorNative extends AbstractPacketDissector {
+public class PacketDissectorNative extends AbstractPacketDissector {
 
 	/** {@code int pkt_is_dissector_supported(PktDescriptorType_e type)} */
 	static final DefaultForeignDowncall pkt_is_dissector_supported;

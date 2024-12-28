@@ -65,7 +65,13 @@ module com.slytechs.jnet.protocol.api {
 	/* Used for loading protocol packs on the class path */
 	uses com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
 
+	/* Used to load different types of dissectors (eg, Packet, IPF, etc) */
+	uses com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService;
+
 	provides com.slytechs.jnet.protocol.api.pack.ProtocolModuleService with
 			com.slytechs.jnet.protocol.api.pack.impl.CoreModuleService;
+
+	provides com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService with
+			com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.TcpipDissectorService;
 
 }

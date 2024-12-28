@@ -38,7 +38,7 @@ import com.slytechs.jnet.protocol.api.core.HashType;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.descriptor.impl.Type2DissectorJavaImpl;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type2DissectorJavaImpl;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;

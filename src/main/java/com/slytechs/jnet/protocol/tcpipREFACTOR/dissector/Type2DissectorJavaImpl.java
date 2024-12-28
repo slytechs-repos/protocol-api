@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor.impl;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 
 import static com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout.*;
@@ -41,6 +41,10 @@ import com.slytechs.jnet.protocol.api.common.HeaderOptionInfo;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension;
+import com.slytechs.jnet.protocol.api.descriptor.impl.Type2DescriptorLayout;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector.RecordRecorder;
 import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.gre.GreConstants;
@@ -130,7 +134,7 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 	/**
 	 * Instantiates a new java dissector type 2.
 	 */
-	Type2DissectorJavaImpl() {
+	public Type2DissectorJavaImpl() {
 		reset();
 
 		this.extensions = Pack.wrapAllExtensions(PacketDescriptorType.TYPE2, this);
@@ -244,7 +248,7 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 	/**
 	 * Destroy dissector.
 	 *
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL3DissectorJava#destroyDissector()
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL3DissectorJava#destroyDissector()
 	 */
 	@Override
 	protected void destroyDissector() {
@@ -328,7 +332,7 @@ public class Type2DissectorJavaImpl extends PacketL3DissectorJava implements Pac
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL3DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL3DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
 	 *      int, int, int)
 	 */
 	@Override

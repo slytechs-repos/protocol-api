@@ -27,6 +27,11 @@ public final class LayerConstants {
 
 	/* Common L2 constants */
 	public static final int L2_HEADER_MIN_LEN = 14;
+	public static final int L2_HEADER_LEN_ETHER = 14;
+	public static final int L2_HEADER_LEN_LLC = 3;
+	public static final int L2_HEADER_LEN_SNAP = 5;
+	public static final int L2_HEADER_LEN_VLAN = 4;
+	public static final int L2_HEADER_LEN_MPLS = 4;
 
 	/* Common L3 constants */
 	public static final int L3_HEADER_MIN_LEN = 20;

@@ -38,10 +38,10 @@ public class CoreModuleService implements ProtocolModuleService {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.pack.ProtocolModuleService#listModules()
+	 * @see com.slytechs.jnet.protocol.api.pack.ProtocolModuleService#getModules()
 	 */
 	@Override
-	public List<ProtocolModule> listModules() {
+	public List<ProtocolModule> getModules() {
 		return MODULES;
 	}
 

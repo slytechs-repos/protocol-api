@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor.impl;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4Constants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6Constants.*;
@@ -29,6 +29,7 @@ import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
 import com.slytechs.jnet.protocol.api.core.L4FrameType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 
 /**
  * The Class JavaDissector.

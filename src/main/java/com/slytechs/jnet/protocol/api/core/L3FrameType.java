@@ -19,24 +19,17 @@ package com.slytechs.jnet.protocol.api.core;
 
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.protocol.api.common.Header;
-import com.slytechs.jnet.protocol.api.common.HeaderInfo;
-import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
-import com.slytechs.jnet.protocol.api.common.Other;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
-
 /**
  * Layer3 frame type table, used by common descriptor types.
  * 
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-public enum L3FrameType implements HeaderInfo, IntSupplier {
-	IPv4(CoreId.CORE_ID_IPv4, Ip4::new),
-	IPv6(CoreId.CORE_ID_IPv4, Ip6::new),
-	IPX(CoreId.CORE_ID_IPv4, Ip4::new),
-	OTHER(0, Other::new),
+public enum L3FrameType implements IntSupplier {
+	IPv4(L3FrameType.L3_FRAME_TYPE_IPv4),
+	IPv6(L3FrameType.L3_FRAME_TYPE_IPv6),
+	IPX(L3FrameType.L3_FRAME_TYPE_IPX),
+	OTHER(L3FrameType.L3_FRAME_TYPE_OTHER),
 
 	;
 
@@ -48,41 +41,30 @@ public enum L3FrameType implements HeaderInfo, IntSupplier {
 	/**
 	 * Value of integer l3 type to enum constant.
 	 *
-	 * @param l3FrameType the layer3 frame type
+	 * @param type the layer3 frame type
 	 * @return the enum constant
 	 */
-	public static L3FrameType valueOfL3FrameType(int l3FrameType) {
-		return values()[l3FrameType];
+	public static L3FrameType valueOfL3FrameType(int type) {
+		return values()[type];
 	}
 
-	private final int id;
-	private final HeaderSupplier supplier;
+	private final int type;
 
 	/**
 	 * Instantiates a new l 2 frame type.
 	 *
-	 * @param id       the id
+	 * @param type     the id
 	 * @param supplier the supplier
 	 */
-	L3FrameType(int id, HeaderSupplier supplier) {
-		this.id = id;
-		this.supplier = supplier;
-	}
-
-	/**
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderSupplier#newHeaderInstance()
-	 */
-	@Override
-	public Header newHeaderInstance() {
-		return supplier.newHeaderInstance();
+	L3FrameType(int type) {
+		this.type = type;
 	}
 
 	/**
 	 * @see com.slytechs.jnet.protocol.api.common.HeaderInfo#id()
 	 */
-	@Override
-	public int id() {
-		return id;
+	public int type() {
+		return type;
 	}
 
 	/**
@@ -90,7 +72,7 @@ public enum L3FrameType implements HeaderInfo, IntSupplier {
 	 */
 	@Override
 	public int getAsInt() {
-		return ordinal();
+		return type;
 	}
 
 }

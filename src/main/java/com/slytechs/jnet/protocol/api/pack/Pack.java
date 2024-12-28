@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import com.slytechs.jnet.platform.api.util.Reflections;
@@ -47,11 +46,7 @@ import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension.D
 public abstract class Pack<E extends Enum<? extends HeaderInfo>> {
 
 	public static List<ProtocolModule> listServiceModules() {
-		var serviceModules = ServiceLoader.load(ProtocolModuleService.class)
-				.stream()
-				.map(s -> s.get())
-				.flatMap(s -> s.listModules().stream())
-				.toList();
+		var serviceModules = ProtocolModuleService.listModules();
 
 		return serviceModules;
 	}

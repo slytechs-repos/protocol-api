@@ -21,6 +21,7 @@ import static com.slytechs.jnet.protocol.api.core.CoreId.*;
 import static com.slytechs.jnet.protocol.api.core.L2FrameType.*;
 import static com.slytechs.jnet.protocol.api.core.L3FrameType.*;
 import static com.slytechs.jnet.protocol.api.core.L4FrameType.*;
+import static com.slytechs.jnet.protocol.api.core.LayerConstants.*;
 import static com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout.*;
 
 import com.slytechs.jnet.platform.api.util.Detail;
@@ -31,11 +32,6 @@ import com.slytechs.jnet.protocol.api.core.L4FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.Type1DescriptorLayout;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.LlcConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.SnapConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.VlanConstants;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.mpls.MplsConstants;
 
 /**
  * The Class Type1Descriptor.
@@ -94,9 +90,9 @@ public class Type1Descriptor extends PacketDescriptor {
 	public boolean lookupHeader(int id, int depth, HeaderDescriptor descriptor) {
 		if (id == CORE_ID_VLAN) {
 			if (depth < vlanCount()) {
-				int offset = EtherConstants.ETHER_HEADER_LEN + depth * VlanConstants.VLAN_HEADER_LEN;
+				int offset = L2_HEADER_LEN_ETHER + depth * L2_HEADER_LEN_VLAN;
 
-				return descriptor.assign(id, depth, offset, VlanConstants.VLAN_HEADER_LEN, type());
+				return descriptor.assign(id, depth, offset, L2_HEADER_LEN_VLAN, type());
 			}
 
 			return false;
@@ -104,9 +100,9 @@ public class Type1Descriptor extends PacketDescriptor {
 
 		if (id == CORE_ID_MPLS) {
 			if (depth < mplsCount()) {
-				int offset = EtherConstants.ETHER_HEADER_LEN + depth * MplsConstants.MPLS_HEADER_LEN;
+				int offset = L2_HEADER_LEN_ETHER + depth * L2_HEADER_LEN_MPLS;
 
-				return descriptor.assign(id, depth, offset, MplsConstants.MPLS_HEADER_LEN, type());
+				return descriptor.assign(id, depth, offset, L2_HEADER_LEN_MPLS, type());
 			}
 
 			return false;
@@ -120,11 +116,10 @@ public class Type1Descriptor extends PacketDescriptor {
 
 		return switch (id) {
 
-		case CORE_ID_ETHER -> l2(L2_FRAME_TYPE_ETHER, id, 0, EtherConstants.ETHER_HEADER_LEN, descriptor);
-		case CORE_ID_LLC -> l2(L2_FRAME_TYPE_LLC, id, EtherConstants.ETHER_HEADER_LEN, LlcConstants.LLC_HEADER_LEN,
-				descriptor);
-		case CORE_ID_SNAP -> l2(L2_FRAME_TYPE_SNAP, id, EtherConstants.ETHER_HEADER_LEN + LlcConstants.LLC_HEADER_LEN,
-				SnapConstants.SNAP_HEADER_LEN, descriptor);
+		case CORE_ID_ETHER -> l2(L2_FRAME_TYPE_ETHER, id, 0, L2_HEADER_LEN_ETHER, descriptor);
+		case CORE_ID_LLC -> l2(L2_FRAME_TYPE_LLC, id, L2_HEADER_LEN_ETHER, L2_HEADER_LEN_LLC, descriptor);
+		case CORE_ID_SNAP -> l2(L2_FRAME_TYPE_SNAP, id, L2_HEADER_LEN_ETHER + L2_HEADER_LEN_LLC,
+				L2_HEADER_LEN_SNAP, descriptor);
 
 		case CORE_ID_IPv4 -> l3(L3_FRAME_TYPE_IPv4, id, descriptor);
 		case CORE_ID_IPv6 -> l3(L3_FRAME_TYPE_IPv6, id, descriptor);

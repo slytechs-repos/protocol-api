@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 
 import com.slytechs.jnet.platform.api.util.Bits;
 import com.slytechs.jnet.protocol.api.core.L3FrameType;
-import com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
 
 /**
@@ -91,7 +91,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectIp(int)
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava#dissectIp(int)
 	 */
 	@Override
 	protected void dissectIp(int offset) {
@@ -190,7 +190,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#addRecord(int,
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava#addRecord(int,
 	 *      int, int)
 	 */
 	@Override
@@ -199,14 +199,14 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#destroyDissector()
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava#destroyDissector()
 	 */
 	@Override
 	protected void destroyDissector() {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava#dissectExtensionType(java.nio.ByteBuffer,
 	 *      int, int, int)
 	 */
 	@Override
@@ -214,7 +214,7 @@ public class IpfFragDissector extends PacketL2DissectorJava {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.PacketL2DissectorJava#dissectIpx(int)
+	 * @see com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.PacketL2DissectorJava#dissectIpx(int)
 	 */
 	@Override
 	protected void dissectIpx(int offset) {

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor.impl;
+package com.slytechs.jnet.protocol.tcpipREFACTOR.dissector;
 
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.arp.ArpConstants.*;
 import static com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.EtherConstants.*;
@@ -31,6 +31,8 @@ import java.nio.ByteBuffer;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
+import com.slytechs.jnet.protocol.api.descriptor.impl.AbstractPacketDissector;
+import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 
 /**
  * @author Sly Technologies Inc
@@ -328,7 +330,7 @@ public abstract class PacketL2DissectorJava extends AbstractPacketDissector {
 	 */
 	@Override
 	public final PacketDissector setDatalinkType(L2FrameType l2Type) throws ProtocolException {
-		this.dltType = l2Type.getL2FrameTypeAsInt();
+		this.dltType = l2Type.getAsInt();
 
 		return this;
 	}

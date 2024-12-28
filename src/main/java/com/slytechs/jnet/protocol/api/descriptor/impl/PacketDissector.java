@@ -24,6 +24,9 @@ import com.slytechs.jnet.platform.api.util.time.TimestampSource;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
+import com.slytechs.jnet.protocol.api.descriptor.Dissector;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type1DissectorJavaImpl;
+import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type2DissectorJavaImpl;
 
 /**
  * A packet dissector which records the state of the packet. A dissectors
@@ -36,7 +39,7 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
-public interface PacketDissector {
+public interface PacketDissector extends Dissector {
 
 	/**
 	 * Interface used to record new header records after dissection.

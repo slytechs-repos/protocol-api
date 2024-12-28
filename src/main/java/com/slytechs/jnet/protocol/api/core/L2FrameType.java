@@ -19,76 +19,53 @@ package com.slytechs.jnet.protocol.api.core;
 
 import java.util.function.IntSupplier;
 
-import com.slytechs.jnet.protocol.api.common.Header;
-import com.slytechs.jnet.protocol.api.common.HeaderInfo;
-import com.slytechs.jnet.protocol.api.common.HeaderSupplier;
-import com.slytechs.jnet.protocol.api.common.Other;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Llc;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Snap;
-
 /**
  * The Enum L2FrameType.
  *
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-public enum L2FrameType implements HeaderInfo, IntSupplier {
+public enum L2FrameType implements IntSupplier {
 
 	/** The other. */
-	OTHER(0),
+	OTHER(L2FrameType.L2_FRAME_TYPE_OTHER),
 
 	/** The ether. */
-	ETHER(CoreId.CORE_ID_ETHER, Ethernet::new),
+	ETHER(L2FrameType.L2_FRAME_TYPE_ETHER),
 
 	/** The llc. */
-	LLC(CoreId.CORE_ID_LLC, Llc::new),
+	LLC(L2FrameType.L2_FRAME_TYPE_LLC),
 
 	/** The snap. */
-	SNAP(CoreId.CORE_ID_SNAP, Snap::new),
+	SNAP(L2FrameType.L2_FRAME_TYPE_SNAP),
 
 	/** The ppp. */
-	PPP(CoreId.CORE_ID_PPP),
+	PPP(L2FrameType.L2_FRAME_TYPE_PPP),
 
 	/** The fddi. */
-	FDDI(CoreId.CORE_ID_FDDI),
+	FDDI(L2FrameType.L2_FRAME_TYPE_FDDI),
 
 	/** The atm. */
-	ATM(CoreId.CORE_ID_ATM),
+	ATM(L2FrameType.L2_FRAME_TYPE_ATM),
 
 	/** The novell raw. */
-	NOVELL_RAW(CoreId.CORE_ID_ETHER),
+	NOVELL_RAW(L2FrameType.L2_FRAME_TYPE_NOVELL_RAW),
 
 	/** The isl. */
-	ISL(CoreId.CORE_ID_ETHER),
+	ISL(L2FrameType.L2_FRAME_TYPE_ISL),
 
 	;
 
 	/** The id. */
-	private final int id;
-
-	/** The supplier. */
-	private final HeaderSupplier supplier;
+	private final int type;
 
 	/**
 	 * Instantiates a new l 2 frame type.
 	 *
-	 * @param id the id
+	 * @param type the id
 	 */
-	L2FrameType(int id) {
-		this.id = id;
-		this.supplier = Other::new;
-	}
-
-	/**
-	 * Instantiates a new l 2 frame type.
-	 *
-	 * @param id       the id
-	 * @param supplier the supplier
-	 */
-	L2FrameType(int id, HeaderSupplier supplier) {
-		this.id = id;
-		this.supplier = supplier;
+	L2FrameType(int type) {
+		this.type = type;
 	}
 
 	/** The Constant L2_FRAME_TYPE_UNKNOWN. */
@@ -124,20 +101,11 @@ public enum L2FrameType implements HeaderInfo, IntSupplier {
 	/**
 	 * Value of integer l2 type to enum constant.
 	 *
-	 * @param l2FrameType the layer2 frame type
+	 * @param type the layer2 frame type
 	 * @return the enum constant
 	 */
-	public static L2FrameType valueOfL2FrameType(int l2FrameType) {
-		return values()[l2FrameType];
-	}
-
-	/**
-	 * Gets the l 2 frame type as int.
-	 *
-	 * @return the l 2 frame type as int
-	 */
-	public int getL2FrameTypeAsInt() {
-		return ordinal();
+	public static L2FrameType valueOfL2FrameType(int type) {
+		return values()[type];
 	}
 
 	/**
@@ -146,20 +114,8 @@ public enum L2FrameType implements HeaderInfo, IntSupplier {
 	 * @return the header id
 	 * @see com.slytechs.jnet.protocol.api.common.HeaderInfo#id()
 	 */
-	@Override
-	public int id() {
-		return id;
-	}
-
-	/**
-	 * New header instance.
-	 *
-	 * @return the header
-	 * @see com.slytechs.jnet.protocol.api.common.HeaderSupplier#newHeaderInstance()
-	 */
-	@Override
-	public Header newHeaderInstance() {
-		return supplier != null ? supplier.newHeaderInstance() : null;
+	public int type() {
+		return type;
 	}
 
 	/**
@@ -167,7 +123,7 @@ public enum L2FrameType implements HeaderInfo, IntSupplier {
 	 */
 	@Override
 	public int getAsInt() {
-		return ordinal();
+		return type;
 	}
 
 }

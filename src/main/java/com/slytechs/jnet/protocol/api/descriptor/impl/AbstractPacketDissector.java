@@ -17,6 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.descriptor.impl;
 
+import java.nio.ByteBuffer;
+
 /**
  * Abstract class for all packet dissectors.
  *
@@ -24,6 +26,15 @@ package com.slytechs.jnet.protocol.api.descriptor.impl;
  * @author repos@slytechs.com
  */
 public abstract class AbstractPacketDissector implements PacketDissector {
+
+	/**
+	 * @see com.slytechs.jnet.protocol.api.descriptor.Dissector#dissect(java.nio.ByteBuffer,
+	 *      int)
+	 */
+	@Override
+	public int dissect(ByteBuffer buffer, int offset) {
+		return dissectPacket(buffer);
+	}
 
 	/**
 	 * Instantiates a new abstract packet dissector.
