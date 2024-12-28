@@ -15,31 +15,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.descriptor.impl;
+package com.slytechs.jnet.protocol.api.pack.spi;
 
 import java.util.List;
 import java.util.ServiceLoader;
 
-import com.slytechs.jnet.protocol.api.descriptor.Dissector;
+import com.slytechs.jnet.protocol.api.pack.ProtocolModule;
 
 /**
- * 
- *
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public interface DissectorService {
+public interface ProtocolModuleService {
 
-	static List<Dissector> listDissectors() {
-
-		var dissectors = ServiceLoader.load(DissectorService.class)
+	static List<ProtocolModule> listModules() {
+		var serviceModules = ServiceLoader.load(ProtocolModuleService.class)
 				.stream()
-				.flatMap(s -> s.get().getDissectors().stream())
+				.map(s -> s.get())
+				.flatMap(s -> s.getModules().stream())
 				.toList();
 
-		return dissectors;
+		return serviceModules;
 	}
 
-	List<Dissector> getDissectors();
+	List<ProtocolModule> getModules();
 
 }

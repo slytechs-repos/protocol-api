@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.Dissector;
-import com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorNative;
+import com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService;
 import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly.IpfFragDissector;
 
 /**
@@ -41,7 +41,7 @@ public class TcpipDissectorService implements DissectorService {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService#listDissector()
+	 * @see com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService#listDissector()
 	 */
 	@Override
 	public List<Dissector> getDissectors() {

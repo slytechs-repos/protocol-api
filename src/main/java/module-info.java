@@ -64,15 +64,15 @@ module com.slytechs.jnet.protocol.api {
 	requires java.logging;
 
 	/* Used for loading protocol packs on the class path */
-	uses com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
+	uses com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService;
 
 	/* Used to load different types of dissectors (eg, Packet, IPF, etc) */
-	uses com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService;
+	uses com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService;
 
-	provides com.slytechs.jnet.protocol.api.pack.ProtocolModuleService with
+	provides com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService with
 			com.slytechs.jnet.protocol.api.pack.impl.CoreModuleService;
 
-	provides com.slytechs.jnet.protocol.api.descriptor.impl.DissectorService with
+	provides com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService with
 			com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.TcpipDissectorService;
 
 }

@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.api.pack.impl;
 import java.util.List;
 
 import com.slytechs.jnet.protocol.api.pack.ProtocolModule;
-import com.slytechs.jnet.protocol.api.pack.ProtocolModuleService;
+import com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService;
 
 /**
  * @author Mark Bednarczyk [mark@slytechs.com]
@@ -38,7 +38,7 @@ public class CoreModuleService implements ProtocolModuleService {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.pack.ProtocolModuleService#getModules()
+	 * @see com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService#getModules()
 	 */
 	@Override
 	public List<ProtocolModule> getModules() {

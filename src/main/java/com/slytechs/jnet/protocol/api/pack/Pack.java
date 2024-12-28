@@ -34,6 +34,7 @@ import com.slytechs.jnet.protocol.api.common.Other;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissectorExtension.DissectorExtensionFactory;
+import com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService;
 
 /**
  * A protocol pack information and instance.
