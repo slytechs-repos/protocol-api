@@ -30,7 +30,7 @@ import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.udp.Udp;
+import com.slytechs.jnet.protocol.tcpip.udp.Udp;
 
 /**
  * VLAN header tests

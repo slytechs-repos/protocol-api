@@ -36,13 +36,13 @@ import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.core.L2FrameType;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.Type1DissectorJavaImpl;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4RouterAlertOption;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6FragmentExtension;
+import com.slytechs.jnet.protocol.tcpip.dissector.Type1DissectorJavaImpl;
+import com.slytechs.jnet.protocol.tcpip.ethernet.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.ip.DiffServ;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4RouterAlertOption;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip6;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip6FragmentExtension;
 import com.slytechs.test.Tests;
 
 /**

@@ -141,7 +141,7 @@ public enum ProtocolPackTable implements PackId {
 	private static final String CORE_MODULE = "com.slytechs.jnet.protocol";
 	
 	/** The Constant CORE_PACK. */
-	private static final String CORE_PACK   = "com.slytechs.jnet.protocol.tcpipREFACTOR.CorePackDefinition";
+	private static final String CORE_PACK   = "com.slytechs.jnet.protocol.tcpip.CorePackDefinition";
 	
 	/** The Constant WEB_MODULE. */
 	private static final String WEB_MODULE = "com.slytechs.jnet.protocol.web";

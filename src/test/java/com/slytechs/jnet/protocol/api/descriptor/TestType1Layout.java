@@ -41,7 +41,7 @@ class TestType1Layout {
 	private static final Random RANDOM = new Random();
 	private ByteBuffer buf1;
 	private ByteBuffer buf2 = ByteBuffer.allocate(DescriptorConstants.DESC_TYPE1_BYTE_SIZE);
-
+	
 	/**
 	 * @throws java.lang.Exception
 	 */

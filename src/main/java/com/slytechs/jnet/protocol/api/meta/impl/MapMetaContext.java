@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
 /**
@@ -140,7 +141,7 @@ public class MapMetaContext
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -152,7 +153,7 @@ public class MapMetaContext
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

@@ -20,12 +20,13 @@ package com.slytechs.jnet.protocol.api.meta;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.impl.DisplaysInfo;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
 import com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember;
@@ -39,6 +40,7 @@ import com.slytechs.jnet.protocol.api.meta.impl.ResolversInfo;
  * @author Mark Bednarczyk
  */
 public final class MetaField extends MetaElement {
+	private static final Logger logger = LoggerFactory.getLogger(MetaField.class);
 
 	/** The header. */
 	private final MetaHeader header;
@@ -69,10 +71,16 @@ public final class MetaField extends MetaElement {
 		if (resolversInfo != null) {
 			this.resolvers = resolversInfo.resolvers();
 
-			assert Stream.of(resolversInfo.resolvers())
-					.filter(r -> r == null)
-					.findAny()
-					.isEmpty() : "Empty resolver for field [%s]".formatted(memberInfo.name());
+			for (int i = 0; i < resolvers.length; i++) {
+				var resolver = resolvers[i];
+				if (resolver == null) {
+					logger.warn("empty meta value resolver for field [{}.{}]",
+							header.name(),
+							memberInfo.name());
+
+					resolvers[i] = ValueResolver.DEFAULT_RESOLVER;
+				}
+			}
 		} else
 			this.resolvers = new ValueResolver[0];
 	}
@@ -156,7 +164,7 @@ public final class MetaField extends MetaElement {
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -171,7 +179,7 @@ public final class MetaField extends MetaElement {
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

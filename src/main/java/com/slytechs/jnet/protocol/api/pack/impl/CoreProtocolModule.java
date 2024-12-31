@@ -22,7 +22,7 @@ import com.slytechs.jnet.protocol.api.pack.Pack;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.api.pack.ProtocolModule;
 import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.CorePackDefinition;
+import com.slytechs.jnet.protocol.tcpip.CorePackDefinition;
 
 /**
  * 

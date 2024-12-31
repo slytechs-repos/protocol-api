@@ -32,7 +32,7 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.arp.Arp;
+import com.slytechs.jnet.protocol.tcpip.arp.Arp;
 
 /**
  * @author Sly Technologies Inc

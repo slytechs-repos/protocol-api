@@ -46,22 +46,26 @@ module com.slytechs.jnet.protocol.api {
 	exports com.slytechs.jnet.protocol.api.meta;
 	exports com.slytechs.jnet.protocol.api.pack;
 	exports com.slytechs.jnet.protocol.api.core;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ppp;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.stp;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.icmp;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.tcp;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ip;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.ip.reassembly;
-	exports com.slytechs.jnet.protocol.tcpipREFACTOR.udp;
+	exports com.slytechs.jnet.protocol.tcpip;
+	exports com.slytechs.jnet.protocol.tcpip.ppp;
+	exports com.slytechs.jnet.protocol.tcpip.stp;
+	exports com.slytechs.jnet.protocol.tcpip.icmp;
+	exports com.slytechs.jnet.protocol.tcpip.tcp;
+	exports com.slytechs.jnet.protocol.tcpip.ethernet;
+	exports com.slytechs.jnet.protocol.tcpip.ip;
+	exports com.slytechs.jnet.protocol.tcpip.ip.reassembly;
+	exports com.slytechs.jnet.protocol.tcpip.udp;
 
 	/* Private API */
 	exports com.slytechs.jnet.protocol.api.pack.impl to
 			com.slytechs.jnet.protocol.tcpip;
 
 	requires transitive com.slytechs.jnet.platform.api;
-	requires java.logging;
+    requires org.yaml.snakeyaml;
+
+	// Required for using SLF4J implementation "agnostic" logging
+	requires org.slf4j;
+	requires java.logging; // TODO: remove usage of JUL logger in library
 
 	/* Used for loading protocol packs on the class path */
 	uses com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService;
@@ -69,10 +73,17 @@ module com.slytechs.jnet.protocol.api {
 	/* Used to load different types of dissectors (eg, Packet, IPF, etc) */
 	uses com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService;
 
+	/* Used to load meta ValueResolvers map */
+	uses com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
+
 	provides com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService with
 			com.slytechs.jnet.protocol.api.pack.impl.CoreModuleService;
 
 	provides com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService with
-			com.slytechs.jnet.protocol.tcpipREFACTOR.dissector.TcpipDissectorService;
+			com.slytechs.jnet.protocol.tcpip.dissector.TcpipDissectorService;
+
+	provides com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService with
+			com.slytechs.jnet.protocol.api.meta.impl.CoreResolverService,
+			com.slytechs.jnet.protocol.tcpip.impl.TcpipResolverService;
 
 }

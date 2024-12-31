@@ -30,9 +30,8 @@ import java.util.stream.Collectors;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.impl.Global;
+import com.slytechs.jnet.protocol.api.meta.impl.GlobalContext;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaContext;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
 import com.slytechs.jnet.protocol.api.meta.impl.ReflectedClass;
@@ -150,7 +149,7 @@ public final class MetaHeader
 	public MetaHeader(MetaDomain ctx, MetaPacket packet, Header header) {
 		this(ctx,
 				header,
-				Global.compute(header.getClass(), ReflectedClass::parse));
+				GlobalContext.compute(header.getClass(), ReflectedClass::parse));
 	}
 
 	/**
@@ -162,7 +161,7 @@ public final class MetaHeader
 	public MetaHeader(MetaDomain ctx, Header header) {
 		this(ctx,
 				header,
-				Global.compute(header.getClass(), ReflectedClass::parse));
+				GlobalContext.compute(header.getClass(), ReflectedClass::parse));
 	}
 
 	/**
@@ -323,7 +322,7 @@ public final class MetaHeader
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
 	 */
 	@Override
 	public <K, V> Optional<V> findKey(K key) {
@@ -338,7 +337,7 @@ public final class MetaHeader
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

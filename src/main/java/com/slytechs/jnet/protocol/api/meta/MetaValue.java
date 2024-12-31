@@ -17,6 +17,8 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
+import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
+
 /**
  * The Class MetaValue.
  *
@@ -44,6 +46,53 @@ public class MetaValue {
 	 * The Interface ValueResolver.
 	 */
 	public interface ValueResolver {
+
+		public class ValueResolverType {
+
+			public static ValueResolverType valueOf(String name) {
+				var cache = ValueResolverService.cached().getResolvers();
+
+				return new ValueResolverType(name, cache.get(name));
+			}
+
+			public static ValueResolverType[] values() {
+				var array = ValueResolverService.cached().getResolverTypeArray();
+
+				return array;
+			}
+
+			private final String name;
+			private final ValueResolver resolver;
+
+			/**
+			 * @param name
+			 * @param resolver
+			 */
+			public ValueResolverType(String name, ValueResolver resolver) {
+				super();
+				this.name = name;
+				this.resolver = resolver;
+			}
+
+			public String name() {
+				return name;
+			}
+
+			public ValueResolver getResolver() {
+				return resolver;
+			}
+
+		}
+
+		ValueResolver DEFAULT_RESOLVER = String::valueOf;
+
+		static ValueResolver of(ValueResolver resolver) {
+			return resolver;
+		}
+
+		static ValueResolver of(ValueResolverTuple2 resolver) {
+			return resolver;
+		}
 
 		/**
 		 * Checks if is default to formatted.
@@ -83,15 +132,27 @@ public class MetaValue {
 		}
 	}
 
-	public interface ValueResolverTuple2 {
+	public interface ValueResolverTuple2 extends ValueResolver {
+		@Override
 		String resolveValue(MetaField field, Object value);
+
+		/**
+		 * Resolve value.
+		 *
+		 * @param value the value
+		 * @return the string
+		 */
+		@Override
+		default String resolveValue(Object value) {
+			throw new UnsupportedOperationException();
+		}
+
 	}
 
 	/**
 	 * Instantiates a new meta value.
 	 */
-	public MetaValue() {
-	}
+	public MetaValue() {}
 
 	/**
 	 * Sets the field value.

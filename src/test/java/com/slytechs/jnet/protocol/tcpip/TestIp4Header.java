@@ -34,8 +34,8 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.IpAddress;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.ip.IpAddress;
 import com.slytechs.test.Tests;
 
 /**

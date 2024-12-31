@@ -32,8 +32,8 @@ import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.DiffServ;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip6;
+import com.slytechs.jnet.protocol.tcpip.ip.DiffServ;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip6;
 
 /**
  * VLAN header tests

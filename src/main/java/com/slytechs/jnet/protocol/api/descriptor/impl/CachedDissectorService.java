@@ -25,13 +25,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import com.slytechs.jnet.platform.api.util.StableValue;
+import com.slytechs.jnet.platform.api.incubator.StableValue;
 import com.slytechs.jnet.protocol.api.descriptor.Dissector;
 import com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService;
 
 /**
- * 
- *
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */

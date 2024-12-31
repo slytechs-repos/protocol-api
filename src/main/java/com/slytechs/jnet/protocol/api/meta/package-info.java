@@ -46,10 +46,10 @@
  * with easy grouping and lookup functions for accessing data out of the overall
  * domain.
  * </p>
- * <h2>MetaDomain interface</h2>
+ * <h2>Domain interface</h2>
  * <p>
  * The meta context is divided up into a set of named domains where each domain
- * can be looked up by a {@code MetaPath} object. This allows any part of any
+ * can be looked up by a {@code DomainPath} object. This allows any part of any
  * meta context to be accessed from any other via a meta paths (think filesystem
  * paths). Since all object types part of the meta package are linked into a
  * meta context, they all become accessible from anywhere in the meta domain.
@@ -67,15 +67,15 @@
  * header. While other elements, such as natively derived IPF tables are only
  * accessed as {@code MetaContextIndexed} types.
  * </p>
- * <h2>MetaPath</h2>
+ * <h2>DomainPath</h2>
  * <p>
  * All elements within a meta context domain can be addressed for retrieval or
- * storage using a {@code MetaPath} object. Meta paths are used to select a
+ * storage using a {@code DomainPath} object. Meta paths are used to select a
  * particular meta context which further accesses its elements via a context
  * specific way (i.e. mapped or index, etc...)
  * </p>
  * <p>
- * For example {@code new MetaPath("Ethernet.destination")} path element when
+ * For example {@code new DomainPath("Ethernet.destination")} path element when
  * applied to a {@code MetaPacket.getField(path)} will return a
  * {@code MetaField} value which will contain the <em>ethernet II</em>
  * destination address or null if field or header is not found.

@@ -33,8 +33,8 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
 import com.slytechs.jnet.protocol.api.meta.PacketFormat;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.Tcp;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.tcp.TcpWindowScaleOption;
+import com.slytechs.jnet.protocol.tcpip.tcp.Tcp;
+import com.slytechs.jnet.protocol.tcpip.tcp.TcpWindowScaleOption;
 import com.slytechs.test.Tests;
 
 /**

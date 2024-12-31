@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.IntFunction;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaIndexed;
 
 /**
@@ -157,7 +158,7 @@ public class ListMetaContext extends AbstractMetaContext implements MetaIndexed 
 	 * @param <V> the value type
 	 * @param key the key
 	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findKey(java.lang.Object)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -173,7 +174,7 @@ public class ListMetaContext extends AbstractMetaContext implements MetaIndexed 
 	 *
 	 * @param name the name
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#findDomain(java.lang.String)
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
 	 */
 	@Override
 	public MetaDomain findDomain(String name) {

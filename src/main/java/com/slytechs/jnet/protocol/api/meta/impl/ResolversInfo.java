@@ -18,6 +18,7 @@
 package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Map;
 
 import com.slytechs.jnet.platform.api.util.json.JsonArray;
 import com.slytechs.jnet.platform.api.util.json.JsonArrayBuilder;
@@ -27,6 +28,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonValue.ValueType;
 import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.Resolver;
 import com.slytechs.jnet.protocol.api.meta.Resolvers;
+import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
 
 /**
  * The ResolversInfo.
@@ -65,18 +67,20 @@ public record ResolversInfo(ValueResolver... resolvers) implements MetaInfoType 
 	private static ResolversInfo parseAnnotations(AnnotatedElement element) {
 		Resolvers multiple = element.getAnnotation(Resolvers.class);
 		Resolver single = element.getAnnotation(Resolver.class);
+		
+		var resolversMap = ValueResolverService.cached().getResolvers();
 
 		if (multiple != null) {
 			Resolver[] resolversAnnotation = multiple.value();
 			ValueResolver[] resolvers = new ValueResolver[resolversAnnotation.length];
 
 			for (int i = 0; i < resolversAnnotation.length; i++)
-				resolvers[i] = resolversAnnotation[i].value().getResolver();
+				resolvers[i] = resolversMap.get(resolversAnnotation[i].value());
 
 			return new ResolversInfo(resolvers);
 
 		} else if (single != null)
-			return new ResolversInfo(single.value().getResolver());
+			return new ResolversInfo(resolversMap.get(single.value()));
 
 		return new ResolversInfo();
 	}
@@ -99,12 +103,19 @@ public record ResolversInfo(ValueResolver... resolvers) implements MetaInfoType 
 		}
 
 		ValueResolver[] resolvers = new ValueResolver[jsonArray.size()];
+		Map<String, ValueResolver> serviceResolvers = ValueResolverService.cached().getResolvers();
 
 		for (int i = 0; i < jsonArray.size(); i++) {
-			resolvers[i] = Resolver.ResolverType
-					.valueOf(jsonArray.getString(i))
-					.getResolver();
+			var resolverName = jsonArray.getString(i);
+			var resolver = serviceResolvers.get(resolverName);
+			resolvers[i] = resolver;
 		}
+		
+//		for (int i = 0; i < jsonArray.size(); i++) {
+//			resolvers[i] = Resolver.ResolverType
+//					.valueOf(jsonArray.getString(i))
+//					.getResolver();
+//		}
 
 		return new ResolversInfo(resolvers);
 

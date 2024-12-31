@@ -17,6 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.meta.impl;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
@@ -120,7 +121,7 @@ public abstract class MetaElement
 	 * Name.
 	 *
 	 * @return the string
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#name()
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#name()
 	 */
 	@Override
 	public final String name() {
@@ -149,7 +150,7 @@ public abstract class MetaElement
 	 * Parent.
 	 *
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#parent()
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#parent()
 	 */
 	@Override
 	public MetaDomain parent() {

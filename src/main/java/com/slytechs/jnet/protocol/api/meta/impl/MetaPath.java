@@ -20,10 +20,11 @@ package com.slytechs.jnet.protocol.api.meta.impl;
 import java.util.Iterator;
 import java.util.Optional;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.MetaField;
 
 /**
- * The Class MetaPath.
+ * The Class DomainPath.
  *
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
@@ -253,7 +254,7 @@ public final class MetaPath implements Iterable<String> {
 			return Optional.empty();
 
 		if (match(GLOBAL_DOMAINNAME, offset))
-			return search(MetaDomain.getGlobalDomain(), offset + 1);
+			return search(GlobalContext.get(), offset + 1);
 
 		if (isUp(offset))
 			return search(domain.parent(), offset + 1);
@@ -261,8 +262,8 @@ public final class MetaPath implements Iterable<String> {
 		if (isLast(offset)) {
 			Optional<V> field = domain.findKey(last());
 			if (field.isPresent()) {
-				if (Global.get().orElse("MetaPath.DEBUG", DEBUG))
-					System.out.printf("MetaPath::search(%s,%d) FOUND=[%s] FOUND!%n",
+				if (GlobalContext.get().orElse("DomainPath.DEBUG", DEBUG))
+					System.out.printf("DomainPath::search(%s,%d) FOUND=[%s] FOUND!%n",
 							domain.name(),
 							offset,
 							stack[offset]);
@@ -271,8 +272,8 @@ public final class MetaPath implements Iterable<String> {
 			}
 
 			if (domain.parent() == null) {
-				if (Global.get().orElse("MetaPath.DEBUG", DEBUG))
-					System.out.printf("MetaPath::search(%s,%d) NOT FOUND! [%s]%n",
+				if (GlobalContext.get().orElse("DomainPath.DEBUG", DEBUG))
+					System.out.printf("DomainPath::search(%s,%d) NOT FOUND! [%s]%n",
 							domain.name(),
 							offset,
 							stack[offset]);
@@ -280,8 +281,8 @@ public final class MetaPath implements Iterable<String> {
 				return Optional.empty();
 			}
 
-			if (Global.get().orElse("MetaPath.DEBUG", DEBUG))
-				System.out.printf("MetaPath::search(%s,%d) UP [%s]%n",
+			if (GlobalContext.get().orElse("DomainPath.DEBUG", DEBUG))
+				System.out.printf("DomainPath::search(%s,%d) UP [%s]%n",
 						domain.name(),
 						offset,
 						stack[offset]);

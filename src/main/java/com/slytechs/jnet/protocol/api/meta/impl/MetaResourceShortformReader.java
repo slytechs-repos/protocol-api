@@ -31,8 +31,7 @@ import com.slytechs.jnet.platform.api.util.json.JsonObject;
 import com.slytechs.jnet.platform.api.util.json.JsonObjectBuilder;
 import com.slytechs.jnet.platform.api.util.json.JsonString;
 import com.slytechs.jnet.platform.api.util.json.JsonValue;
-import com.slytechs.jnet.protocol.api.meta.Resolver;
-import com.slytechs.jnet.protocol.api.meta.Resolver.ResolverType;
+import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver.ValueResolverType;
 
 /**
  * The Class MetaResourceShortformReader.
@@ -158,7 +157,7 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 			jsFieldBuilder.add("meta", jsMetaObj);
 		}
 
-		List<ResolverType> resolverList = getResolversOrListFromDisplay(jsFieldBuilder, displayString);
+		List<ValueResolverType> resolverList = getResolversOrListFromDisplay(jsFieldBuilder, displayString);
 
 		JsonObjectBuilder jsDisplayBuilder = JsonObjectBuilder
 				.wrapOrElseNewInstance(jsFieldBuilder.getJsonObject("display"));
@@ -181,8 +180,9 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 		fieldsBuilder.add(fieldName, jsFieldBuilder.build());
 	}
 
-	private List<ResolverType> getResolversOrListFromDisplay(JsonObjectBuilder jsFieldBuilder, String displayString) {
-		List<ResolverType> resolverList = null;
+	private List<ValueResolverType> getResolversOrListFromDisplay(JsonObjectBuilder jsFieldBuilder,
+			String displayString) {
+		List<ValueResolverType> resolverList = null;
 		if (jsFieldBuilder.getJsonArray("resolver") == null) {
 			resolverList = listResolvers(displayString);
 
@@ -194,7 +194,7 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 			for (JsonValue str : jsFieldBuilder.getJsonArray("resolver")) {
 				String resolverName = ((JsonString) str).getString();
 
-				resolverList.add(ResolverType.valueOf(resolverName));
+				resolverList.add(ValueResolverType.valueOf(resolverName));
 			}
 		}
 
@@ -307,7 +307,7 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 	 */
 	private void inflateDisplay(JsonObjectBuilder displayBuilder, Detail detail, String label,
 			String displayValue,
-			List<ResolverType> resolverList,
+			List<ValueResolverType> resolverList,
 			JsonArray jsMultiArr) {
 
 		if (detail == null) {
@@ -333,14 +333,14 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 		displayBuilder.add(detail.name(), detailBuilder.build());
 	}
 
-	private JsonArray inflateResolvers(List<ResolverType> resolverList) {
+	private JsonArray inflateResolvers(List<ValueResolverType> resolverList) {
 		if (resolverList.isEmpty())
 			return null;
 
 		var resolverBuilder = new JsonArrayBuilder();
 
-		for (ResolverType resolverType : resolverList) {
-			resolverBuilder.add(resolverType.name());
+		for (ValueResolverType valueResolverType : resolverList) {
+			resolverBuilder.add(valueResolverType.name());
 		}
 
 		return resolverBuilder.build();
@@ -399,10 +399,10 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 
 	private static final Pattern RESOLVER_EMBED = Pattern.compile("%\\{:(\\w+)\\}");
 
-	private String inflateDisplayFormat(String line, List<ResolverType> resolverList) {
+	private String inflateDisplayFormat(String line, List<ValueResolverType> resolverList) {
 
 		for (int i = 0; i < resolverList.size(); i++) {
-			ResolverType rt = resolverList.get(i);
+			ValueResolverType rt = resolverList.get(i);
 
 			line = line.replaceAll(":%s".formatted(rt), ":R%d".formatted(i + 1));
 		}
@@ -410,21 +410,21 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 		return line;
 	}
 
-	private List<ResolverType> listResolvers(String line) {
+	private List<ValueResolverType> listResolvers(String line) {
 		var matcher = RESOLVER_EMBED.matcher(line);
-		var list = new ArrayList<ResolverType>();
+		var list = new ArrayList<ValueResolverType>();
 
 		while (matcher.find()) {
 			String candidate = matcher.group(1);
 			if (candidate == null)
 				continue;
 
-			ResolverType resolverType = findResolver(candidate);
-			if (resolverType == null)
+			ValueResolverType valueResolverType = findResolver(candidate);
+			if (valueResolverType == null)
 				continue;
 
-			if (!list.contains(resolverType)) {
-				list.add(resolverType);
+			if (!list.contains(valueResolverType)) {
+				list.add(valueResolverType);
 			}
 		}
 
@@ -446,9 +446,9 @@ public class MetaResourceShortformReader extends MetaResourceReader {
 		}
 	}
 
-	private ResolverType findResolver(String resolverName) {
+	private ValueResolverType findResolver(String resolverName) {
 		try {
-			return ResolverType.valueOf(resolverName);
+			return ValueResolverType.valueOf(resolverName);
 		} catch (Throwable e) {
 			return null;
 		}

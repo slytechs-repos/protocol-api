@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.MetaField;
 
 /**
@@ -371,7 +372,7 @@ public interface MetaContext extends MetaDomain {
 	 * @return the meta context
 	 */
 	static MetaContext newRoot() {
-		return new MapMetaContext(Global.get(), MetaPath.ROOT_NAME, 1);
+		return new MapMetaContext(GlobalContext.get(), MetaPath.ROOT_NAME, 1);
 	}
 
 	/**

@@ -20,10 +20,10 @@ package com.slytechs.jnet.protocol.api.meta.impl;
 import java.lang.reflect.AnnotatedElement;
 
 import com.slytechs.jnet.platform.api.util.json.JsonArray;
-import com.slytechs.jnet.protocol.api.meta.MetaValue;
+import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.Resolver;
 import com.slytechs.jnet.protocol.api.meta.Resolvers;
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
+import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
 
 /**
  * The Class ResolverInfo.
@@ -58,18 +58,19 @@ public class ResolverInfo implements MetaInfoType {
 	private static ResolverInfo parseAnnotations(AnnotatedElement element) {
 		Resolvers multiple = element.getAnnotation(Resolvers.class);
 		Resolver single = element.getAnnotation(Resolver.class);
+		var resolverMap = ValueResolverService.cached().getResolvers();
 
 		if (multiple != null) {
 			Resolver[] resolversAnnotation = multiple.value();
 			ValueResolver[] resolvers = new ValueResolver[resolversAnnotation.length];
 
 			for (int i = 0; i < resolversAnnotation.length; i++)
-				resolvers[i] = resolversAnnotation[i].value().getResolver();
+				resolvers[i] = resolverMap.get(resolversAnnotation[i].value());
 
 			return new ResolverInfo(resolvers);
 
 		} else if (single != null)
-			return new ResolverInfo(single.value().getResolver());
+			return new ResolverInfo(resolverMap.get(single.value()));
 
 		return new ResolverInfo();
 	}

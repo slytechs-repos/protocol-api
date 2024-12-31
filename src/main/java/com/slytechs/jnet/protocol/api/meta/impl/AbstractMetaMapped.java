@@ -17,7 +17,6 @@
  */
 package com.slytechs.jnet.protocol.api.meta.impl;
 
-import com.slytechs.jnet.protocol.api.meta.LookupField;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
 
 /**

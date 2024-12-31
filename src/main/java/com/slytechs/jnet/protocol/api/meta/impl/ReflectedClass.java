@@ -47,7 +47,7 @@ public class ReflectedClass extends ReflectedComponent {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ReflectedClass.class.getPackageName());
 
-	private static final Function<Class<?>, ReflectedClass> STORAGE = cl -> Global.compute(cl, ReflectedClass::parse);
+	private static final Function<Class<?>, ReflectedClass> STORAGE = cl -> GlobalContext.compute(cl, ReflectedClass::parse);
 
 	public static ReflectedClass parse(Class<?> cl) {
 

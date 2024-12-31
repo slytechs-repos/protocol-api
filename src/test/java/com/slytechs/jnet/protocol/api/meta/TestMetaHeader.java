@@ -38,8 +38,8 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ethernet.Ethernet;
-import com.slytechs.jnet.protocol.tcpipREFACTOR.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.ethernet.Ethernet;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
 import com.slytechs.test.Tests;
 
 /**

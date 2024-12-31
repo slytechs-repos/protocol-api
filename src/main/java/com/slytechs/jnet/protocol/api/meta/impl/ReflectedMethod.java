@@ -36,7 +36,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaException;
  * @author Mark Bednarczyk
  */
 public class ReflectedMethod extends ReflectedMember {
-	
+
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ReflectedMethod.class.getPackageName());
 
@@ -135,9 +135,22 @@ public class ReflectedMethod extends ReflectedMember {
 				return (T) method.invoke(null, args);
 			else
 				return (T) method.invoke(target, args);
-		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+		} catch (IllegalArgumentException | InvocationTargetException e) {
 			throw new MetaException("unable to get reflected method value [%s]"
 					.formatted(method.toString()), unwindCauseException(e));
+		} catch (IllegalAccessException e) {
+			try {
+				method.setAccessible(true);
+				if (isStatic(method))
+					return (T) method.invoke(null, args);
+				else
+					return (T) method.invoke(target, args);
+				
+			} catch (Throwable e2) {
+				throw new MetaException("unable to get reflected method value [%s]"
+						.formatted(method.toString()), unwindCauseException(e));
+
+			}
 		}
 	}
 

@@ -19,6 +19,8 @@ package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.Objects;
 
+import com.slytechs.jnet.protocol.api.meta.MetaDomain;
+
 /**
  * The Class AbstractMetaContext.
  *
@@ -27,10 +29,10 @@ import java.util.Objects;
  * @author Mark Bednarczyk
  */
 public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
-	
+
 	/** The parent. */
 	private final MetaContext parent;
-	
+
 	/** The name. */
 	private final String name;
 
@@ -59,9 +61,9 @@ public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
 		this.name = name;
 		this.parent = name.equals(MetaPath.GLOBAL_DOMAINNAME)
 				? null
-				: MetaDomain.getGlobalDomain();
+				: GlobalContext.get();
 
-		if ((getClass() != Global.class) && (name.equals(MetaPath.GLOBAL_DOMAINNAME)))
+		if ((getClass() != GlobalContext.class) && (name.equals(MetaPath.GLOBAL_DOMAINNAME)))
 			throw new IllegalArgumentException("reserved context name [%s]"
 					.formatted(name));
 	}
@@ -70,7 +72,7 @@ public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
 	 * Name.
 	 *
 	 * @return the string
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#name()
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#name()
 	 */
 	@Override
 	public final String name() {
@@ -81,7 +83,7 @@ public abstract class AbstractMetaContext implements MetaDomain, MetaContext {
 	 * Parent.
 	 *
 	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaDomain#parent()
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#parent()
 	 */
 	@Override
 	public final MetaDomain parent() {

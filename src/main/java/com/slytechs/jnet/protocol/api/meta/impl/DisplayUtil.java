@@ -188,7 +188,7 @@ public final class DisplayUtil {
 		className = className.replaceFirst("\\.class", "");
 
 		if (className.indexOf('.') == -1)
-			className = "com.slytechs.jnet.protocol.tcpipREFACTOR.constants." + className;
+			className = "com.slytechs.jnet.protocol.tcpip.constants." + className;
 
 		try {
 			Class<?> cl = Reflections.loadClass(module, className);

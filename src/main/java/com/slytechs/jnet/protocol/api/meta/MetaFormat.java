@@ -31,7 +31,6 @@ import com.slytechs.jnet.platform.api.util.WeakNamedCache;
 import com.slytechs.jnet.platform.api.util.collection.IntList;
 import com.slytechs.jnet.platform.api.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.meta.impl.DisplayUtil;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaDomain;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaPath;
