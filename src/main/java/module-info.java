@@ -61,7 +61,7 @@ module com.slytechs.jnet.protocol.api {
 			com.slytechs.jnet.protocol.tcpip;
 
 	requires transitive com.slytechs.jnet.platform.api;
-    requires org.yaml.snakeyaml;
+	requires org.yaml.snakeyaml; // Meta header template resource in YAML format
 
 	// Required for using SLF4J implementation "agnostic" logging
 	requires org.slf4j;
