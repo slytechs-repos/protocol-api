@@ -17,20 +17,16 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
-import com.slytechs.jnet.protocol.api.meta.impl.DisplaysInfo;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
-import com.slytechs.jnet.protocol.api.meta.impl.ReflectedMember;
-import com.slytechs.jnet.protocol.api.meta.impl.ResolversInfo;
+import com.slytechs.jnet.platform.api.util.Named;
+import com.slytechs.jnet.platform.api.util.format.Detail;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
 
 /**
  * The Class MetaField.
@@ -39,185 +35,96 @@ import com.slytechs.jnet.protocol.api.meta.impl.ResolversInfo;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-public final class MetaField extends MetaElement {
-	private static final Logger logger = LoggerFactory.getLogger(MetaField.class);
-
-	/** The header. */
-	private final MetaHeader header;
-
-	/** The member. */
-	private final ReflectedMember member;
-
-	/** The resolvers. */
-	private final ValueResolver[] resolvers;
-
-	/** The target. */
-	private final Object target;
+public record MetaField(
+		MetaParent parent,
+		String name,
+		List<MetaAttribute> attributes,
+		MetaValue value,
+		Map<Detail, FieldTemplate> templateMap,
+		FieldTemplate[] templateArray,
+		List<FieldTemplate> templateList)
+		implements MetaElement, Named {
 
 	/**
-	 * Instantiates a new meta field.
-	 *
-	 * @param header     the header
-	 * @param memberInfo the member info
-	 */
-	MetaField(MetaHeader header, ReflectedMember memberInfo) {
-		super(header, memberInfo);
-		this.target = header.getTarget();
-		this.header = header;
-		this.member = memberInfo;
-		memberInfo.getMetaType(MetaInfo.class).metaType();
-		var resolversInfo = memberInfo.getMetaType(ResolversInfo.class);
-
-		if (resolversInfo != null) {
-			this.resolvers = resolversInfo.resolvers();
-
-			for (int i = 0; i < resolvers.length; i++) {
-				var resolver = resolvers[i];
-				if (resolver == null) {
-					logger.warn("empty meta value resolver for field [{}.{}]",
-							header.name(),
-							memberInfo.name());
-
-					resolvers[i] = ValueResolver.DEFAULT_RESOLVER;
-				}
-			}
-		} else
-			this.resolvers = new ValueResolver[0];
-	}
-
-	/**
-	 * Gets the parent header.
-	 *
-	 * @return the parent header
-	 */
-	public MetaHeader getParentHeader() {
-		return header;
-	}
-
-	/**
-	 * List sub fields.
-	 *
-	 * @return the list
-	 */
-	public List<MetaField> listSubFields() {
-		return Collections.emptyList();
-	}
-
-	/**
-	 * Gets the.
-	 *
-	 * @param <V> the value type
-	 * @return the v
-	 */
-	public <V> V get() {
-		return member.getValue(target);
-	}
-
-	/**
-	 * Sets the.
-	 *
-	 * @param <V>      the value type
-	 * @param newValue the new value
-	 */
-	public <V> void set(V newValue) {
-		member.setValue(target, newValue);
-	}
-
-	/**
-	 * String value.
-	 *
-	 * @return the string
-	 */
-	public String stringValue() {
-		return get();
-	}
-
-	/**
-	 * Gets the formatted.
-	 *
-	 * @return the formatted
-	 */
-	public String getFormatted() {
-		Object value = member.getValue(target);
-		MetaInfo meta = getMeta(MetaInfo.class);
-
-		return meta.formatter().format(value);
-	}
-
-	/**
-	 * Gets the resolved.
-	 *
-	 * @param resolverIndex the resolver index
-	 * @return the resolved
-	 */
-	public String getResolved(int resolverIndex) {
-		if (resolverIndex >= resolvers.length)
-			return "";
-
-		return resolvers[resolverIndex].resolveValue(this, get());
-	}
-
-	/**
-	 * Find key.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param key the key
-	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
-	 */
-	@Override
-	public <K, V> Optional<V> findKey(K key) {
-		if (name().equals(key))
-			return Optional.of((V) this);
-
-		return Optional.empty();
-	}
-
-	/**
-	 * Find domain.
-	 *
-	 * @param name the name
-	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
-	 */
-	@Override
-	public MetaDomain findDomain(String name) {
-		return null;
-	}
-
-	/**
-	 * @param detail
+	 * @param templateArray
 	 * @return
 	 */
-	public boolean isDisplayable(Detail detail) {
-		DisplaysInfo displays = getMeta(DisplaysInfo.class);
+	private static List<FieldTemplate> arrayToList(FieldTemplate[] templateArray) {
+		var list = Arrays.asList(templateArray);
 
-		return displays != null && displays.select(detail) != null;
+		return Collections.unmodifiableList(list);
 	}
 
 	/**
-	 * Read number from header.
-	 *
-	 * @param type  the type
-	 * @param index the index
-	 * @return the number
+	 * @param templateArray2
+	 * @return
 	 */
-	public Number readNumberFromHeader(Class<?> type, int index) {
-		var buf = getParentHeader().buffer();
+	private static Map<Detail, FieldTemplate> arrayToMap(FieldTemplate[] templateArray) {
+		var map = Arrays.stream(Detail.values())
+				.filter(detail -> templateArray[detail.ordinal()] != null)
+				.collect(Collectors.toMap(detail -> detail, detail -> templateArray[detail.ordinal()]));
 
-		if (type == byte.class)
-			return Byte.toUnsignedInt(buf.get(index));
-
-		if (type == short.class)
-			return Short.toUnsignedInt(buf.getShort(index));
-
-		if (type == int.class)
-			return Integer.toUnsignedLong(buf.getInt(index));
-
-		if (type == long.class)
-			return buf.getLong(index);
-
-		return get();
+		return Collections.unmodifiableMap(map);
 	}
+
+	public MetaField(String name, MetaValue value, FieldTemplate[] templateArray) {
+		this(null, name, List.of(), value, arrayToMap(templateArray), templateArray, arrayToList(templateArray));
+	}
+
+	public boolean isPresent(Detail detail) {
+		return templateArray[detail.ordinal()] != null;
+	}
+
+	public FieldTemplate template(Detail detail) {
+		return templateArray[detail.ordinal()];
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MetaField other = (MetaField) obj;
+		return Objects.equals(name, other.name);
+	}
+
+	public MetaField bindTo(Object target) {
+		var newAttributes = attributes.stream()
+				.map(a -> a.bindTo(target))
+				.toList();
+
+		return new MetaField(new MetaParent(), name, newAttributes, value.bindTo(target),
+				templateMap,
+				templateArray, templateList);
+	}
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T get() {
+		return (T) value.get();
+	}
+
+	/**
+	 * @return
+	 */
+	public MetaHeader getParentHeader() {
+		throw new UnsupportedOperationException("not implemented yet");
+	}
+
 }

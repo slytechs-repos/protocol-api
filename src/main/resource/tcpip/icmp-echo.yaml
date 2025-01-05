@@ -8,48 +8,48 @@ ICMPv4-Echo:
 
  templates:
    HIGH:
-     summary: "Internet Control Message Protocol Echo (Ping), offset=${offset}, length=${length}"
+     summary: "Internet Control Message Protocol Echo (Ping), offset=\{offset}, length=\{length}"
      fields:
        - name: identifier
          label: "Identifier"
-         template: "${value} (0x${value:04X})"
+         template: "\{value} (0x\{value:04X})"
 
        - name: sequence
          label: "Sequence Number"
-         template: "${value}"
+         template: "\{value}"
 
    MEDIUM:
-     summary: "Internet Control Message Protocol Echo (Ping), offset=${offset}, length=${length}"
+     summary: "Internet Control Message Protocol Echo (Ping), offset=\{offset}, length=\{length}"
      fields:
        - name: identifier
          label: "Identifier"
-         template: "${value} (0x${value:04X})"
+         template: "\{value} (0x\{value:04X})"
 
        - name: sequence
          label: "Sequence Number"
-         template: "${value}"
+         template: "\{value}"
 
-   LOW:
-     summary: "ICMP Echo id=${identifier} seq=${sequence}"
+   SUMMARY:
+     summary: "ICMP Echo id=\{identifier} seq=\{sequence}"
 
    DEBUG:
-     summary: "Internet Control Message Protocol Echo (Ping), offset=${offset}, length=${length}"
+     summary: "Internet Control Message Protocol Echo (Ping), offset=\{offset}, length=\{length}"
      fields:
        - name: identifier
          label: "Identifier"
-         template: "${value} (0x${value:04X})"
+         template: "\{value} (0x\{value:04X})"
 
        - name: sequence
          label: "Sequence Number"
-         template: "${value}"
+         template: "\{value}"
 
-   TRACE:
-     summary: "Internet Control Message Protocol Echo (Ping), offset=${offset}, length=${length}"
+   HEXDUMP:
+     summary: "Internet Control Message Protocol Echo (Ping), offset=\{offset}, length=\{length}"
      fields:
        - name: identifier
          label: "Identifier"
-         template: "${value} (0x${value:04X})"
+         template: "\{value} (0x\{value:04X})"
 
        - name: sequence
          label: "Sequence Number"
-         template: "${value}"
+         template: "\{value}"

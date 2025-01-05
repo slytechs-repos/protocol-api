@@ -17,15 +17,17 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
 import com.slytechs.jnet.platform.api.common.binding.MemoryBinding;
-import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.platform.api.util.DetailedString;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.ToHexdump;
+import com.slytechs.jnet.platform.api.util.format.Detail;
+import com.slytechs.jnet.platform.api.util.format.Printable;
+import com.slytechs.jnet.platform.api.util.format.Stringable;
 import com.slytechs.jnet.platform.api.util.time.HasTimestamp;
 import com.slytechs.jnet.platform.api.util.time.Timestamp;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
@@ -40,7 +42,7 @@ import com.slytechs.jnet.protocol.api.descriptor.impl.CompactDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**
@@ -60,10 +62,10 @@ import com.slytechs.jnet.protocol.api.pack.PackId;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("packet-meta.json")
+@MetaResource("/core/packet.yaml")
 public final class Packet
 		extends MemoryBinding
-		implements HasHeader, Cloneable, DetailedString, ToHexdump, HasTimestamp {
+		implements HasHeader, Cloneable, Stringable, ToHexdump, HasTimestamp {
 
 	/** The Constant MAX_PACKET_LENGTH. */
 	public static final int MAX_PACKET_LENGTH = 1538;
@@ -75,7 +77,7 @@ public final class Packet
 	private final HeaderLookup lookup;
 
 	/** The formatter. */
-	private PacketFormat formatter;
+	private PacketFormatter formatter;
 
 	/**
 	 * Instantiates a new packet.
@@ -381,7 +383,7 @@ public final class Packet
 			 */
 		} catch (Throwable e) {
 			throw new IllegalStateException("Unexpected error in %s"
-					.formatted(toString(Detail.MEDIUM, null)), e);
+					.formatted(toStringFormatted(null, Detail.MEDIUM)), e);
 		}
 	}
 
@@ -402,7 +404,7 @@ public final class Packet
 	 *
 	 * @param formatter the new formatter
 	 */
-	public void setFormatter(PacketFormat formatter) {
+	public void setFormatter(PacketFormatter formatter) {
 		this.formatter = formatter;
 	}
 
@@ -411,7 +413,7 @@ public final class Packet
 	 *
 	 * @return the formatter if assigned, otherwise null
 	 */
-	public PacketFormat getFormatter() {
+	public PacketFormatter getFormatter() {
 		return this.formatter;
 	}
 
@@ -443,37 +445,43 @@ public final class Packet
 	 */
 	@Override
 	public String toString() {
-		return toString(Detail.HIGH, formatter);
+		return toStringFormatted(formatter, Printable.DEFAULT_DETAIL);
 	}
 
 	/**
-	 * To string.
+	 * Wire length.
 	 *
-	 * @param detail the detail
-	 * @return the string
+	 * @return the int
+	 */
+
+	@Meta(MetaType.ATTRIBUTE)
+	public int wireLength() {
+		return descriptor.wireLength();
+	}
+
+	@Meta(MetaType.ATTRIBUTE)
+	public long frameNo() {
+		return descriptor.frameNo();
+	}
+
+	/**
+	 * @see com.slytechs.jnet.platform.api.util.format.Printable#printTo(java.lang.Appendable,
+	 *      com.slytechs.jnet.platform.api.util.format.Detail)
 	 */
 	@Override
-	public String toString(Detail detail) {
-		return toString(detail, formatter);
-	}
+	public void printTo(Appendable out, Detail detail) throws IOException {
+		if (formatter != null) {
+			printToFormatted(out, formatter, detail);
 
-	/**
-	 * To string.
-	 *
-	 * @param detail    the detail
-	 * @param formatter the formatter
-	 * @return the string
-	 */
-	public String toString(Detail detail, PacketFormat formatter) {
-		if (formatter != null)
-			return formatter.format(this, detail);
+			return;
+		}
 
 		String ifWirelenIsDifferent = (captureLength() != wireLength())
 				? "/%d".formatted(wireLength())
 				: "";
 
-		return switch (detail) {
-		case LOW -> "Packet [#%2d: length=%4d%s, timestamp=%s]"
+		String str = switch (detail) {
+		case SUMMARY -> "Packet [#%2d: length=%4d%s, timestamp=%s]"
 				.formatted(
 						descriptor().frameNo(),
 						captureLength(),
@@ -507,15 +515,8 @@ public final class Packet
 		case OFF -> "";
 		default -> throw new IllegalArgumentException("Unexpected value: " + detail);
 		};
-	}
 
-	/**
-	 * Wire length.
-	 *
-	 * @return the int
-	 */
-	public int wireLength() {
-		return descriptor.wireLength();
+		out.append(str);
 	}
 
 }

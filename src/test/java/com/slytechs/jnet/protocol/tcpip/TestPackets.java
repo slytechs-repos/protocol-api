@@ -23,7 +23,7 @@ import java.nio.ByteOrder;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.time.TimestampUnit;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 
 /**
  * Various hex packets used in testing.
@@ -841,7 +841,7 @@ public enum TestPackets {
 	public Packet toPacket() {
 		var packet = new Packet(toByteBuffer());
 		packet.descriptor().timestampUnit(TimestampUnit.EPOCH_MILLI);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		return packet;
 	}

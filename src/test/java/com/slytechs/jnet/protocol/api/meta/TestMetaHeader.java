@@ -19,6 +19,7 @@ package com.slytechs.jnet.protocol.api.meta;
 
 import static java.nio.charset.StandardCharsets.*;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.stream.IntStream;
@@ -28,8 +29,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.slytechs.jnet.platform.api.common.NotFound;
-import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.platform.api.util.json.JsonException;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.common.Payload;
@@ -166,7 +167,7 @@ class TestMetaHeader {
 
 	@Test
 	void testPerHeaderFormatter() throws NotFound, JsonException {
-		PacketFormat pf = new PacketFormat(Detail.LOW);
+		PacketFormatter pf = new PacketFormatter(Detail.SUMMARY);
 
 		Ethernet eth = new Ethernet();
 		Ip4 ip4 = new Ip4();
@@ -176,7 +177,7 @@ class TestMetaHeader {
 //			Tests.out.println(pf.format(eth));
 
 		if (packet.hasHeader(ip4))
-			Tests.out.println(pf.format(ip4, Detail.TRACE));
+			Tests.out.println(pf.formatToString(ip4, Detail.HEXDUMP));
 
 //		if (packet.hasHeader(payload))
 //			Tests.out.println(pf.format(payload));
@@ -184,20 +185,20 @@ class TestMetaHeader {
 
 	@Test
 	void testPacketFormatter() throws NotFound, JsonException {
-		PacketFormat format = new PacketFormat(Detail.LOW);
+		PacketFormatter format = new PacketFormatter(Detail.SUMMARY);
 
-		Tests.out.println(format.format(packet));
+		Tests.out.println(format.formatToString(packet));
 	}
 
 	@Test
 	void testPacketHexdumps() throws NotFound, JsonException {
-		PacketFormat format = new PacketFormat(Detail.LOW);
+		PacketFormatter format = new PacketFormatter(Detail.SUMMARY);
 
 //		Ethernet eth = packet.getHeader(new Ethernet());
 //		Payload payload = packet.getHeader(new Payload());
 
 		Tests.out.println("Dump entire packet:");
-		Tests.out.println(format.formatHexdump(packet));
+		Tests.out.println(format.formatToString(packet, Detail.HEXDUMP));
 //
 //		Tests.out.println("Dump Ethernet header only:");
 //		Tests.out.println(format.formatHexdump(eth));
@@ -206,4 +207,16 @@ class TestMetaHeader {
 //		Tests.out.println(format.formatHexdump(new MetaHeader(format, payload).getField("data")));
 
 	}
+
+	@Test
+	void dumpMetaPacket() throws NotFound, JsonException, IOException {
+		MetaBuilder b = new MetaBuilder();
+		var metaPacket = b.buildPacket(packet);
+		var formatter = new PacketFormatter();
+
+		formatter.formatPacketTo(System.out, metaPacket, Detail.HIGH);
+
+//		System.out.println(metaPacket);
+	}
+
 }

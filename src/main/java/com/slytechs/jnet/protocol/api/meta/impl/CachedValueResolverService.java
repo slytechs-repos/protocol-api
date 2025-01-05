@@ -19,13 +19,11 @@ package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.slytechs.jnet.platform.api.incubator.StableValue;
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver.ValueResolverType;
+import com.slytechs.jnet.protocol.api.meta.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
 
 /**
@@ -39,19 +37,8 @@ public class CachedValueResolverService implements ValueResolverService {
 
 	private final Map<String, ValueResolver> cacheMap;
 
-	private final List<ValueResolverType> cacheList;
-	private final ValueResolverType[] cacheArray;
-
 	public CachedValueResolverService() {
-
 		this.cacheMap = Collections.unmodifiableMap(new HashMap<>(ValueResolverService.mergeAllServices()));
-
-		var list = getResolvers().entrySet().stream()
-				.map(e -> new ValueResolverType(e.getKey(), e.getValue()))
-				.toList();
-		this.cacheList = Collections.unmodifiableList(list);
-
-		this.cacheArray = getResolverTypeList().toArray(ValueResolverType[]::new);
 	}
 
 	/**
@@ -60,22 +47,6 @@ public class CachedValueResolverService implements ValueResolverService {
 	@Override
 	public Map<String, ValueResolver> getResolvers() {
 		return cacheMap;
-	}
-
-	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService#getResolverTypes()
-	 */
-	@Override
-	public List<ValueResolverType> getResolverTypeList() {
-		return cacheList;
-	}
-
-	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService#getResolverTypeArray()
-	 */
-	@Override
-	public ValueResolverType[] getResolverTypeArray() {
-		return cacheArray;
 	}
 
 	@Override

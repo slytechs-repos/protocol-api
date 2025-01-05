@@ -26,8 +26,8 @@ import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.tcpip.ip.impl.Ip4Struct;
 import com.slytechs.jnet.protocol.api.meta.MetaResource;
+import com.slytechs.jnet.protocol.tcpip.ip.impl.Ip4Struct;
 
 /**
  * Internet Protocol Version 4 (IPv4).
@@ -56,7 +56,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("ip4-experimental-meta.json")
+@MetaResource("/tcpip/ip4.yaml")
 public final class Ip4
 		extends Ip
 		implements DiffServ, HasOption<Ip4Option>, Iterable<Ip4Option> {
@@ -303,6 +303,7 @@ public final class Ip4
 		return Ip4Struct.FLAGS_RB.getInt(buffer());
 	}
 
+	@Meta(value = MetaType.ATTRIBUTE)
 	public String flagsAsString() {
 		return flagsEnum().toString();
 	}
@@ -317,6 +318,7 @@ public final class Ip4
 		return Ip4Flag.valueOfInt03(flags());
 	}
 
+	@Meta(value = MetaType.ATTRIBUTE)
 	public String flagsFormatted() {
 		return FLAGS_FORMATTER.format(flags());
 	}

@@ -25,7 +25,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * the options field in the TCP header to an even 32-bit boundary. This is
  * sometimes done to improve the performance of TCP connections.
  */
-@MetaResource("tcp-opt-nop-meta.json")
+@MetaResource("/tcpip/tcp-options.yaml#TCP-NOP")
 public class TcpNopOption extends TcpOption {
 
 	/** The Constant ID. */

@@ -5,58 +5,58 @@ TCP:
 
   templates:
     HIGH:
-      summary: "Transmission Control Protocol, offset=${offset} length=${length}"
+      summary: "Transmission Control Protocol, offset=\{offset} length=\{length}"
       fields:
-        - name: src
+        - name: source
           label: "Source Port"
-          template: "${value:PORT_LOOKUP} (${value})"
+          template: "\{value:PORT_LOOKUP} (\{value})"
 
-        - name: dst
+        - name: destination
           label: "Destination Port" 
-          template: "${value:PORT_LOOKUP} (${value})"
+          template: "\{value:PORT_LOOKUP} (\{value})"
 
         - name: seq
           label: "Sequence Number (raw)"
-          template: "${value}"
+          template: "\{value}"
 
         - name: ack
           label: "Acknowledgment Number (raw)"
-          template: "${value}"
+          template: "\{value}"
 
         - name: dataOffset
           label: "Header Length"
-          template: "${length} bytes (${value})"
+          template: "\{length} bytes (\{value})"
 
         - name: flags
           label: "Flags"
-          template: "0x${value:03X} (${value:TCP_FLAGS}) [${value:TCP_BITS}]"
+          template: "0x\{value:03X} (\{value:TCP_FLAGS}) [\{value:TCP_BITS}]"
 
         - name: window
           label: "Window"
-          template: "${value}"
+          template: "\{value}"
 
         - name: checksum
           label: "Checksum"
-          template: "0x${value:X}"
+          template: "0x\{value:HEX}"
 
         - name: urgent
           label: "Urgent Pointer"
-          template: "${value}"
+          template: "\{value}"
 
     MEDIUM:
-      summary: "TCP ${src:PORT_LOOKUP} → ${dst:PORT_LOOKUP}"
+      summary: "TCP \{src:PORT_LOOKUP} → \{dst:PORT_LOOKUP}"
       fields:
         - name: flags
           label: "Flags"
-          template: "${value:TCP_FLAGS}"
+          template: "\{value:TCP_FLAGS}"
 
         - name: seq
           label: "Seq"
-          template: "${value}"
+          template: "\{value}"
 
         - name: ack
           label: "Ack"
-          template: "${value}"
+          template: "\{value}"
 
-    LOW:
-      summary: "TCP ${src:PORT_LOOKUP} → ${dst:PORT_LOOKUP}"
+    SUMMARY:
+      summary: "TCP \{src:PORT_LOOKUP} → \{dst:PORT_LOOKUP}"

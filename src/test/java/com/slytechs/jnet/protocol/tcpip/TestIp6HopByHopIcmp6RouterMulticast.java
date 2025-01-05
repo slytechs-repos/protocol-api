@@ -27,13 +27,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.test.Tests;
 
 /**
@@ -78,7 +78,7 @@ class TestIp6HopByHopIcmp6RouterMulticast {
 
 		var packet = TestPackets.ETH_IPv6_HOP_BY_HOP_ROUTER_ALERT_ICMPv6_MLRv2_CHG_IN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
@@ -95,7 +95,7 @@ class TestIp6HopByHopIcmp6RouterMulticast {
 	void IPv4_ROUTER_ALERT_OPTION() throws HeaderNotFound {
 		var packet = TestPackets.ETH_IPv4_OPT_RSVP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
@@ -109,7 +109,7 @@ class TestIp6HopByHopIcmp6RouterMulticast {
 
 		var packet = TestPackets.ETH_IPv6_HOP_BY_HOP_ROUTER_ALERT_ICMPv6_MLRv2_CHG_IN.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
@@ -129,7 +129,7 @@ class TestIp6HopByHopIcmp6RouterMulticast {
 
 		var packet = TestPackets.ETH_IPv6_HOP_BY_HOP_ROUTER_ALERT_ICMPv6_MLRv2_CHG_EX.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());

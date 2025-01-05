@@ -76,14 +76,20 @@ module com.slytechs.jnet.protocol.api {
 	/* Used to load meta ValueResolvers map */
 	uses com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
 
+	/* Used to load META JSON/YAML header templates */
+	uses com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
+
 	provides com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService with
-			com.slytechs.jnet.protocol.api.pack.impl.CoreModuleService;
+			com.slytechs.jnet.protocol.api.pack.impl.CoreProtocolModuleService;
 
 	provides com.slytechs.jnet.protocol.api.descriptor.spi.DissectorService with
 			com.slytechs.jnet.protocol.tcpip.dissector.TcpipDissectorService;
 
 	provides com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService with
-			com.slytechs.jnet.protocol.api.meta.impl.CoreResolverService,
-			com.slytechs.jnet.protocol.tcpip.impl.TcpipResolverService;
+			com.slytechs.jnet.protocol.api.meta.impl.CoreValueResolverService,
+			com.slytechs.jnet.protocol.tcpip.impl.TcpipValueResolverService;
+
+	provides com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService with
+			com.slytechs.jnet.protocol.api.meta.spi.impl.CoreHeaderTemplateService;
 
 }

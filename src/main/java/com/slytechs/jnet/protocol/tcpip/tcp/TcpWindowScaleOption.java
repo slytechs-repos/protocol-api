@@ -57,7 +57,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * of web browsing, file transfers, and other applications that use TCP.
  * </p>
  */
-@MetaResource("tcp-opt-win-scale-meta.json")
+@MetaResource("/tcpip/tcp-options.yaml#TCP-WS")
 public class TcpWindowScaleOption extends TcpOption {
 
 	/** The Constant ID. */

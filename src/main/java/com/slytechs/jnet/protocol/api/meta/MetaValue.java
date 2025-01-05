@@ -17,7 +17,12 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
-import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
+import static java.lang.invoke.MethodHandles.*;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
+
+import com.slytechs.jnet.platform.api.domain.value.Value;
 
 /**
  * The Class MetaValue.
@@ -26,163 +31,79 @@ import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-public class MetaValue {
+public record MetaValue(String name, MethodHandle getter, MethodHandle setter) implements Value {
 
-	/**
-	 * The Interface ValueFormatter.
-	 */
-	public interface ValueFormatter {
+	public MetaValue(String name, Method getter) throws IllegalAccessException {
+		this(name, lookup().unreflect(getter), null);
+	}
 
-		/**
-		 * Format.
-		 *
-		 * @param value the value
-		 * @return the string
-		 */
-		String format(Object value);
+	public MetaValue(String name, Method getter, Method setter) throws IllegalAccessException {
+		this(name, lookup().unreflect(getter), lookup().unreflect(setter));
+	}
+
+	public MetaValue bindTo(Object target) {
+		return new MetaValue(
+
+				name,
+				getter.bindTo(target),
+				setter == null ? null : setter.bindTo(target)
+
+		);
 	}
 
 	/**
-	 * The Interface ValueResolver.
+	 * @see com.slytechs.jnet.platform.api.domain.value.Value#get()
 	 */
-	public interface ValueResolver {
-
-		public class ValueResolverType {
-
-			public static ValueResolverType valueOf(String name) {
-				var cache = ValueResolverService.cached().getResolvers();
-
-				return new ValueResolverType(name, cache.get(name));
-			}
-
-			public static ValueResolverType[] values() {
-				var array = ValueResolverService.cached().getResolverTypeArray();
-
-				return array;
-			}
-
-			private final String name;
-			private final ValueResolver resolver;
-
-			/**
-			 * @param name
-			 * @param resolver
-			 */
-			public ValueResolverType(String name, ValueResolver resolver) {
-				super();
-				this.name = name;
-				this.resolver = resolver;
-			}
-
-			public String name() {
-				return name;
-			}
-
-			public ValueResolver getResolver() {
-				return resolver;
-			}
-
+	@Override
+	public Object get() {
+		try {
+			return getter.invoke();
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
 		}
+	}
+	
+	public String getFormatted() {
+		return String.valueOf(get());
+	}
 
-		ValueResolver DEFAULT_RESOLVER = String::valueOf;
+	/**
+	 * @see com.slytechs.jnet.platform.api.domain.value.Value#set(java.lang.Object)
+	 */
+	@Override
+	public void set(Object newValue) {
+		if (setter != null)
+			try {
+				setter.invoke(newValue);
+			} catch (Throwable e) {
+				throw new RuntimeException(e);
+			}
+	}
 
-		static ValueResolver of(ValueResolver resolver) {
-			return resolver;
-		}
+	/**
+	 * @see com.slytechs.jnet.platform.api.domain.value.Value#compareAndSet(java.lang.Object,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public boolean compareAndSet(Object expectedValue, Object newValue) {
+		Object old = get();
+		if (expectedValue.equals(old)) {
+			set(newValue);
 
-		static ValueResolver of(ValueResolverTuple2 resolver) {
-			return resolver;
-		}
-
-		/**
-		 * Checks if is default to formatted.
-		 *
-		 * @return true, if is default to formatted
-		 */
-		default boolean isDefaultToFormatted() {
 			return true;
 		}
 
-		/**
-		 * Or else.
-		 *
-		 * @param alternative the alternative
-		 * @return the value resolver
-		 */
-		default ValueResolver orElse(ValueResolver alternative) {
-			return v -> {
-				String r = resolveValue(v);
-				if (r != null)
-					return r;
-
-				return alternative.resolveValue(v);
-			};
-		}
-
-		/**
-		 * Resolve value.
-		 *
-		 * @param value the value
-		 * @return the string
-		 */
-		String resolveValue(Object value);
-
-		default String resolveValue(MetaField field, Object value) {
-			return resolveValue(value);
-		}
-	}
-
-	public interface ValueResolverTuple2 extends ValueResolver {
-		@Override
-		String resolveValue(MetaField field, Object value);
-
-		/**
-		 * Resolve value.
-		 *
-		 * @param value the value
-		 * @return the string
-		 */
-		@Override
-		default String resolveValue(Object value) {
-			throw new UnsupportedOperationException();
-		}
-
+		return false;
 	}
 
 	/**
-	 * Instantiates a new meta value.
+	 * @see com.slytechs.jnet.platform.api.domain.value.Value#getAndSet(java.lang.Object)
 	 */
-	public MetaValue() {}
+	@Override
+	public Object getAndSet(Object newValue) {
+		Object old = get();
+		set(newValue);
 
-	/**
-	 * Sets the field value.
-	 *
-	 * @param <T>      the generic type
-	 * @param target   the target
-	 * @param newValue the new value
-	 */
-	public <T> void setFieldValue(Object target, T newValue) {
-
-	}
-
-	/**
-	 * Gets the.
-	 *
-	 * @param <T> the generic type
-	 * @return the t
-	 */
-	public <T> T get() {
-		return null;
-	}
-
-	/**
-	 * Gets the.
-	 *
-	 * @param <T>  the generic type
-	 * @param type the type
-	 * @return the t
-	 */
-	public final <T> T get(Class<T> type) {
-		return get();
+		return old;
 	}
 }

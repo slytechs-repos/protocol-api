@@ -3,36 +3,40 @@ Ethernet:
     width: 50
     align: left
 
+  macros:
+    $MAC: "MAC"
+    $OUI: "ETHER_MAC_OUI_NAME_PREFIXED"
+
   templates:
     HIGH:
-      summary: "Ethernet II, src: ${src:ETHER_MAC_OUI_NAME_PREFIXED} dst=${dst:ETHER_MAC_OUI_NAME_PREFIXED} offset=${offset} length=${length}"
+      summary: "Ethernet II, src: \{src:ETHER_MAC_OUI_NAME_PREFIXED} dst=\{dst:ETHER_MAC_OUI_NAME_PREFIXED} offset=\{offset} length=\{length} caplen=\{captureLength}"
       fields:
         - name: dst 
           label: "Destination Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:MAC})"
+          template: "\{} (\{value:$MAC})"
 
         - name: src
           label: "Source Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:MAC})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:MAC})"
 
         - name: type
           label: "Type"
-          template: "${value:ETHER_TYPE} (0x${value:HEX})"
+          template: "\{value:ETHER_TYPE} (0x\{value:HEX})"
           width: 30
 
     MEDIUM:
-      summary: "Ethernet II, src: ${src:MAC} dst=${dst:MAC} type=${type:ETHER_TYPE}"
+      summary: "Ethernet II, src: \{src:MAC} dst=\{dst:MAC} type=\{type:ETHER_TYPE}"
       fields:
         - name: dst 
           label: "Destination"
-          template: "${value:MAC}"
+          template: "\{value:MAC}"
           width: 30
 
         - name: type
           label: "Type"
-          template: "${value:ETHER_TYPE}"
+          template: "\{value:ETHER_TYPE}"
           width: 20
 
-    LOW:
-      summary: "Ethernet II, type=${type:ETHER_TYPE}"
+    SUMMARY:
+      summary: "Ethernet II, type=\{type:ETHER_TYPE}"
       # No fields, just summary

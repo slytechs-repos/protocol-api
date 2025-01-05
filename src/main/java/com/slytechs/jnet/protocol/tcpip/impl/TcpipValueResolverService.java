@@ -20,7 +20,7 @@ package com.slytechs.jnet.protocol.tcpip.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
+import com.slytechs.jnet.protocol.api.meta.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService;
 import com.slytechs.jnet.protocol.tcpip.arp.ArpHardwareType;
 import com.slytechs.jnet.protocol.tcpip.arp.ArpOp;
@@ -43,12 +43,12 @@ import com.slytechs.jnet.protocol.tcpip.tcp.TcpFlag;
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public class TcpipResolverService implements ValueResolverService {
+public class TcpipValueResolverService implements ValueResolverService {
 
 	/**
 	 * 
 	 */
-	public TcpipResolverService() {}
+	public TcpipValueResolverService() {}
 
 	/**
 	 * @see com.slytechs.jnet.protocol.api.meta.spi.ValueResolverService#getResolvers()

@@ -27,13 +27,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.platform.api.util.Detail;
 import com.slytechs.jnet.platform.api.util.HexStrings;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
 import com.slytechs.jnet.protocol.tcpip.ip.IpAddress;
 import com.slytechs.test.Tests;
@@ -273,7 +273,7 @@ class TestIp4Header {
 		var ip4 = packet.getHeader(new Ip4());
 
 //		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
-		Tests.out.println(ip4.toString(Detail.TRACE));
+		Tests.out.println(ip4.toString(Detail.HEXDUMP));
 
 		assertEquals(0x2, ip4.flags());
 	}
@@ -439,7 +439,7 @@ class TestIp4Header {
 	void test_Ip4_Router_Option() throws HeaderNotFound {
 		var packet = TestPackets.ETH_IPv4_OPT_RSVP.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());

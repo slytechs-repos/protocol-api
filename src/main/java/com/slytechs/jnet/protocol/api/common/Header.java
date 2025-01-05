@@ -17,21 +17,22 @@
  */
 package com.slytechs.jnet.protocol.api.common;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 import com.slytechs.jnet.platform.api.common.binding.MemoryBinding;
-import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.platform.api.util.DetailedString;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.ToHexdump;
+import com.slytechs.jnet.platform.api.util.format.Detail;
+import com.slytechs.jnet.platform.api.util.format.Stringable;
 import com.slytechs.jnet.protocol.api.descriptor.HeaderDescriptor;
 import com.slytechs.jnet.protocol.api.descriptor.PacketDescriptor;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.api.pack.HasPackId;
 
 /**
@@ -41,7 +42,7 @@ import com.slytechs.jnet.protocol.api.pack.HasPackId;
  * @author repos@slytechs.com
  */
 @Meta
-public abstract class Header extends MemoryBinding implements DetailedString, ToHexdump, HasPackId {
+public abstract class Header extends MemoryBinding implements Stringable, ToHexdump, HasPackId {
 
 	private final HeaderDescriptor headerDescriptor = new HeaderDescriptor();
 
@@ -61,7 +62,7 @@ public abstract class Header extends MemoryBinding implements DetailedString, To
 	 * A pretty pring formatted, if will be used to generated {@code toString()}
 	 * output.
 	 */
-	private PacketFormat formatter;
+	private PacketFormatter formatter;
 
 	private PacketDescriptor descriptor;
 
@@ -248,7 +249,7 @@ public abstract class Header extends MemoryBinding implements DetailedString, To
 	 *
 	 * @param formatter the new formatter
 	 */
-	public void setFormatter(PacketFormat formatter) {
+	public void setFormatter(PacketFormatter formatter) {
 		this.formatter = formatter;
 	}
 
@@ -261,42 +262,27 @@ public abstract class Header extends MemoryBinding implements DetailedString, To
 	 */
 	@Override
 	public final String toString() {
-		return toString(Detail.DEFAULT);
+		return toStringFormatted(formatter);
 	}
 
 	/**
-	 * Generates a simple string representing the state of this header or uses the
-	 * formatter if set.
-	 *
-	 * @param detail generates the header string at specified detail level
-	 * @return the generated string from the fields of this header
-	 * @see java.lang.Object#toString()
+	 * @see com.slytechs.jnet.platform.api.util.format.Printable#printTo(java.lang.Appendable,
+	 *      com.slytechs.jnet.platform.api.util.format.Detail)
 	 */
 	@Override
-	public final String toString(Detail detail) {
-		return toString(detail, formatter);
-	}
+	public void printTo(Appendable out, Detail detail) throws IOException {
+		if (formatter != null) {
+			printToFormatted(out, formatter, detail);
 
-	/**
-	 * Generates a simple string representing the state of this header or uses the
-	 * supplied formatter if not null.
-	 *
-	 * @param detail    generates the header string at specified detail level
-	 * @param formatter the packet formatter, or if null default to builtin
-	 *                  formatting
-	 * @return the generated string from the fields of this header
-	 * @see java.lang.Object#toString()
-	 */
-	public final String toString(Detail detail, PacketFormat formatter) {
-		if (formatter != null)
-			return formatter.format(this, detail);
+			return;
+		}
 
 		int offset = headerOffset();
 		int length = headerLength();
 
-		return switch (detail) {
+		String str = switch (detail) {
 		case OFF -> "";
-		case LOW -> headerName();
+		case SUMMARY -> headerName();
 
 		case MEDIUM -> "%s [offset=%d, length=%d]"
 				.formatted(headerName(), offset, length);
@@ -309,9 +295,11 @@ public abstract class Header extends MemoryBinding implements DetailedString, To
 						buffer(),
 						i -> "%04X: ".formatted(i + offset)));
 
-		case TRACE, DEBUG -> "%s [offset=%d, length=%d, payload=%d, id=%04X]"
+		case HEXDUMP, DEBUG -> "%s [offset=%d, length=%d, payload=%d, id=%04X]"
 				.formatted(headerName(), offset, length, payloadLength(), id());
 		};
+
+		out.append(str);
 	}
 
 	/**

@@ -1,0 +1,75 @@
+TCP-MSS:
+  defaults:
+    width: 50
+    align: left
+
+  meta:
+    priority: 200
+
+  templates:
+    HIGH:
+      summary: "Maximum Segment Size Option"
+      fields:
+        - name: mss
+          label: "Max segment size"
+          template: "\{value}"
+
+TCP-SACK-PERM:
+  defaults:
+    width: 50
+    align: left
+
+  meta:
+    priority: 200
+
+  templates:
+    HIGH:
+      summary: "Sack Permitted Option"
+
+TCP-TS:
+  defaults:
+    width: 50
+    align: left
+
+  meta:
+    priority: 200
+
+  templates:
+    HIGH:
+      summary: "Timestamp Option"
+      fields:
+        - name: tsValue
+          label: "Timestamp"
+          template: "\{value:HEX}"
+          
+        - name: tsEchoReply
+          label: "Timestamp Echo Reply" 
+          template: "\{value:HEX}"
+
+TCP-WS:
+  defaults:
+    width: 50
+    align: left
+
+  meta:
+    priority: 200
+
+  templates:
+    HIGH:
+      summary: "Window Scale Option (bitshift)"
+      fields:
+        - name: shiftCount
+          label: "Window scale"
+          template: "\{value} (multiply by \{multiplier})"
+
+TCP-NOP:
+  defaults:
+    width: 50
+    align: left
+
+  meta:
+    priority: 200
+
+  templates:
+    HIGH:
+      summary: "Tcp No Option (padding)"

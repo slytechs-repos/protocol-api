@@ -15,34 +15,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.pack.impl;
-
-import java.util.List;
-
-import com.slytechs.jnet.protocol.api.pack.ProtocolModule;
-import com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService;
+package com.slytechs.jnet.protocol.api.meta;
 
 /**
+ * 
+ *
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public class CoreModuleService implements ProtocolModuleService {
+public interface FormatRegistry extends ValueFormatter {
 
-	private static final List<ProtocolModule> MODULES = List.of(
+	FormatRegistry EMTPY = (value, _) -> String.valueOf(value);
 
-			new CoreProtocolModule()
-
-	);
-
-	public CoreModuleService() {
+	static FormatRegistry valueOfString() {
+		return new DefaultFormatters();
 	}
 
-	/**
-	 * @see com.slytechs.jnet.protocol.api.pack.spi.ProtocolModuleService#getModules()
-	 */
+	default SpecificValueFormatter resolveFormat(String formatName) {
+		return null;
+	}
+
 	@Override
-	public List<ProtocolModule> getModules() {
-		return MODULES;
-	}
+	String applyFormat(Object value, String formatName);
 
 }

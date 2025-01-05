@@ -1,0 +1,13 @@
+Frame:
+  defaults:
+    width: 50
+    align: left
+
+  display: "Frame #\{Frame.frameNo}, \{IPv\d?.src} > \{IPv\d?.dst} proto=\{IPv\d?.protocol:R} len=\{Frame.captureLength} bytes info=\{IPv\d?.protocol:R}"
+  
+  meta:
+    name: "Frame"
+
+  templates:
+    HIGH:
+      summary: ""

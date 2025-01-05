@@ -8,24 +8,24 @@ ICMPv4:
 
   templates:
     HIGH:
-      summary: "Internet Control Message Protocol Version 4, offset=${offset}, length=${length}"
+      summary: "Internet Control Message Protocol Version 4, offset=\{offset}, length=\{length}"
       fields:
         - name: type
           label: "Type"
-          template: "${value} (${value:ICMPv4_TYPE})"
+          template: "\{value} (\{value:ICMPv4_TYPE})"
 
         - name: code
           label: "Code" 
-          template: "${value} (${value:ICMPv4_CODE})"
+          template: "\{value} (\{value:ICMPv4_CODE})"
 
         - name: checksum
           label: "Checksum"
-          template: "0x${value:04X}"
+          template: "0x\{value:04X}"
 
     MEDIUM:
       # Only override the summary, inherit fields from HIGH
-      summary: "ICMPv4 ${type:ICMPv4_TYPE}"
+      summary: "ICMPv4 \{type:ICMPv4_TYPE}"
 
-    LOW:
+    SUMMARY:
       # Just override summary, no fields needed
-      summary: "ICMPv4 ${type:ICMPv4_TYPE}"
+      summary: "ICMPv4 \{type:ICMPv4_TYPE}"

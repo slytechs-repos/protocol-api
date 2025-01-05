@@ -5,26 +5,26 @@ Frame:
 
   templates:
     HIGH:
-      summary: ""
+      summary: "Frame \{frameNo}: \{wireLength} bytes on wire (\{wireLength:<<3} bits), \{captureLength} bytes captured (\{captureLength:bits} bits)"
       fields:
         - name: portNo
           label: "Interface id"
-          template: "${value} (${portName})"
+          template: "\{value} (\{portName})"
 
         - name: frameNo
           label: "Frame Number"
-          template: "${value}"
+          template: "\{value}"
 
         - name: timestamp
           label: "Arrival Time"
-          template: "${value} [0x${timestampAsLong:016X}]"
+          template: "\{value} [0x\{timestampAsLong:016X}]"
 
         - name: captureLength 
           label: "Capture Length"
-          template: "${value} bytes (${captureLengthBits} bits)"
+          template: "\{value} bytes (\{captureLengthBits} bits)"
 
         - name: wireLength
           label: "Frame Length"
-          template: "${value} bytes (${wireLengthBits} bits)"
+          template: "\{value} bytes (\{wireLengthBits} bits)"
 
     # MEDIUM and LOW will inherit from HIGH since they're identical

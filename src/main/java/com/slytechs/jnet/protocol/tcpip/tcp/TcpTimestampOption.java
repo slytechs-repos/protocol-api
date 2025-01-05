@@ -60,7 +60,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * TCP.
  * </p>
  */
-@MetaResource("tcp-opt-tstamp-meta.json")
+@MetaResource("/tcpip/tcp-options.yaml#TCP-TS")
 public class TcpTimestampOption extends TcpOption {
 
 	/** The Constant ID. */

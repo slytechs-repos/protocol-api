@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.tcpip.tcp.Tcp;
 import com.slytechs.jnet.protocol.tcpip.tcp.TcpWindowScaleOption;
 import com.slytechs.test.Tests;
@@ -94,7 +94,7 @@ class TestTcpHeader {
 		DISSECTOR.writeDescriptor(packet.descriptor());
 
 		var tcp = packet.getHeader(new Tcp());
-		Tests.out.println(tcp.toString(Detail.HIGH, new PacketFormat()));
+		Tests.out.println(tcp.toStringFormatted(new PacketFormatter(), Detail.HIGH));
 
 		assertEquals(5840 << 7, tcp.windowScaled(7));
 	}

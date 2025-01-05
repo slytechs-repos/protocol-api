@@ -31,7 +31,7 @@ import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.tcpip.arp.Arp;
 
 /**
@@ -69,7 +69,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_hardwareType() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -83,7 +83,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_protocolType() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -97,7 +97,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_hardwareSize() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -111,7 +111,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_protocolSize() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -125,7 +125,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_operation() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -139,7 +139,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_senderMacAddress() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -155,7 +155,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_senderProtocolAddress() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -171,7 +171,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_targetMacAddress() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);
@@ -187,7 +187,7 @@ class TestRarpRequestHeader {
 	@Test
 	void test_RarpRequest_targetProtocolAddress() throws HeaderNotFound {
 		var packet = TestPackets.RARP1_REQUEST.toPacket();
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 		packet.descriptor().bind(DESC_BUFFER);
 
 		DISSECTOR.dissectPacket(packet);

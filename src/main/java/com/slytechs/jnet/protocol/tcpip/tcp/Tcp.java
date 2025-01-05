@@ -71,7 +71,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("tcp-meta.json")
+@MetaResource("/tcpip/tcp.yaml")
 public final class Tcp
 		extends OptionsHeader
 		implements HasOption<TcpOption> {

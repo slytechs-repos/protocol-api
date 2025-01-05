@@ -1,7 +1,7 @@
 /*
  * Sly Technologies Free License
  * 
- * Copyright 2023 Sly Technologies Inc.
+ * Copyright 2024 Sly Technologies Inc.
  *
  * Licensed under the Sly Technologies Free License (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,30 +17,14 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
-import com.slytechs.jnet.platform.api.util.Detail;
-import com.slytechs.jnet.protocol.api.common.Frame;
-import com.slytechs.jnet.protocol.api.common.HasIndexedRecord;
-import com.slytechs.jnet.protocol.api.common.HasOption;
-import com.slytechs.jnet.protocol.api.common.Header;
-import com.slytechs.jnet.protocol.api.common.HeaderFactory;
-import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
+import com.slytechs.jnet.platform.api.domain.DomainAccessor;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.impl.GlobalContext;
-import com.slytechs.jnet.protocol.api.meta.impl.MapMetaContext;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
-import com.slytechs.jnet.protocol.api.meta.impl.ReflectedClass;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
-import com.slytechs.jnet.protocol.api.pack.PackId;
-import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 
 /**
  * The Class MetaPacket.
@@ -49,308 +33,133 @@ import com.slytechs.jnet.protocol.api.pack.ProtocolPackTable;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-public final class MetaPacket
-		extends MetaElement
-		implements Iterable<MetaHeader>, MetaMapped {
-
-	private static final Logger LOGGER = Logger.getLogger(MetaPacket.class.getPackageName());
-
-	@Meta(name = "*** Exception")
-	private static class InternarErrorHeaderStub extends Header {
-
-		private final String errorMessage;
-		private final String headerName;
-		private String cause;
-
-		protected InternarErrorHeaderStub(String headerName, String errorMessage, Throwable cause) {
-			super(-1);
-			this.headerName = headerName;
-			this.errorMessage = errorMessage;
-			this.cause = (cause == null) ? "<not specified>" : cause.getMessage();
-		}
-
-		@Meta
-		public String header() {
-			return headerName;
-		}
-
-		@Meta
-		public String error() {
-			return errorMessage;
-		}
-
-		@Meta
-		public String cause() {
-			return cause == null ? "" : cause;
-		}
-	}
-
-	/** The header factory. */
-	private final HeaderFactory headerFactory = HeaderFactory.newInstance();
-
-	/** The packet. */
-	private final Packet packet;
-
-	/** The headers. */
-	private final List<MetaHeader> headers = new ArrayList<>();
-
-	/** The last header. */
-	private final MetaHeader lastHeader;
+public record MetaPacket(
+		MetaBuilder builder,
+		Packet packet,
+		List<MetaHeader> headers,
+		List<MetaAttribute> attributes,
+		ProtocolTemplate template)
+		implements MetaElement, DomainAccessor {
 
 	/**
-	 * Instantiates a new meta packet.
+	 * Private constructor which initializes with constant non-changing properties
+	 * of the packet and is used as a factory with the {@link #bindTo(Packet)}
+	 * method.
 	 *
-	 * @param packet the packet
+	 * @param builder    the builder
+	 * @param attributes the attributes
+	 * @param template   the template
 	 */
-	public MetaPacket(Packet packet) {
-		this(new MapMetaContext("packet", 1), packet);
+	MetaPacket(MetaBuilder builder, List<MetaAttribute> attributes, ProtocolTemplate template) {
+		this(builder, null, null, attributes, template);
+	}
+
+	public DetailTemplate template(Detail detail) {
+		return template.detail(detail);
+	}
+
+	public DetailTemplate templateOrThrow(Detail detail) throws IllegalStateException {
+		DetailTemplate d = (template == null) ? null : template.detail(detail);
+		if (d == null)
+			throw new IllegalStateException("missing meta template for packet");
+
+		return d;
 	}
 
 	/**
-	 * Instantiates a new meta packet.
+	 * Binds a packet to a copy of this meta object.
 	 *
-	 * @param ctx    the ctx
 	 * @param packet the packet
+	 * @return a new meta packet object initialized with packet's current headers
+	 *         and all of the constant properties.
 	 */
-	public MetaPacket(MetaDomain ctx, Packet packet) {
-		super(ctx, GlobalContext.compute(Packet.class, ReflectedClass::parse));
-		this.packet = packet;
+	public MetaPacket bindTo(Packet packet) {
 
-		String lastHeaderName = "";
-		try {
-			headers.add(new MetaHeader(ctx, this, packet.getHeader(new Frame(), 0)));
+		var newAttributes = attributes.stream()
+				.map(a -> a.bindTo(packet))
+				.toList();
 
-			int lastId = 0;
-			HasIndexedRecord<? extends Header> lastHeaderRecord = null;
-			int recordIndex = 0;
-			HasOption<? super Header> lastHeaderOption = null;
+		List<MetaHeader> newHeaders = builder.listHeaders(packet);
 
-			long[] compactArray = packet.descriptor().listHeaders();
-			for (long cp : compactArray) {
-				try {
-					int id = PackId.decodeRecordId(cp);
-					int packId = PackId.decodePackId(id);
-					boolean isOption = (packId == ProtocolPackTable.PACK_ID_OPTIONS);
-					if (isOption && (lastHeaderOption == null) && (lastHeaderRecord == null)) {
-						throw new IllegalStateException(
-								"Option header id[0x%X] error: parent %s header must implement OptionsHeader class"
-										.formatted(id, lastHeaderName));
-					}
+		var meta = new MetaPacket(builder, packet, newHeaders, newAttributes, template);
 
-					final Header header;
-					if (isOption) {
-						
-						if (lastHeaderOption != null) {
-							header = headerFactory.getExtension(lastId, id);
-							lastHeaderOption.getOption(header, 0);
+		newAttributes.forEach(att -> att.parent().setParent(meta));
+		newHeaders.forEach(hdr -> hdr.parent().setParent(meta));
 
-						} else {
-							header = lastHeaderRecord.getRecord(recordIndex++);
-						}
+		return meta;
+	}
 
-						lastHeaderName = header.headerName();
+	@Override
+	public boolean isEmpty() {
+		return headers.isEmpty();
+	}
 
-					} else {
-						header = headerFactory.get(id);
-						lastHeaderName = header.headerName();
-						lastId = id;
-						recordIndex = 0;
-						lastHeaderOption = null;
-						lastHeaderRecord = null;
-						if (header instanceof HasOption<?> ext)
-							lastHeaderOption = (HasOption<? super Header>) ext;
+	private static final Pattern HEADER_ARRAY = Pattern.compile("header\\[(\\d+)\\]");
 
-						else if (header instanceof HasIndexedRecord<?> ext)
-							lastHeaderRecord = ext;
+	/**
+	 * @see com.slytechs.jnet.platform.api.domain.DomainAccessor#resolve(java.lang.String,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public Object resolve(String name, Object ctx) {
 
-						packet.getHeader(header, 0);
-					}
+//		System.out.printf("MetaPacket::resolve name=%s, ctx=%s%n", name, (ctx instanceof Named n) ? n.name() : ctx);
 
-					lastHeaderName = header.toString(Detail.MEDIUM, null);
+		if (ctx instanceof MetaField field) {
+			if (name.equals("value") || name.equals(field.name()))
+				return field.get();
 
-					MetaHeader metaHdr = new MetaHeader(ctx, this, header);
-					headers.add(metaHdr);
+			return resolve(name, field.parent().parent());
+		}
 
-				} catch (RuntimeException e) {
-					MetaHeader errorHeaders = new MetaHeader(
-							ctx,
-							this,
-							new InternarErrorHeaderStub(lastHeaderName, e.getMessage(), e.getCause()));
-					headers.add(errorHeaders);
+		if (ctx instanceof MetaHeader header) {
+			var res = header.getField(name);
+			if (res instanceof MetaField field2)
+				return field2.get();
 
-					LOGGER.log(Level.FINER, "runtime error", e);
+			var metAtt = header.getAttribute(name);
+			if (metAtt instanceof MetaAttribute att)
+				return att.get();
+
+			if (name.indexOf('[') != -1) {
+				var matcher = HEADER_ARRAY.matcher(name);
+				if (matcher.find()) {
+					int index = Integer.parseInt(matcher.group(1));
+
+					return header.header().buffer().get(index);
 				}
 			}
 
-			this.lastHeader = headers.get(headers.size() - 1);
-
-//			if (packet.hasPayload())
-//				headers.add(new MetaHeader(ctx, this, packet.getHeader(new Payload(), 0)));
-		} catch (HeaderNotFound e) {
-			LOGGER.fine(e::getMessage);
-			throw new IllegalStateException(lastHeaderName, e);
+			return resolve(name, header.parent().parent());
 		}
+
+		if (ctx instanceof MetaPacket packet) {
+			var metAtt = packet.getAttribute(name);
+			if (metAtt instanceof MetaAttribute att)
+				return att.get();
+
+		}
+
+		return "\\{%s}".formatted(name);
 	}
 
 	/**
-	 * Gets the target.
-	 *
-	 * @return the target
+	 * @param name
+	 * @return
 	 */
-	public Object getTarget() {
-		return packet;
-	}
-
-	/**
-	 * Iterator.
-	 *
-	 * @return the iterator
-	 * @see java.lang.Iterable#iterator()
-	 */
-	@Override
-	public Iterator<MetaHeader> iterator() {
-		return listHeaders().iterator();
-	}
-
-	/**
-	 * List headers.
-	 *
-	 * @return the list
-	 */
-	public List<MetaHeader> listHeaders() {
-		return headers;
-	}
-
-	/**
-	 * Gets the header.
-	 *
-	 * @param name the name
-	 * @return the header
-	 */
-	public MetaHeader getHeader(String name) {
-		return headers.stream()
-				.filter(h -> h.name().equals(name))
+	public MetaAttribute getAttribute(String name) {
+		return attributes.stream()
+				.filter(att -> att.name().equalsIgnoreCase(name))
 				.findAny()
 				.orElse(null);
 	}
 
 	/**
-	 * Find header.
-	 *
-	 * @param name the name
-	 * @return the optional
-	 */
-	public Optional<MetaHeader> findHeader(String name) {
-		if (name.equals("last"))
-			return Optional.of(lastHeader);
-
-		return headers.stream()
-//				.peek(h -> System.out.println("findHeader:: " + h.name()))
-				.filter(h -> h.name().equals(name))
-				.findAny();
-	}
-
-	/**
-	 * Gets the.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param key the key
-	 * @return the v
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <K, V> V get(K key) {
-		String name = (String) key;
-		return (V) headers.stream()
-				.filter(h -> h.name().equals(name))
-				.findAny()
-				.orElse(null);
-	}
-
-	/**
-	 * Size.
-	 *
-	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
+	 * @see com.slytechs.jnet.protocol.api.meta.MetaElement#parent()
 	 */
 	@Override
-	public int size() {
-		return headers.size();
+	public MetaElement parent() {
+		return null;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "MetaPacket [%s]"
-				.formatted(headers.stream()
-						.map(MetaHeader::name)
-						.collect(Collectors.joining(", ")));
-	}
-
-	/**
-	 * Capture length.
-	 *
-	 * @return the int
-	 */
-	public int captureLength() {
-		return packet.captureLength();
-	}
-
-	/**
-	 * Wire length.
-	 *
-	 * @return the int
-	 */
-	public int wireLength() {
-		return packet.wireLength();
-	}
-
-	/**
-	 * Buffer.
-	 *
-	 * @return the byte buffer
-	 */
-	public ByteBuffer buffer() {
-		return packet.buffer();
-	}
-
-	/**
-	 * Find key.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param key the key
-	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
-	 */
-	@Override
-	public <K, V> Optional<V> findKey(K key) {
-		String m = key.toString();
-		return listHeaders().stream()
-				.filter(h -> h.name().matches(m))
-				.map(h -> (V) h)
-				.findAny();
-	}
-
-	/**
-	 * Find domain.
-	 *
-	 * @param name the name
-	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
-	 */
-	@Override
-	public MetaDomain findDomain(String name) {
-		return listHeaders().stream()
-				.filter(h -> h.name().matches(name))
-				.findAny()
-				.orElse(null);
-	}
 }

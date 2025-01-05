@@ -27,13 +27,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.slytechs.jnet.platform.api.util.Detail;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
-import com.slytechs.jnet.protocol.api.meta.PacketFormat;
+import com.slytechs.jnet.protocol.api.meta.PacketFormatter;
 import com.slytechs.jnet.protocol.tcpip.ethernet.Ethernet;
 import com.slytechs.test.Tests;
 
@@ -79,7 +79,7 @@ class TestIcmp6Messages {
 
 		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_SOLICITATION.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
@@ -96,7 +96,7 @@ class TestIcmp6Messages {
 	void ICMPv6_NEIGHBOR_ADVERTISEMENT() throws HeaderNotFound {
 		var packet = TestPackets.ETH_IPv6_ICMPv6_NEIGHBOR_ADVERTISEMENT.toPacket();
 		packet.descriptor().bind(DESC_BUFFER);
-		packet.setFormatter(new PacketFormat());
+		packet.setFormatter(new PacketFormatter());
 
 		DISSECTOR.dissectPacket(packet);
 		DISSECTOR.writeDescriptor(packet.descriptor());
@@ -104,9 +104,9 @@ class TestIcmp6Messages {
 		packet.descriptor().buffer().flip();
 
 //		Tests.out.println(packet.descriptor().toString(Detail.HIGH));
-//		Tests.out.println(packet.toString(Detail.TRACE));
-		Tests.out.println(packet.getHeader(new Ethernet()).toString(Detail.TRACE));
-//		Tests.out.println(packet.getHeader(new Icmp6NeighborAdvertisement()).toString(Detail.TRACE));
+//		Tests.out.println(packet.toString(Detail.HEXDUMP));
+		Tests.out.println(packet.getHeader(new Ethernet()).toString(Detail.HEXDUMP));
+//		Tests.out.println(packet.getHeader(new Icmp6NeighborAdvertisement()).toString(Detail.HEXDUMP));
 		
 		
 

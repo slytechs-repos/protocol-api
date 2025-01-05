@@ -18,12 +18,10 @@
 package com.slytechs.jnet.protocol.api.meta.spi;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver.ValueResolverType;
+import com.slytechs.jnet.protocol.api.meta.ValueResolver;
 import com.slytechs.jnet.protocol.api.meta.impl.CachedValueResolverService;
 
 /**
@@ -48,22 +46,4 @@ public interface ValueResolverService {
 
 	Map<String, ValueResolver> getResolvers();
 
-	default List<ValueResolverType> getResolverTypeList() {
-		return getResolvers().entrySet().stream()
-				.map(e -> new ValueResolverType(e.getKey(), e.getValue()))
-				.toList();
-	}
-
-	default ValueResolverType[] getResolverTypeArray() {
-		return getResolverTypeList().toArray(ValueResolverType[]::new);
-	}
-
-	default ValueResolverType valueTypeOf(String name) {
-		for (var ar : getResolverTypeArray()) {
-			if (ar.name().endsWith(name))
-				return ar;
-		}
-
-		return null;
-	}
 }

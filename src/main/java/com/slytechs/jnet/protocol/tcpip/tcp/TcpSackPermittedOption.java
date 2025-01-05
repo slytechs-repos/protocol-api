@@ -64,7 +64,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * transfers, and other applications that use TCP.
  * </p>
  */
-@MetaResource("tcp-opt-sack-perm-meta.json")
+@MetaResource("/tcpip/tcp-options.yaml#TCP-SACK-PERM")
 public class TcpSackPermittedOption extends TcpOption {
 	/** The Constant ID. */
 	public static final int ID = TcpOptionId.TCP_OPT_ID_SACK_PERMITTED;

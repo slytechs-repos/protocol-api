@@ -494,6 +494,10 @@ public interface PackId {
 		return null;
 	}
 
+	static boolean isOption(int id) {
+		return PackId.decodePackOrdinal(id) == 1;
+	}
+
 	/**
 	 * Find.
 	 *

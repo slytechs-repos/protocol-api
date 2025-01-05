@@ -23,9 +23,6 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueFormatter;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaValues;
-
 /**
  * The Interface Meta.
  *
@@ -33,9 +30,11 @@ import com.slytechs.jnet.protocol.api.meta.impl.MetaValues;
  * @author repos@slytechs.com
  */
 @Retention(RUNTIME)
-@Target({ TYPE,
+@Target({
+		TYPE,
 		METHOD,
-		FIELD })
+		FIELD
+})
 public @interface Meta {
 
 	/**
@@ -54,67 +53,12 @@ public @interface Meta {
 
 	}
 
-	/**
-	 * The Enum Formatter.
-	 */
-	public enum Formatter implements ValueFormatter {
-
-		/** The none. */
-		NONE(MetaValues::none),
-
-		/** The auto. */
-		AUTO(MetaValues::auto),
-
-		/** The mac address. */
-		MAC_ADDRESS(MetaValues::macAddress),
-
-		/** The ip address. */
-		IP_ADDRESS(MetaValues::ipAddress),
-
-		/** The I pv 4 ADDRESS. */
-		IPv4_ADDRESS(MetaValues::ip4Address),
-
-		/** The I pv 6 ADDRESS. */
-		IPv6_ADDRESS(MetaValues::ip6Address),
-		
-		/** The hex lowercase. */
-		HEX_LOWERCASE(MetaValues::hexLowercase),
-
-		/** The hex uppercase. */
-		HEX_UPPERCASE(MetaValues::hexUppercase),
-
-		/** The hex uppercase 0x. */
-		HEX_UPPERCASE_0X(MetaValues::hexUppercase0x),
-
-		/** The HE X LOWERCAS E 0 x. */
-		HEX_LOWERCASE_0x(MetaValues::hexLowercase0x),
-
-		;
-
-		/** The formatter. */
-		private final ValueFormatter formatter;
-
-		/**
-		 * Instantiates a new formatter.
-		 *
-		 * @param formatter the formatter
-		 */
-		Formatter(ValueFormatter formatter) {
-			this.formatter = formatter;
-		}
-
-		/**
-		 * Format.
-		 *
-		 * @param value the value
-		 * @return the string
-		 */
-		@Override
-		public String format(Object value) {
-			return formatter.format(value);
-		}
-
+	public enum Formatter {
+		NONE,
+		HEX_LOWERCASE_0x
 	}
+
+	Formatter formatter() default Formatter.NONE;
 
 	/**
 	 * Ordinal.
@@ -143,13 +87,6 @@ public @interface Meta {
 	 * @return the string
 	 */
 	String note() default "";
-
-	/**
-	 * Formatter.
-	 *
-	 * @return the formatter
-	 */
-	Formatter formatter() default Formatter.AUTO;
 
 	/**
 	 * Value.

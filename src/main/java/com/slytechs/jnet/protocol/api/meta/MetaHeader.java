@@ -17,25 +17,14 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.impl.GlobalContext;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaContext;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaElement;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaInfo;
-import com.slytechs.jnet.protocol.api.meta.impl.ReflectedClass;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 
 /**
  * The Class MetaHeader.
@@ -44,315 +33,150 @@ import com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped;
  * @author repos@slytechs.com
  * @author Mark Bednarczyk
  */
-public final class MetaHeader
-		extends MetaElement
-		implements Iterable<MetaField>, MetaMapped {
-
-	/** The header. */
-	private final Header header;
-
-	/** The fields. */
-	private final List<MetaField> fields;
-
-	/** The attributes. */
-	private final List<MetaField> attributes;
-
-	/** The elements. */
-	private final List<MetaField> elements;
-
-	/** The element map. */
-	private volatile Map<String, MetaField> elementMap;
-	private volatile Map<String, Object> variableMap;
+public record MetaHeader(
+		MetaParent parent,
+		Header header,
+		List<MetaHeader> subHeaders,
+		List<MetaField> fields,
+		List<MetaAttribute> attributes,
+		ProtocolTemplate template)
+		implements MetaElement {
 
 	/**
-	 * Instantiates a new meta header.
-	 *
-	 * @param domain         the domain
-	 * @param target         the target
-	 * @param reflectedClass the reflected class
+	 * Private constructor which initializes with global non-changing properties of
+	 * the header and is used as a factory with the {@link #bindTo(Header)} method.
+	 * 
+	 * @param header
+	 * @param fields
+	 * @param attributes
+	 * @param template
 	 */
-	private MetaHeader(MetaDomain domain, Header target, ReflectedClass reflectedClass) {
-		super(domain, reflectedClass);
-		this.header = target;
-		this.elements = Arrays.stream(reflectedClass.getFields())
-				.map(reflectedMember -> new MetaField(this, reflectedMember))
-				.collect(Collectors.toList());
-
-		this.fields = elements.stream().filter(MetaField::isField).toList();
-		this.attributes = elements.stream().filter(MetaField::isAttribute).toList();
-		this.elementMap = new HashMap<>();
-		this.variableMap = new HashMap<>();
-
-		fields.forEach(e -> elementMap.put(e.name(), e));
-		attributes.forEach(e -> elementMap.put(e.name(), e));
-
-		fields.forEach(this::addVariablesFromFields);
-		attributes.forEach(this::addVariablesFromFields);
-
-		linkReferencesToFields(fields);
-	}
-
-	private void linkReferencesToFields(List<MetaField> fields) {
-
-		super.setIntReferenceResolver(this::getIntValueByReference);
-
-		for (MetaField m : fields) {
-			if (m.getMeta(MetaInfo.class).metaType() == MetaType.FIELD)
-				m.setIntReferenceResolver(this::getIntValueByReference);
-		}
-	}
-
-	private int getIntValueByReference(String refName) {
-		MetaField intValue = get(refName);
-		if (intValue == null) {
-			elementMap.keySet().forEach(System.out::println);
-
-			throw new IllegalStateException("Meta header [%s] has unresolved meta field reference [%s]"
-					.formatted(header.headerName(), refName));
-		}
-
-		return intValue.get();
-	}
-
-	private void addVariablesFromFields(MetaField field) {
-		MetaInfo info = field.getMeta(MetaInfo.class);
-		String abbr = info.abbr();
-		String name = field.name();
-
-		String formatted = field.getFormatted();
-
-		if (variableMap.containsKey(name) || variableMap.containsKey(abbr))
-			throw new IllegalStateException("variable already defined [%s]"
-					.formatted(name + "/" + abbr));
-
-		variableMap.put(name, formatted);
-		variableMap.put(abbr, formatted);
+	MetaHeader(Header header, List<MetaField> fields, List<MetaAttribute> attributes, ProtocolTemplate template) {
+		this(new MetaParent(), header, List.of(), fields, attributes, template);
 	}
 
 	/**
-	 * Instantiates a new meta header.
-	 *
-	 * @param packet the packet
-	 * @param header the header
+	 * @param string
+	 * @return
 	 */
-	public MetaHeader(Packet packet, Header header) {
-		this(MetaContext.newRoot(), new MetaPacket(packet), header);
-	}
-
-	/**
-	 * Instantiates a new meta header.
-	 *
-	 * @param ctx    the ctx
-	 * @param packet the packet
-	 * @param header the header
-	 */
-	public MetaHeader(MetaDomain ctx, MetaPacket packet, Header header) {
-		this(ctx,
-				header,
-				GlobalContext.compute(header.getClass(), ReflectedClass::parse));
-	}
-
-	/**
-	 * Instantiates a new meta header.
-	 *
-	 * @param ctx    the ctx
-	 * @param header the header
-	 */
-	public MetaHeader(MetaDomain ctx, Header header) {
-		this(ctx,
-				header,
-				GlobalContext.compute(header.getClass(), ReflectedClass::parse));
-	}
-
-	/**
-	 * Gets the extension.
-	 *
-	 * @param name the name
-	 * @return the extension
-	 */
-	public MetaHeader getExtension(String name) {
-		return null;
-	}
-
-	/**
-	 * Gets the field.
-	 *
-	 * @param name the name
-	 * @return the field
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#getField(java.lang.String)
-	 */
-	@Override
 	public MetaField getField(String name) {
-		if (elementMap == null) {// Lazy allocate map
-			var fieldsMap = elements.stream()
-					.collect(Collectors.toConcurrentMap(MetaField::name, f -> f));
+		return fields.stream()
+				.filter(fld -> fld.name().equalsIgnoreCase(name))
+				.findAny()
+				.orElse(null);
+	}
 
-			while (this.elementMap == null)
-				this.elementMap = fieldsMap;
-		}
+	public MetaAttribute getAttribute(String name) {
+		return attributes.stream()
+				.filter(att -> att.name().equalsIgnoreCase(name))
+				.findAny()
+				.orElse(null);
+	}
 
-		return this.elementMap.get(name);
+	public String name() {
+		return header.headerName();
+	}
+
+	public List<MetaField> fields(Detail detail) {
+		return fieldsStream(detail)
+				.toList();
+
+	}
+
+	public Stream<MetaField> fieldsStream(Detail detail) {
+
+		var temp = template.detail(detail)
+				.fieldList();
+
+		return temp.stream()
+				.map(ft -> getField(ft.name()));
+	}
+
+	public Iterable<MetaField> fieldsIterable(Detail detail) {
+
+		var it = fieldsStream(detail)
+				.filter(f -> f.isPresent(detail))
+				.iterator();
+
+		return () -> it;
+	}
+
+	public DetailTemplate template(Detail detail) {
+		return template.detail(detail);
+	}
+
+	public DetailTemplate templateOrThrow(Detail detail) throws IllegalStateException {
+		DetailTemplate d = (template == null) ? null : template.detail(detail);
+		if (d == null)
+			throw new IllegalStateException("missing meta header template [%s]".formatted(name()));
+
+		return d;
 	}
 
 	/**
-	 * Gets the target.
+	 * Binds a packet to a copy of this meta object, reusing the existing protocol
+	 * header backing this meta object.
 	 *
-	 * @return the target
+	 * @param packet the packet
+	 * @return a new meta header object initialized with packet's current headers
+	 *         and all of the constant properties.
 	 */
-	public Object getTarget() {
-		return header;
+	public MetaHeader bindTo(Packet packet) {
+		if (packet.peekHeader(this.header) == null)
+			throw new IllegalStateException("can not bind this header [%s]to packet".formatted(header.headerName()));
+
+		var newFields = fields.stream()
+				.map(f -> f.bindTo(header))
+				.toList();
+
+		var newAttributes = attributes.stream()
+				.map(a -> a.bindTo(header))
+				.toList();
+
+		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, template);
+
+		newFields.forEach(fld -> fld.parent().setParent(meta));
+		newAttributes.forEach(att -> att.parent().setParent(meta));
+
+		return meta;
 	}
 
 	/**
-	 * Iterator.
+	 * Binds a new protocol header to a copy of this meta object. The new protocol
+	 * header must of the same class as the one currently backing this meta object.
+	 * 
+	 * <p>
+	 * Note: if a competely different header was bound to this meta object, the meta
+	 * template data would no longer match the new header.
+	 * </p>
 	 *
-	 * @return the iterator
-	 * @see java.lang.Iterable#iterator()
+	 * @param header the header
+	 * @return a new meta header object initialized with packet's current headers
+	 *         and all of the constant properties.
 	 */
+	public MetaHeader bindTo(Header header) {
+
+		var newFields = fields.stream()
+				.map(f -> f.bindTo(header))
+				.toList();
+
+		var newAttributes = attributes.stream()
+				.map(a -> a.bindTo(header))
+				.toList();
+
+		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, template);
+
+		newFields.forEach(fld -> fld.parent().setParent(meta));
+		newAttributes.forEach(att -> att.parent().setParent(meta));
+
+		return meta;
+	}
+
 	@Override
-	public Iterator<MetaField> iterator() {
-		return fields.iterator();
-	}
+	public boolean isEmpty() {
 
-	/**
-	 * List attributes.
-	 *
-	 * @return the list
-	 */
-	public List<MetaField> listAttributes() {
-		return attributes;
-	}
-
-	/**
-	 * List fields.
-	 *
-	 * @return the list
-	 */
-	public List<MetaField> listFields() {
-		return fields;
-	}
-
-	/**
-	 * List all elements.
-	 *
-	 * @return the list
-	 */
-	public List<MetaField> listAllElements() {
-		return elements;
-	}
-
-	/**
-	 * List sub headers.
-	 *
-	 * @return the list
-	 */
-	public List<MetaHeader> listSubHeaders() {
-		return Collections.emptyList();
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "%s [fields=%s]"
-				.formatted(name(), fields);
-	}
-
-	/**
-	 * Gets the.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param key the key
-	 * @return the v
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#get(java.lang.Object)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <K, V> V get(K key) {
-		return (V) elementMap.get(key);
-	}
-
-	/**
-	 * Size.
-	 *
-	 * @return the int
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.MetaContext.MetaMapped#size()
-	 */
-	@Override
-	public int size() {
-		return elements.size();
-	}
-
-	/**
-	 * Buffer.
-	 *
-	 * @return the byte buffer
-	 */
-	public ByteBuffer buffer() {
-		return header.buffer();
-	}
-
-	/**
-	 * Offset.
-	 *
-	 * @return the int
-	 */
-	public int offset() {
-		return header.headerOffset();
-	}
-
-	/**
-	 * Length.
-	 *
-	 * @return the int
-	 */
-	public int length() {
-		return header.headerLength();
-	}
-
-	/**
-	 * Find key.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param key the key
-	 * @return the optional
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findKey(java.lang.Object)
-	 */
-	@Override
-	public <K, V> Optional<V> findKey(K key) {
-		if (key instanceof String name)
-			return Optional.ofNullable((V) elementMap.get(name));
-
-		return Optional.empty();
-	}
-
-	/**
-	 * Find domain.
-	 *
-	 * @param name the name
-	 * @return the meta domain
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaDomain#findDomain(java.lang.String)
-	 */
-	@Override
-	public MetaDomain findDomain(String name) {
-		return (MetaDomain) findKey(name).orElse(null);
-	}
-
-	/**
-	 * Find a variable. Variables are in the format of {@code $variable_name}.
-	 *
-	 * @param <V>  variable value type
-	 * @param name the name of the variable
-	 * @return the variable value if present otherwise empty is returned
-	 */
-	@SuppressWarnings("unchecked")
-	public <V> Optional<V> findVariable(String name) {
-		return (Optional<V>) Optional.ofNullable(variableMap.get(name));
+//		System.out.println("MetaHeader::%s::isEmpty fields.isEmpty=%s".formatted(name(), fields.isEmpty()));
+//		System.out.println("MetaHeader::%s::isEmpty fields.size=%s".formatted(name(), fields.size()));
+		return fields.size() < 3;
 	}
 }

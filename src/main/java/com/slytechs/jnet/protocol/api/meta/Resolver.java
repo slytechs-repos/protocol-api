@@ -24,8 +24,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
-
 /**
  * Resolves field values to human readable representations. For example IP
  * addresses are can be resolved to host names, etc..
@@ -43,21 +41,12 @@ import com.slytechs.jnet.protocol.api.meta.MetaValue.ValueResolver;
 })
 public @interface Resolver {
 
-	
-
 	/**
 	 * Value.
 	 *
 	 * @return the resolver type
 	 */
 	String value() default "NONE";
-
-	/**
-	 * Resolver class.
-	 *
-	 * @return A value resolver compatible class which can be instantiated
-	 */
-	Class<? extends ValueResolver> resolverClass() default ValueResolver.class;
 
 	/**
 	 * If resolver does not exist or is unable to resolve the value, default to

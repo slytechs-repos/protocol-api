@@ -5,37 +5,37 @@ Ethernet:
 
   templates:
     HIGH:
-      summary: "Ethernet II, src: ${src:R1} dst: ${dst:R1} offset=${offset} length=${length}"
+      summary: "Ethernet II, src: \{src:R1} dst: \{dst:R1} offset=\{offset} length=\{length}"
       fields:
         - name: dst
           label: "Destination Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
         - name: src
           label: "Source Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
         - name: type
           label: "Type"
-          template: "${value:ETHER_TYPE} (0x${value:04X})"
+          template: "\{value:ETHER_TYPE} (0x\{value:04X})"
 
     MEDIUM:
-      summary: "Ethernet II, src: ${src:R1} dst: ${dst:R1} offset=${offset} length=${length}"
+      summary: "Ethernet II, src: \{src:R1} dst: \{dst:R1} offset=\{offset} length=\{length}"
       fields:
         - name: dst
           label: "Destination Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
         - name: src
           label: "Source Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
-    LOW:
-      summary: "Ethernet II, src: ${src:R1} dst: ${dst:R1} offset=${offset} length=${length}"
+    SUMMARY:
+      summary: "Ethernet II, src: \{src:R1} dst: \{dst:R1} offset=\{offset} length=\{length}"
 
     DEBUG:
       summary: |
-        Ethernet II, src: ${source:R1} dst: ${destination:R1} offset=${offset} length=${length}
+        Ethernet II, src: \{source:R1} dst: \{destination:R1} offset=\{offset} length=\{length}
          0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         |           |G|U|                                               |
@@ -47,29 +47,33 @@ Ethernet:
         |             Type              |  Data ...                     
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                
 
-    TRACE:
+    HEXDUMP:
+      bitfields:
+        - G: "\{gbit}"
+        - U: "\{ubit}"
+
       summary: |
-        Ethernet II, src: ${src:R1} dst: ${dst:R1} offset=${offset} length=${length}
+        Ethernet II, src: \{src:R1} dst: \{dst:R1} offset=\{offset} length=\{length}
          0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        |           |$1g|$1u|                $47-                       |
-        +             $dst              +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        |                               |           |$1g|$1u|    $15-   |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+              $src             +
+        |           |G|U|                                               |
+        +            &dst               +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        |                               |           |G|U|               |
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+            &src               +
         |                                                               |
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        |            $type              |  Data ...                     
+        |            &type              |  Data ...                     
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                
 
       fields:
         - name: dst
           label: "Destination Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
         - name: src
           label: "Source Address"
-          template: "${value:ETHER_MAC_OUI_NAME_PREFIXED} (${value:F})"
+          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:F})"
 
         - name: type
           label: "Type"
-          template: "${value:ETHER_TYPE} (0x${value:04X})"
+          template: "\{value:ETHER_TYPE} (0x\{value:04X})"
