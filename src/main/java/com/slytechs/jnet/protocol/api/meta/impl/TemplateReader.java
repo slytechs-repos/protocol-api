@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 
 public interface TemplateReader {
@@ -58,4 +60,7 @@ public interface TemplateReader {
 	 */
 	ProtocolTemplate parseHeader(String content);
 
+	MetaTemplate.Defaults defaults();
+	
+	void setDefaults(Defaults newDefaults);
 }

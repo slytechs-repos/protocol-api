@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.slytechs.jnet.protocol.api.meta.DefaultFormatters;
 import com.slytechs.jnet.protocol.api.meta.FormatRegistry;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaMacros;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
 import com.slytechs.jnet.protocol.api.meta.ValueFormatter.SpecificValueFormatter;
 
@@ -67,7 +67,7 @@ public class DefaultMetaPattern implements MetaPattern {
 	private final Arg[] args;
 	private final String template;
 
-	public DefaultMetaPattern(FormatRegistry formatRegistry, String template, MetaMacros metaMacros) {
+	public DefaultMetaPattern(FormatRegistry formatRegistry, String template, Macros macros) {
 		this.template = template;
 		this.formatRegistry = formatRegistry;
 
@@ -75,15 +75,15 @@ public class DefaultMetaPattern implements MetaPattern {
 		List<Arg> args = new ArrayList<>();
 
 		parseTemplateString(template, 0, fragments, args);
-		substituteMacros(metaMacros, args);
+		substituteMacros(macros, args);
 		resolveFormatters(args);
 
 		this.fragments = fragments.toArray(String[]::new);
 		this.args = args.toArray(Arg[]::new);
 	}
 
-	public DefaultMetaPattern(String template, MetaMacros metaMacros) {
-		this(new DefaultFormatters(), template, metaMacros);
+	public DefaultMetaPattern(String template, Macros macros) {
+		this(new DefaultFormatters(), template, macros);
 	}
 
 	/**
@@ -196,36 +196,41 @@ public class DefaultMetaPattern implements MetaPattern {
 	}
 
 	/**
-	 * @param metaMacros
+	 * @param macros
 	 * @param args
 	 * @param rawArgs
 	 */
-	private boolean substituteMacros(MetaMacros metaMacros, List<Arg> args) {
-		AtomicInteger count = new AtomicInteger();
+	private boolean substituteMacros(Macros macros, List<Arg> args) {
+
+		AtomicInteger replacedCount = new AtomicInteger();
 		var tempList = args.stream()
 				.map(arg -> {
 					var ref = arg.referenceName().trim();
-					var fmt = arg.isFormatPresent() ? arg.formatName().trim() : null;
+					var fmt = arg.formatName();
 
-					if (metaMacros.isMacroPresent(ref) || metaMacros.isMacroPresent(fmt))
-						count.incrementAndGet();
+					String newRef = macros.replaceOrDefault(ref, "value");
+					String newFmt = macros.replaceOrDefault(fmt, "any");
 
-					ref = metaMacros.resolveIfPresent(ref);
-					fmt = fmt == null ? "any" : metaMacros.resolveIfPresent(fmt);
+					if (newRef == null && newFmt == null)
+						return arg;
 
-					return new SplitArg(arg.expression(), new String[] {
-							ref,
-							fmt
+					replacedCount.incrementAndGet();
+
+					var newArg = new SplitArg(arg.expression(), new String[] {
+							newRef == null ? ref : newRef,
+							newFmt == null ? fmt : newFmt
 					});
+
+					return newArg;
 				})
 				.toList();
 
-		if (count.get() > 0) {
+		if (replacedCount.get() > 0) {
 			args.clear();
 			args.addAll(tempList);
 		}
 
-		return count.get() > 0;
+		return replacedCount.get() > 0;
 	}
 
 	/**

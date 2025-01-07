@@ -18,11 +18,11 @@
 package com.slytechs.jnet.protocol.api.meta;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.slytechs.jnet.platform.api.util.Named;
 import com.slytechs.jnet.platform.api.util.format.Detail;
@@ -40,35 +40,12 @@ public record MetaField(
 		String name,
 		List<MetaAttribute> attributes,
 		MetaValue value,
-		Map<Detail, FieldTemplate> templateMap,
 		FieldTemplate[] templateArray,
-		List<FieldTemplate> templateList)
+		Map<Detail, MetaField[]> children)
 		implements MetaElement, Named {
 
-	/**
-	 * @param templateArray
-	 * @return
-	 */
-	private static List<FieldTemplate> arrayToList(FieldTemplate[] templateArray) {
-		var list = Arrays.asList(templateArray);
-
-		return Collections.unmodifiableList(list);
-	}
-
-	/**
-	 * @param templateArray2
-	 * @return
-	 */
-	private static Map<Detail, FieldTemplate> arrayToMap(FieldTemplate[] templateArray) {
-		var map = Arrays.stream(Detail.values())
-				.filter(detail -> templateArray[detail.ordinal()] != null)
-				.collect(Collectors.toMap(detail -> detail, detail -> templateArray[detail.ordinal()]));
-
-		return Collections.unmodifiableMap(map);
-	}
-
-	public MetaField(String name, MetaValue value, FieldTemplate[] templateArray) {
-		this(null, name, List.of(), value, arrayToMap(templateArray), templateArray, arrayToList(templateArray));
+	public MetaField(String name, MetaValue value, FieldTemplate[] templateArray, Map<Detail, MetaField[]> children) {
+		this(null, name, List.of(), value, templateArray, children);
 	}
 
 	public boolean isPresent(Detail detail) {
@@ -107,9 +84,27 @@ public record MetaField(
 				.map(a -> a.bindTo(target))
 				.toList();
 
-		return new MetaField(new MetaParent(), name, newAttributes, value.bindTo(target),
-				templateMap,
-				templateArray, templateList);
+		Map<Detail, MetaField[]> newChildren = children();
+
+		if (!children.isEmpty()) {
+			var tempMap = new HashMap<Detail, MetaField[]>(children().size());
+
+			Stream.of(Detail.values())
+					.filter(detail -> children.containsKey(detail))
+					.forEach(detail -> {
+						MetaField[] childrenAtDetail = children.get(detail);
+
+						MetaField[] arr = Arrays.stream(childrenAtDetail)
+								.map(m -> m.bindTo(target))
+								.toArray(MetaField[]::new);
+
+						tempMap.put(detail, arr);
+					});
+
+			newChildren = tempMap;
+		}
+
+		return new MetaField(new MetaParent(), name, newAttributes, value.bindTo(target), templateArray, newChildren);
 	}
 
 	/**

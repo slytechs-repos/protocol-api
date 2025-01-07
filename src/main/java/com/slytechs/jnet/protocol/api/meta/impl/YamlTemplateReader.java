@@ -29,57 +29,106 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import com.slytechs.jnet.platform.api.util.format.Detail;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaMacros;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 
 public class YamlTemplateReader implements TemplateReader {
+
+	private static final String DEFAULTS_KEYWORD = "defaults";
+	private static final String FIELDS_KEYWORD = "fields";
+	private static final String MACROS_KEYWORD = "macros";
+
+	private Defaults defaults = Defaults.root();
+	private Macros defaultMacros = Macros.root();
+
+	/**
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReader#defaults()
+	 */
+	@Override
+	public Defaults defaults() {
+		return defaults;
+	}
+
+	/**
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReader#setDefaults(com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults)
+	 */
+	@Override
+	public void setDefaults(Defaults newDefaults) {
+		this.defaults = newDefaults;
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(YamlTemplateReader.class.getSimpleName());
 
 	/**
-	 * Pre-process reader input stream to replace single `\{` with double `\\{` YAML
-	 * approved sequence before YAML parser. This is why all of the YAML template
-	 * resource files can use a single `\{value}` in a YAML file.
+	 * Pre-process reader input stream to replace: 1) Single `\{` with double `\\{`
+	 * (YAML-approved sequence). 2) Each tab `'\t'` with TAB_CHAR_WIDTH spaces.
 	 */
-	static class EscapeSequenceReader extends FilterReader {
+	static class YamlPreprocessorReader extends FilterReader {
+		public static final int TAB_CHAR_WIDTH = 4;
+
 		private int lastChar = -1;
 		private int backslashCount = 0;
+		private int spaceCount = 0; // how many ' ' spaces remain to output after a tab
 
-		public EscapeSequenceReader(Reader in) {
+		public YamlPreprocessorReader(Reader in) {
 			super(in);
 		}
 
 		@Override
 		public int read() throws IOException {
+			// 1) If we owe spaces from a recent tab, return a space
+			if (spaceCount > 0) {
+				spaceCount--;
+				return ' ';
+			}
+
+			// 2) If we owe an extra backslash, return it
 			if (backslashCount > 0) {
 				backslashCount--;
 				return '\\';
 			}
 
+			// 3) If lastChar is "uninitialized", read from underlying
 			if (lastChar == -1) {
 				lastChar = super.read();
 			}
 
+			// 4) Check for tab expansion
+			if (lastChar == '\t') {
+				// We will convert this tab into TAB_CHAR_WIDTH spaces in total
+				spaceCount = TAB_CHAR_WIDTH - 1; // we'll return one space now
+				lastChar = -1; // sentinel to avoid re-processing this char
+				return ' ';
+			}
+
+			// 5) Check for a backslash + '{' sequence that needs doubling
 			if (lastChar == '\\') {
 				int next = super.read();
 				if (next == '{') {
-					lastChar = next;
-					backslashCount = 1; // Queue up one more backslash
-					return '\\'; // Return first backslash
+					// We want to convert "\{" into "\\{"
+					// so we queue up one more backslash to output.
+					lastChar = next; // so next iteration sees '{'
+					backslashCount = 1; // one more backslash to insert
+					return '\\'; // return the first backslash now
 				}
+				// Otherwise, not "\{", so just return the backslash
 				int temp = lastChar;
-				lastChar = next;
+				lastChar = next; // keep reading
 				return temp;
 			}
 
+			// 6) Normal character path
 			int temp = lastChar;
 			lastChar = super.read();
 			return temp;
@@ -91,7 +140,7 @@ public class YamlTemplateReader implements TemplateReader {
 			for (int i = 0; i < len; i++) {
 				int c = read();
 				if (c == -1) {
-					return count == 0 ? -1 : count;
+					return (count == 0) ? -1 : count;
 				}
 				cbuf[off + i] = (char) c;
 				count++;
@@ -100,25 +149,31 @@ public class YamlTemplateReader implements TemplateReader {
 		}
 
 		public static void main(String[] args) throws IOException {
+			// Demo: a few test strings including tabs and "\{" combos
 			String[] tests = {
 					"Hello \\{world}",
 					"\\{test} \\{test2}",
-					"No replacement needed",
-					"Multiple \\\\ backslashes \\{test}",
-					"template: \"\\{value} (\\{portName})\"",
+					"No replacement needed\t(tab here)",
+					"\tLeading tab and backslash \\{test}",
+					"template:\t\"\\{value} (\\{portName})\"",
 					""
 			};
 
 			for (String test : tests) {
-				System.out.println("\nTest input: " + test);
-				Reader reader = new EscapeSequenceReader(new StringReader(test));
+				System.out.println("\nTest input:    " + test.replace("\t", "\\t"));
+				Reader reader = new YamlPreprocessorReader(new StringReader(test));
 				StringBuilder result = new StringBuilder();
 				int c;
 				while ((c = reader.read()) != -1) {
 					result.append((char) c);
 				}
-				System.out.println("Result: " + result);
-				System.out.println("Expected: " + test.replace("\\{", "\\\\{"));
+				// Show result with literal tabs replaced for clarity
+				System.out.println("Result:        " + result.toString()
+						.replace("\t", "\\t"));
+				// Show what we'd expect from doubling "\{"
+				String expectedDoubleBackslash = test.replace("\\{", "\\\\{")
+						.replace("\t", "→");
+				System.out.println("Double \\{:    " + expectedDoubleBackslash);
 			}
 		}
 	}
@@ -166,21 +221,21 @@ public class YamlTemplateReader implements TemplateReader {
 
 	@Override
 	public ProtocolTemplate parseHeader(Reader reader) throws IOException {
-		reader = new EscapeSequenceReader(reader);
+		reader = new YamlPreprocessorReader(reader);
 
 		Yaml yaml = new Yaml();
 		Map<String, Object> root = yaml.load(reader);
 
-		return parseHeaderFromMap(root);
+		return parseProtocolFromMap(root);
 	}
 
 	@Override
 	public Map<String, ProtocolTemplate> parseAllHeaders(Reader reader) {
-		reader = new EscapeSequenceReader(reader);
+		reader = new YamlPreprocessorReader(reader);
 
 		Yaml yaml = new Yaml();
 		Map<String, Object> root = yaml.load(reader);
-		return parseAllHeadersFromMap(root);
+		return parseAllProtocolsFromMap(root);
 	}
 
 	@Override
@@ -189,18 +244,18 @@ public class YamlTemplateReader implements TemplateReader {
 
 		Yaml yaml = new Yaml();
 		Map<String, Object> root = yaml.load(yamlContent);
-		return parseHeaderFromMap(root);
+		return parseProtocolFromMap(root);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, ProtocolTemplate> parseAllHeadersFromMap(Map<String, Object> root) {
+	private Map<String, ProtocolTemplate> parseAllProtocolsFromMap(Map<String, Object> root) {
 		var map = new HashMap<String, ProtocolTemplate>();
 
 		for (Map.Entry<String, Object> protocolEntry : root.entrySet()) {
 			String protocolName = protocolEntry.getKey();
 			Map<String, Object> protocol = (Map<String, Object>) protocolEntry.getValue();
 
-			var hdr = parseHeaderFromMap(protocol, protocolName);
+			var hdr = parseProtocolFromMap(protocol, protocolName);
 			map.put(protocolName, hdr);
 		}
 
@@ -208,39 +263,37 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ProtocolTemplate parseHeaderFromMap(Map<String, Object> root) {
+	private ProtocolTemplate parseProtocolFromMap(Map<String, Object> root) {
 		Map.Entry<String, Object> protocolEntry = root.entrySet().iterator().next();
 		String protocolName = protocolEntry.getKey();
 		Map<String, Object> protocol = (Map<String, Object>) protocolEntry.getValue();
 
-		return parseHeaderFromMap(protocol, protocolName);
+		return parseProtocolFromMap(protocol, protocolName);
 	}
 
 	@SuppressWarnings("unchecked")
-	private ProtocolTemplate parseHeaderFromMap(Map<String, Object> protocol, String protocolName) {
-		Map<String, Object> defaults = (Map<String, Object>) protocol.get("defaults");
-		int defaultWidth = ((Number) defaults.getOrDefault("width", 50)).intValue();
+	private ProtocolTemplate parseProtocolFromMap(Map<String, Object> protocol, String protocolName) {
+		Defaults defaults = Defaults.fromMap(this.defaults, (Map<String, Object>) protocol.get(
+				DEFAULTS_KEYWORD));
 
-		Map<String, String> macroMap = (Map<String, String>) protocol.get("macros");
-		MetaMacros metaMacros = new MetaMacros(macroMap == null ? Map.of() : macroMap);
-
-		// Parse meta section
-		Map<String, String> meta = new HashMap<>();
-		if (protocol.containsKey("meta")) {
-			Map<String, Object> metaMap = (Map<String, Object>) protocol.get("meta");
-			metaMap.forEach((k, v) -> meta.put(k, String.valueOf(v)));
-		}
+		Map<String, String> macroMap = (Map<String, String>) protocol.get(MACROS_KEYWORD);
+		Macros macros = new Macros(this.defaultMacros, macroMap);
 
 		// Parse templates with inheritance
 		Map<String, Object> templates = (Map<String, Object>) protocol.get("templates");
-		Map<Detail, DetailTemplate> details = parseDetailTemplates(templates, defaultWidth, metaMacros);
+		Map<Detail, DetailTemplate> details = parseDetailTemplates(templates, defaults, macros);
 
-		return new ProtocolTemplate(protocolName, details, metaMacros, meta);
+		return new ProtocolTemplate(protocolName, details, macros, defaults);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<Detail, DetailTemplate> parseDetailTemplates(Map<String, Object> templates, int defaultWidth,
-			MetaMacros macros) {
+	private Map<Detail, DetailTemplate> parseDetailTemplates(Map<String, Object> templates, Defaults defaults,
+			Macros macros) {
+
+		// Chain new Defaults if present, otherwise the passed in parent Defaults are
+		// returned
+		defaults = Defaults.fromMap(defaults, (Map<String, Object>) templates.get(DEFAULTS_KEYWORD));
+
 		Map<Detail, DetailTemplate> details = new EnumMap<>(Detail.class);
 
 		// First pass: parse explicitly defined templates
@@ -253,12 +306,12 @@ public class YamlTemplateReader implements TemplateReader {
 
 			List<FieldTemplate> fields = new ArrayList<>();
 
-			if (template.containsKey("fields")) {
-				Object fieldsObj = template.get("fields");
-				fields = parseFields(fieldsObj, defaultWidth);
+			if (template.containsKey(FIELDS_KEYWORD)) {
+				Object fieldsObj = template.get(FIELDS_KEYWORD);
+				fields = parseFields(detail, fieldsObj, defaults);
 			}
 
-			details.put(detail, new DetailTemplate(summary, fields, pattern));
+			details.put(detail, new DetailTemplate(detail, summary, fields, defaults, pattern));
 		}
 
 		// Second pass: apply inheritance
@@ -297,33 +350,64 @@ public class YamlTemplateReader implements TemplateReader {
 		return null;
 	}
 
+	private List<FieldTemplate> parseFields(Detail detail, Object fieldsObj, Defaults defaults) {
+		return parseFields(detail, fieldsObj, null, defaults);
+	}
+
 	@SuppressWarnings("unchecked")
-	private List<FieldTemplate> parseFields(Object fieldsObj, int defaultWidth) {
+	private List<FieldTemplate> parseFields(
+			Detail detail,
+			Object fieldsObj,
+			String defaultName,
+			Defaults defaults) {
+
 		List<FieldTemplate> fields = new ArrayList<>();
 
 		if (fieldsObj instanceof List) {
 			List<Map<String, Object>> fieldsList = (List<Map<String, Object>>) fieldsObj;
+
+			int fieldIndex = 0;
 			for (Map<String, Object> field : fieldsList) {
-				fields.add(createFieldTemplate(field, defaultWidth));
+				defaults = Defaults.fromMap(defaults, (Map<String, Object>) field.get(DEFAULTS_KEYWORD));
+
+				if (field.get("name") == null)
+					field.put("name", defaultName.formatted(fieldIndex++));
+
+				String name = (String) field.get("name");
+
+				List<FieldTemplate> children = null;
+
+				// Process child group of fields recursively
+				if (field.containsKey(FIELDS_KEYWORD)) {
+					Object childrenObj = field.get(FIELDS_KEYWORD);
+					String childrenDefaultName = name + "/field[%d]";
+
+					children = parseFields(detail, childrenObj, childrenDefaultName, defaults);
+
+					children.forEach(System.out::println);
+				}
+
+				fields.add(createFieldTemplate(detail, field, children, defaults));
 			}
-		} else if (fieldsObj instanceof Map) {
-			Map<String, Map<String, Object>> fieldsMap = (Map<String, Map<String, Object>>) fieldsObj;
-			for (Map.Entry<String, Map<String, Object>> field : fieldsMap.entrySet()) {
-				Map<String, Object> fieldProps = new HashMap<>(field.getValue());
-				fieldProps.put("name", field.getKey());
-				fields.add(createFieldTemplate(fieldProps, defaultWidth));
-			}
+
 		}
 
 		return fields;
 	}
 
-	private FieldTemplate createFieldTemplate(Map<String, Object> field, int defaultWidth) {
+	private FieldTemplate createFieldTemplate(
+			Detail detail,
+			Map<String, Object> field,
+			List<FieldTemplate> children,
+			Defaults defaults) {
+
 		return new FieldTemplate(
-				(String) field.get("name"),
-				(String) field.get("label"),
+				detail,
+				Objects.requireNonNull((String) field.get("name"), "Must provide or inherit a field name"),
+				(String) field.getOrDefault("label", ""),
 				(String) field.get("template"),
-				((Number) field.getOrDefault("width", defaultWidth)).intValue());
+				children,
+				defaults);
 	}
 
 	public static void main(String[] args) {
@@ -363,7 +447,7 @@ public class YamlTemplateReader implements TemplateReader {
 					System.out.printf("  - %s:%n", field.name());
 					System.out.printf("      Label: %s%n", field.label());
 					System.out.printf("      Template: %s%n", field.template());
-					System.out.printf("      Width: %d%n", field.width());
+					System.out.printf("      Width: %d%n", field.defaults().width());
 				}
 			}
 		}

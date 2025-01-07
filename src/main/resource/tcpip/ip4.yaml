@@ -1,43 +1,59 @@
 IPv4:
   defaults:
-    width: 50
-    align: left
+    indent: 4
+    width: 64
+	align: left
+	
+  macros:
+	$ip_ver:      "/1111 ..../"
+	$ip_hlen:     "/.... 1111/"
+	$ip_flag:     "/111. ..../"
+	$ip_res:      "/.1.. ..../"
+	$ip_df:       "/..1. ..../"
+	$ip_frag_off: "/...1 1111 1111 1111/"
 
   templates:
     HIGH:
       summary: "Internet Protocol Version 4, offset=\{offset} length=\{length}"
       fields:
         - name: version
-          label: ""
-          template: "\{header[0]:1111 ....} = Version: \{value}"
+          template: "\{header[0]:$ip_ver} = Version: \{value}"
 
         - name: hdrLen
-          label: ""
-          template: "\{header[0]:.... 1111} = Header Length: \{hdrLenBytes} bytes (\{value})"
+		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes = $0 * 4} (\{value})"
+ #         template: "\{header[0]:/.... 1111/} = Header Length: \{hdrLenBytes} bytes (\{value})"
 
         - name: trafficClass
           label: "Traffic Class"
-          template: "0x\{value:02X} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
+          template: "\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
 
         - name: totalLength
           label: "Total Length"
-          template: "\{value} bytes"
+          template: "\{:bytes}"
 
         - name: identification
           label: "Identification"
-          template: "0x\{value:04X} [\{value}]"
+          template: "\{:0x%04x} (\{value})"
 
         - name: flags
-          label: ""
-          template: "\{value:010. ....} = Flags: 0x\{value:HEX}, \{flagsInfo:NO_QUOTES}"
-#		  010. .... = Flags: 0x2, Don't fragment
-#		      0... .... = Reserved bit: Not set
-#		      .1.. .... = Don't fragment: Set
-#		      ..0. .... = More fragments: Not set
+          defaults:
+            indent: 0 # Sets the group bitfield indentiation to 0, to align with template
+          template:     "\{:$ip_flag = ($0 << 5)} = Flags: \{:0x%X}, \{flagsInfo}"
+#          fields:
+#            - template: "\{:/1... ..../} = Reserved bit: \{:BIT_SET_OR_NOT_SET}"
+#            - template: "\{:/.1.. ..../} = Don't fragment: \{:BIT_SET_OR_NOT_SET}"
+#			- template: "\{:/..1. ..../} = More fragments: \{:BIT_SET_OR_NOT_SET}"
+#			  fields:
+#				- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+#				- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+#				  fields:
+#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
 
         - name: fragOffset
-          label: "Fragment Offset"
-          template: "\{value} [\{value}*8 = \{fragOffsetBytes} bytes]"
+          template: "\{:$ip_frag_off} = Fragment Offset: \{fragOffset}"
 
         - name: ttl
           label: "Time to Live"
@@ -45,7 +61,7 @@ IPv4:
 
         - name: protocol
           label: "Protocol"
-          template: "\{protocol:IP_TYPE} (\{value})"
+          template: "\{:IP_TYPE} (\{value})"
 
         - name: src
           label: "Source Address"
@@ -60,7 +76,7 @@ IPv4:
       fields:
         - name: trafficClass
           label: "Traffic Class"
-          template: "0x\{value:02X} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
+          template: "\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
 
         - name: totalLength
           label: "Total Length"

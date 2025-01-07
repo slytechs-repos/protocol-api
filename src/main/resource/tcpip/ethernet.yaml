@@ -4,24 +4,23 @@ Ethernet:
     align: left
 
   macros:
-    $MAC: "MAC"
     $OUI: "ETHER_MAC_OUI_NAME_PREFIXED"
 
   templates:
     HIGH:
-      summary: "Ethernet II, src: \{src:ETHER_MAC_OUI_NAME_PREFIXED} dst=\{dst:ETHER_MAC_OUI_NAME_PREFIXED} offset=\{offset} length=\{length} caplen=\{captureLength}"
+      summary: "Ethernet II, src: \{src:$OUI} dst=\{dst:$OUI} offset=\{offset} length=\{length} caplen=\{captureLength}"
       fields:
         - name: dst 
           label: "Destination Address"
-          template: "\{} (\{value:$MAC})"
+          template: "\{:$OUI} (\{value})"
 
         - name: src
           label: "Source Address"
-          template: "\{value:ETHER_MAC_OUI_NAME_PREFIXED} (\{value:MAC})"
+          template: "\{:$OUI} (\{value})"
 
         - name: type
           label: "Type"
-          template: "\{value:ETHER_TYPE} (0x\{value:HEX})"
+          template: "\{:ETHER_TYPE} (\{value:0x%X})"
           width: 30
 
     MEDIUM:

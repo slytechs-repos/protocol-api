@@ -20,6 +20,7 @@ package com.slytechs.jnet.protocol.api.meta.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.slytechs.jnet.platform.api.util.Reflections;
@@ -30,7 +31,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaAttribute;
 import com.slytechs.jnet.protocol.api.meta.MetaField;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaMacros;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaValue;
@@ -67,16 +68,25 @@ public final class MetaReflections {
 				? method.getName()
 				: meta.name();
 
-		MetaMacros macros = template.metaMacros();
+		Macros macros = template.macros();
 
 		var fieldTemplateArray = Arrays.stream(Detail.values())
 				.map(detail -> template.detail(detail))
 				.map(detailTemplate -> buildFieldTemplate(name, detailTemplate, macros))
 				.toArray(FieldTemplate[]::new);
 
+		var childMetaFieldMap = new HashMap<Detail, MetaField[]>();
+
+//		Arrays.stream(Detail.values())
+//				.filter(detail -> fieldTemplateArray[detail.ordinal()].children() != null)
+//				.map(detail -> {
+//					fieldTemplateArray[detail.ordinal()].children().stream()
+//						.map(null)
+//				});
+
 		try {
 			var value = new MetaValue(name, method);
-			return new MetaField(name, value, fieldTemplateArray);
+			return new MetaField(name, value, fieldTemplateArray, childMetaFieldMap);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -86,7 +96,7 @@ public final class MetaReflections {
 
 	}
 
-	private static FieldTemplate buildFieldTemplate(String name, DetailTemplate detailTemplate, MetaMacros macros) {
+	private static FieldTemplate buildFieldTemplate(String name, DetailTemplate detailTemplate, Macros macros) {
 		FieldTemplate field = detailTemplate == null ? null : detailTemplate.fieldMap().get(name);
 		if (field == null)
 			return null;
@@ -94,11 +104,12 @@ public final class MetaReflections {
 		MetaPattern pattern = MetaPattern.compile(field.template(), macros);
 
 		return new FieldTemplate(
-
+				field.detail(),
 				field.name(),
 				field.label(),
 				field.template(),
-				field.width(),
+				field.children(),
+				field.defaults(),
 				pattern
 
 		);
@@ -120,10 +131,10 @@ public final class MetaReflections {
 	public static List<MetaField> listFields(Class<?> containerClass, ProtocolTemplate template) {
 		var list = new ArrayList<MetaField>();
 
-		var attributeMethods = Reflections.listMethods(containerClass, Meta.class, a -> a
+		var fieldMethods = Reflections.listMethods(containerClass, Meta.class, a -> a
 				.value() == MetaType.FIELD);
 
-		attributeMethods.stream()
+		fieldMethods.stream()
 				.map(method -> buildField(method, template))
 				.forEach(list::add);
 

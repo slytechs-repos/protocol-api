@@ -17,6 +17,7 @@
  */
 package com.slytechs.jnet.protocol.api.meta;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.slytechs.jnet.platform.api.incubator.StableValue;
+import com.slytechs.jnet.platform.api.util.Reflections;
+import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.Packet;
+import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 import com.slytechs.jnet.protocol.api.meta.impl.DummyHeaderRegistry;
 import com.slytechs.jnet.protocol.api.meta.impl.HeaderRegistry;
@@ -48,11 +55,33 @@ public final class MetaBuilder {
 	private final StableValue<MetaPacket> UNBOUND_PACKET = StableValue.ofSupplier(this::initPacket);
 	private final Map<Long, MetaHeader> UNBOUND_HEADERS = new HashMap<>();
 
-	private MetaPacket initPacket() {
-		var attributes = MetaReflections.listAttributes(Packet.class);
-		var template = loadTemplate(Packet.class, "packet");
+	private HeaderRegistry registry = new DummyHeaderRegistry();
 
-		return new MetaPacket(this, attributes, template);
+	public MetaHeader buildHeader(Header header) {
+		if (!header.isBound())
+			throw new IllegalStateException("header [%s] not bound".formatted(header.headerName()));
+
+		int id = header.id();
+		var metaHeader = getHeaderFromCache(id, 0);
+
+		return metaHeader.bindTo(header);
+	}
+
+	public MetaPacket buildPacket(Packet packet) {
+		return UNBOUND_PACKET.get().bindTo(packet);
+	}
+
+	/**
+	 * @param header
+	 * @return
+	 */
+	private MetaHeader getHeaderFromCache(int id, int parentId) {
+		long key = parentId << 32 | id;
+
+		if (!UNBOUND_HEADERS.containsKey(key))
+			UNBOUND_HEADERS.put(key, initHeader(id, parentId));
+
+		return UNBOUND_HEADERS.get(key);
 	}
 
 	private MetaHeader initHeader(int id, int parentId) {
@@ -68,55 +97,65 @@ public final class MetaBuilder {
 		var fields = MetaReflections.listFields(hdrClass, template);
 
 		var meta = new MetaHeader(header, fields, attributes, template);
-		
-		var attDebug = attributes.stream()
-				.map(a -> a.name())
-				.toList();
-		
-//		System.out.printf("initPacket:: %s, att=%s%n", meta.name(), attDebug, meta.attributes());
-		
 		return meta;
 	}
 
-	private ProtocolTemplate loadTemplate(Object targetObjOrClass, String targetName) {
-		Class<?> targetClass = targetObjOrClass instanceof Class cl ? cl : targetObjOrClass.getClass();
-		var resourceAnnotation = targetClass.getAnnotation(MetaResource.class);
-		if (resourceAnnotation == null) {
-			logger.warn("{} did not define a MetaResource template definition", targetName);
-			return null;
-		}
+	private List<MetaField> listFields(Class<?> containerClass, ProtocolTemplate template) {
+		var fieldMethodList = Reflections.listMethods(containerClass, Meta.class, a -> a
+				.value() == MetaType.FIELD);
 
-		var resource = resourceAnnotation.value();
+		return fieldMethodList.stream()
+				.map(method -> buildFieldFromMethod(method, template.macros(), template.detailList()))
+				.toList();
 
-		if (resource.isEmpty()) {
-			logger.warn("{} did not define a MetaResource template definition", targetName);
-			return null;
-		}
-
-		var arr = resource.split("#");
-		var name = arr.length > 1 ? arr[1] : null;
-
-		ProtocolTemplate template = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
-		if (template == null)
-			logger.warn("{} template '{}#{}' definition not found", targetName, arr[0], name);
-
-		return template;
 	}
 
-	private HeaderRegistry registry = new DummyHeaderRegistry();
+	private String fieldNameFrom(Method method) {
+		Meta meta = method.getAnnotation(Meta.class);
+		String name = meta.name().isBlank()
+				? method.getName()
+				: meta.name();
 
-	public MetaPacket buildPacket(Packet packet) {
-		return UNBOUND_PACKET.get().bindTo(packet);
+		return name;
 	}
 
-	public MetaHeader buildHeader(Header header) {
-		if (!header.isBound())
-			throw new IllegalStateException("header [%s] not bound".formatted(header.headerName()));
+	private MetaValue buildValueUsing(String name, Method method) {
+		try {
+			return new MetaValue(name, method);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 
-		int id = header.id();
-		var metaHeader = getHeaderFromCache(id, 0);
+			throw new RuntimeException(e);
+		}
+	}
 
-		return metaHeader.bindTo(header);
+	private record IRField(IRField parent, String name, int index, FieldTemplate[] fieldTemplate) {}
+
+//	private IRField buildIRField(DetailTemplate detailTemp, FieldTemplate fieldTemp) {
+//
+//	}
+
+	private MetaField buildFieldFromMethod(Method method, Macros macros, List<DetailTemplate> templateList) {
+		String name = fieldNameFrom(method);
+		MetaValue value = buildValueUsing(name, method);
+
+		return buildField(value, macros, templateList);
+	}
+
+	private MetaField buildField(MetaValue value, Macros macros, List<DetailTemplate> templateList) {
+
+		String name = value.name();
+		FieldTemplate[] fieldTemplateArray = null;
+		Map<Detail, MetaField[]> children = null;
+
+		return new MetaField(name, value, fieldTemplateArray, children);
+	}
+
+	private MetaPacket initPacket() {
+		var attributes = MetaReflections.listAttributes(Packet.class);
+		var template = loadTemplate(Packet.class, "packet");
+
+		return new MetaPacket(this, attributes, template);
 	}
 
 	List<MetaHeader> listHeaders(Packet packet) {
@@ -153,17 +192,29 @@ public final class MetaBuilder {
 		return headerList;
 	}
 
-	/**
-	 * @param header
-	 * @return
-	 */
-	private MetaHeader getHeaderFromCache(int id, int parentId) {
-		long key = parentId << 32 | id;
+	private ProtocolTemplate loadTemplate(Object targetObjOrClass, String targetName) {
+		Class<?> targetClass = targetObjOrClass instanceof Class cl ? cl : targetObjOrClass.getClass();
+		var resourceAnnotation = targetClass.getAnnotation(MetaResource.class);
+		if (resourceAnnotation == null) {
+			logger.warn("{} did not define a MetaResource template definition", targetName);
+			return null;
+		}
 
-		if (!UNBOUND_HEADERS.containsKey(key))
-			UNBOUND_HEADERS.put(key, initHeader(id, parentId));
+		var resource = resourceAnnotation.value();
 
-		return UNBOUND_HEADERS.get(key);
+		if (resource.isEmpty()) {
+			logger.warn("{} did not define a MetaResource template definition", targetName);
+			return null;
+		}
+
+		var arr = resource.split("#");
+		var name = arr.length > 1 ? arr[1] : null;
+
+		ProtocolTemplate template = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
+		if (template == null)
+			logger.warn("{} template '{}#{}' definition not found", targetName, arr[0], name);
+
+		return template;
 	}
 
 }
