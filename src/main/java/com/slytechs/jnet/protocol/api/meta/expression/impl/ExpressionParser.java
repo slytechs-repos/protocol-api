@@ -35,6 +35,7 @@ final class ExpressionParser {
      */
     private enum TokenType {
         NUMBER,         // Numeric literal
+        STRING,         // String literal
         IDENTIFIER,     // Variable name
         OPERATOR,       // Binary or unary operator
         LEFT_PAREN,     // (
@@ -55,11 +56,6 @@ final class ExpressionParser {
             this.text = text;
             this.position = position;
         }
-        
-        @Override
-        public String toString() {
-            return String.format("%s('%s' at %d)", type, text, position);
-        }
     }
     
     ExpressionParser(String input) {
@@ -71,65 +67,78 @@ final class ExpressionParser {
     
     ExprNode parse() {
         tokenize();
-        ExprNode result = parseExpression();
-        
-        if (peek().type != TokenType.EOF) {
-            throw new ExpressionException(
-                String.format("Unexpected token '%s' at position %d",
-                    peek().text, peek().position));
-        }
-        
-        return result;
+        return parseExpression();
     }
     
     private void tokenize() {
         while (pos < input.length()) {
             char c = input.charAt(pos);
+            int startPos = pos;
             
             if (Character.isWhitespace(c)) {
                 pos++;
                 continue;
             }
             
-            int startPos = pos;
-            
-            if (Character.isDigit(c)) {
-                tokenizeNumber(startPos);
-            }
-            else if (isIdentifierStart(c)) {
-                tokenizeIdentifier(startPos);
-            }
-            else if (c == '(') {
-                tokens.add(new Token(TokenType.LEFT_PAREN, "(", startPos));
-                pos++;
-            }
-            else if (c == ')') {
-                tokens.add(new Token(TokenType.RIGHT_PAREN, ")", startPos));
-                pos++;
-            }
-            else if (isOperatorStart(c)) {
-                tokenizeOperator(startPos);
-            }
-            else {
-                throw new ExpressionException(
-                    String.format("Unexpected character '%c' at position %d", c, pos));
-            }
+            tokens.add(switch (c) {
+                case '(' -> { pos++; yield new Token(TokenType.LEFT_PAREN, "(", startPos); }
+                case ')' -> { pos++; yield new Token(TokenType.RIGHT_PAREN, ")", startPos); }
+                case '"' -> tokenizeString(startPos);
+                case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> tokenizeNumber(startPos);
+                default -> {
+                    if (isIdentifierStart(c)) yield tokenizeIdentifier(startPos);
+                    else if (isOperatorStart(c)) yield tokenizeOperator(startPos);
+                    else throw new ExpressionException(
+                        String.format("Invalid character '%c' at position %d", c, startPos));
+                }
+            });
         }
         
         tokens.add(new Token(TokenType.EOF, "", pos));
     }
     
-    private boolean isOperatorStart(char c) {
-        return "+-*/<>=&|^~!".indexOf(c) >= 0;
+    private Token tokenizeString(int startPos) {
+        pos++; // Skip opening quote
+        StringBuilder sb = new StringBuilder();
+        
+        while (pos < input.length()) {
+            char c = input.charAt(pos++);
+            if (c == '"') {
+                return new Token(TokenType.STRING, sb.toString(), startPos);
+            }
+            if (c == '\\' && pos < input.length()) {
+                // Handle escape sequences
+                char next = input.charAt(pos++);
+                sb.append(switch (next) {
+                    case 'n' -> '\n';
+                    case 't' -> '\t';
+                    case 'r' -> '\r';
+                    case '"' -> '"';
+                    case '\\' -> '\\';
+                    default -> throw new ExpressionException(
+                        String.format("Invalid escape sequence '\\%c' at position %d",
+                            next, pos - 2));
+                });
+            } else {
+                sb.append(c);
+            }
+        }
+        
+        throw new ExpressionException(
+            String.format("Unterminated string starting at position %d", startPos));
     }
     
-    private void tokenizeNumber(int startPos) {
-        NumericLiteralParser.ParseResult result = NumericLiteralParser.parse(input, startPos);
-        tokens.add(new Token(TokenType.NUMBER, String.valueOf(result.value), startPos));
-        pos += result.charsConsumed;
+    private Token tokenizeNumber(int startPos) {
+        StringBuilder sb = new StringBuilder();
+        
+        while (pos < input.length() && Character.isDigit(input.charAt(pos))) {
+            sb.append(input.charAt(pos++));
+        }
+        
+        return new Token(TokenType.NUMBER, sb.toString(), startPos);
     }
     
-    private void tokenizeIdentifier(int startPos) {
+    private Token tokenizeIdentifier(int startPos) {
         StringBuilder sb = new StringBuilder();
         sb.append(input.charAt(pos++));
         
@@ -137,146 +146,93 @@ final class ExpressionParser {
             sb.append(input.charAt(pos++));
         }
         
-        tokens.add(new Token(TokenType.IDENTIFIER, sb.toString(), startPos));
+        return new Token(TokenType.IDENTIFIER, sb.toString(), startPos);
     }
     
-    private void tokenizeOperator(int startPos) {
-        // Check for three-character operators first
-        String threeChars = remainingInput(3);
-        if (isValidOperator(threeChars)) {
-            tokens.add(new Token(TokenType.OPERATOR, threeChars, startPos));
-            pos += 3;
-            return;
+    private Token tokenizeOperator(int startPos) {
+        // Try three-character operators
+        if (pos + 2 < input.length()) {
+            String op = input.substring(pos, pos + 3);
+            if ("<<=".equals(op) || ">>=".equals(op)) {
+                pos += 3;
+                return new Token(TokenType.OPERATOR, op, startPos);
+            }
         }
         
-        // Then two-character operators
-        String twoChars = remainingInput(2);
-        if (isValidOperator(twoChars)) {
-            tokens.add(new Token(TokenType.OPERATOR, twoChars, startPos));
-            pos += 2;
-            return;
+        // Try two-character operators
+        if (pos + 1 < input.length()) {
+            String op = input.substring(pos, pos + 2);
+            if (isTwoCharOperator(op)) {
+                pos += 2;
+                return new Token(TokenType.OPERATOR, op, startPos);
+            }
         }
         
-        // Finally single-character operators
-        String oneChar = remainingInput(1);
-        if (isValidOperator(oneChar)) {
-            tokens.add(new Token(TokenType.OPERATOR, oneChar, startPos));
-            pos += 1;
-            return;
+        // Single-character operators
+        String op = String.valueOf(input.charAt(pos++));
+        if (isOneCharOperator(op)) {
+            return new Token(TokenType.OPERATOR, op, startPos);
         }
         
         throw new ExpressionException(
             String.format("Invalid operator at position %d", startPos));
     }
     
-    private String remainingInput(int length) {
-        if (pos + length <= input.length()) {
-            return input.substring(pos, pos + length);
-        }
-        return input.substring(pos);
-    }
-    
-    private boolean isValidOperator(String op) {
-        switch (op) {
-            // Three-character operators
-            case "<<=":
-            case ">>=":
-                
-            // Two-character operators
-            case "<<":
-            case ">>":
-            case "+=":
-            case "-=":
-            case "*=":
-            case "/=":
-            case "&=":
-            case "|=":
-            case "^=":
-            case "~=":
-            case "++":
-            case "--":
-                
-            // Single-character operators
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-            case "&":
-            case "|":
-            case "^":
-            case "~":
-            case "<":
-            case ">":
-                return true;
-                
-            default:
-                return false;
-        }
-    }
-    
-    private static boolean isIdentifierStart(char c) {
-        return Character.isLetter(c) || c == '_' || c == '$';
-    }
-    
-    private static boolean isIdentifierPart(char c) {
-        return Character.isLetterOrDigit(c) || c == '_';
-    }
-    
-    private Token peek() {
-        if (tokenIndex >= tokens.size()) {
-            return tokens.get(tokens.size() - 1); // EOF token
-        }
-        return tokens.get(tokenIndex);
-    }
-    
-    private Token consume() {
-        return tokens.get(tokenIndex++);
-    }
-    
-    private void expect(TokenType type, String errorMessage) {
-        Token token = peek();
-        if (token.type != type) {
-            throw new ExpressionException(
-                String.format("%s at position %d", errorMessage, token.position));
-        }
-        consume();
-    }
-    
     private ExprNode parseExpression() {
-        Token first = peek();
-        if (first.type == TokenType.OPERATOR && first.text.endsWith("=")) {
-            return parseAssignment();
+        Token token = peek();
+        
+        // Handle assignment operators at the start of the expression
+        if (token.type == TokenType.OPERATOR && token.text.endsWith("=") && token.text.length() > 1) {
+            token = consume(); // consume operator
+            ExprNode right = parseConditional();
+            ExprNode left = new ArgumentNode("$0", token.position);
+            
+            // Map assignment operators to operations
+            return switch (token.text) {
+                case "*=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.MULTIPLY, left, right, token.position);
+                case "/=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.DIVIDE, left, right, token.position);
+                case "%=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.MODULO, left, right, token.position);
+                case "+=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.ADD, left, right, token.position);
+                case "-=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.SUBTRACT, left, right, token.position);
+                case "&=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_AND, left, right, token.position);
+                case "|=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_OR, left, right, token.position);
+                case "^=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_XOR, left, right, token.position);
+                case "<<=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.LEFT_SHIFT, left, right, token.position);
+                case ">>=" -> new BinaryOpNode(BinaryOpNode.BinaryOperator.RIGHT_SHIFT, left, right, token.position);
+                case "~=" -> UnaryOpNode.createBitwiseNot(right, token.position);
+                default -> throw new ExpressionException(
+                    String.format("Unknown assignment operator '%s' at position %d",
+                        token.text, token.position));
+            };
         }
-        return parseExpressionAtPrecedence(0);
+        
+        // Not an assignment operator, parse as normal expression
+        return parseConditional();
     }
-
-    private ExprNode parseAssignment() {
-        Token op = consume();
-        ExprNode right = parseExpression();
+    
+    private ExprNode parseConditional() {
+        ExprNode condition = parseExpressionAtPrecedence(0);
         
-        // Special case for bitwise NOT
-        if ("~=".equals(op.text)) {
-            return UnaryOpNode.createBitwiseNot(right, op.position);
+        // Check for ternary operator
+        if (peek().type == TokenType.OPERATOR && "?".equals(peek().text)) {
+            int startPos = peek().position;
+            consume(); // consume ?
+            
+            ExprNode trueExpr = parseExpression();
+            
+            if (peek().type != TokenType.OPERATOR || !":".equals(peek().text)) {
+                throw new ExpressionException(
+                    String.format("Expected ':' for ternary operator at position %d",
+                        peek().position));
+            }
+            consume(); // consume :
+            
+            ExprNode falseExpr = parseExpression();
+            
+            return new TernaryNode(condition, trueExpr, falseExpr, startPos);
         }
         
-        // Create argument node for $0
-        ExprNode left = new ArgumentNode("$0", op.position);
-        
-        // Map operators to operations
-        switch (op.text) {
-            case "*=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.MULTIPLY, left, right, op.position);
-            case "/=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.DIVIDE, left, right, op.position);
-            case "+=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.ADD, left, right, op.position);
-            case "-=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.SUBTRACT, left, right, op.position);
-            case "&=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_AND, left, right, op.position);
-            case "|=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_OR, left, right, op.position);
-            case "^=":  return new BinaryOpNode(BinaryOpNode.BinaryOperator.BITWISE_XOR, left, right, op.position);
-            case "<<=": return new BinaryOpNode(BinaryOpNode.BinaryOperator.LEFT_SHIFT, left, right, op.position);
-            case ">>=": return new BinaryOpNode(BinaryOpNode.BinaryOperator.RIGHT_SHIFT, left, right, op.position);
-            default:
-                throw new ExpressionException(String.format("Unknown assignment operator '%s' at position %d",
-                    op.text, op.position));
-        }
+        return condition;
     }
     
     private ExprNode parseExpressionAtPrecedence(int minPrecedence) {
@@ -284,14 +240,10 @@ final class ExpressionParser {
         
         while (true) {
             Token token = peek();
-            if (token.type != TokenType.OPERATOR) {
-                break;
-            }
+            if (token.type != TokenType.OPERATOR) break;
             
             BinaryOpNode.BinaryOperator op = getBinaryOperator(token.text);
-            if (op == null || op.getPrecedence() < minPrecedence) {
-                break;
-            }
+            if (op == null || op.getPrecedence() < minPrecedence) break;
             
             consume();
             ExprNode right = parseExpressionAtPrecedence(op.getPrecedence() + 1);
@@ -304,50 +256,53 @@ final class ExpressionParser {
     private ExprNode parsePrimary() {
         Token token = peek();
         
-        switch (token.type) {
-            case NUMBER:
+        return switch (token.type) {
+            case NUMBER -> {
                 consume();
-                return new ConstantNode(Integer.parseInt(token.text), token.position);
-                
-            case IDENTIFIER:
-                return parseIdentifier();
-                
-            case OPERATOR:
-                if (isUnaryOperator(token.text)) {
-                    return parseUnaryOp();
-                }
-                break;
-                
-            case LEFT_PAREN:
+                yield new ConstantNode(Integer.parseInt(token.text), token.position);
+            }
+            case IDENTIFIER -> parseIdentifier();
+            case LEFT_PAREN -> {
                 consume();
                 ExprNode expr = parseExpression();
-                expect(TokenType.RIGHT_PAREN, "Unclosed parenthesis");
-                return expr;
-        }
-        
-        throw new ExpressionException(
-            String.format("Unexpected token '%s' at position %d",
-                token.text, token.position));
+                if (peek().type != TokenType.RIGHT_PAREN) {
+                    throw new ExpressionException(
+                        String.format("Unclosed parenthesis, started at position %d",
+                            token.position));
+                }
+                consume();
+                yield expr;
+            }
+            case OPERATOR -> {
+                if (isUnaryOperator(token.text)) yield parseUnaryOp();
+                else throw new ExpressionException(
+                    String.format("Unexpected operator '%s' at position %d",
+                        token.text, token.position));
+            }
+            default -> throw new ExpressionException(
+                String.format("Unexpected token '%s' at position %d",
+                    token.text, token.position));
+        };
     }
     
     private ExprNode parseIdentifier() {
-        Token id = consume();
-        if (id.text.startsWith("$")) {
-            return new ArgumentNode(id.text, id.position);
+        Token token = consume();
+        
+        // Handle argument references ($0, $1, etc.)
+        if (token.text.startsWith("$")) {
+            return new ArgumentNode(token.text, token.position);
         }
         
-        VariableNode var = new VariableNode(id.text, id.position);
-        
+        // Handle variables with postfix operators
+        VariableNode var = new VariableNode(token.text, token.position);
         Token next = peek();
+        
         if (next.type == TokenType.OPERATOR) {
-            if ("++".equals(next.text)) {
-                consume();
-                return var.makePostfixIncrement();
-            }
-            if ("--".equals(next.text)) {
-                consume();
-                return var.makePostfixDecrement();
-            }
+            return switch (next.text) {
+                case "++" -> { consume(); yield var.makePostfixIncrement(); }
+                case "--" -> { consume(); yield var.makePostfixDecrement(); }
+                default -> var;
+            };
         }
         
         return var;
@@ -357,33 +312,70 @@ final class ExpressionParser {
         Token op = consume();
         ExprNode operand = parsePrimary();
         
-        switch (op.text) {
-            case "++":
-                if (!(operand instanceof VariableNode)) {
-                    throw new ExpressionException(
-                        String.format("Invalid target for ++ at position %d",
-                            op.position));
-                }
-                return ((VariableNode)operand).makePrefixIncrement();
-            
-            case "--":
-                if (!(operand instanceof VariableNode)) {
-                    throw new ExpressionException(
-                        String.format("Invalid target for -- at position %d",
-                            op.position));
-                }
-                return ((VariableNode)operand).makePrefixDecrement();
-            
-            case "~": return UnaryOpNode.createBitwiseNot(operand, op.position);
-            case "!": return UnaryOpNode.createLogicalNot(operand, op.position);
-            case "+": return UnaryOpNode.createPlus(operand, op.position);
-            case "-": return UnaryOpNode.createMinus(operand, op.position);
-            
-            default:
-                throw new ExpressionException(
-                    String.format("Unknown unary operator '%s' at position %d",
-                        op.text, op.position));
+        if (operand instanceof VariableNode varNode) {
+            return switch (op.text) {
+                case "++" -> varNode.makePrefixIncrement();
+                case "--" -> varNode.makePrefixDecrement();
+                default -> createUnaryOp(op, operand);
+            };
         }
+        
+        return createUnaryOp(op, operand);
+    }
+    
+    private ExprNode createUnaryOp(Token op, ExprNode operand) {
+        return switch (op.text) {
+            case "~" -> UnaryOpNode.createBitwiseNot(operand, op.position);
+            case "!" -> UnaryOpNode.createLogicalNot(operand, op.position);
+            case "+" -> UnaryOpNode.createPlus(operand, op.position);
+            case "-" -> UnaryOpNode.createMinus(operand, op.position);
+            default -> throw new ExpressionException(
+                String.format("Unknown unary operator '%s' at position %d",
+                    op.text, op.position));
+        };
+    }
+    
+    private Token peek() {
+        return tokens.get(Math.min(tokenIndex, tokens.size() - 1));
+    }
+    
+    private Token consume() {
+        return tokens.get(tokenIndex++);
+    }
+    
+    private static boolean isIdentifierStart(char c) {
+        return Character.isLetter(c) || c == '_' || c == '$';
+    }
+    
+    private static boolean isIdentifierPart(char c) {
+        return Character.isLetterOrDigit(c) || c == '_';
+    }
+    
+    private static boolean isOperatorStart(char c) {
+        return "+-*/%<>=!&|^~?:".indexOf(c) >= 0;
+    }
+    
+    private static boolean isTwoCharOperator(String op) {
+        return switch (op) {
+            case "++", "--", "<<", ">>", "*=", "/=", "%=", "+=",
+                 "-=", "&=", "|=", "^=", "~=", "==", "!=" -> true;
+            default -> false;
+        };
+    }
+    
+    private static boolean isOneCharOperator(String op) {
+        return switch (op) {
+            case "+", "-", "*", "/", "%", "&", "|", "^",
+                 "~", "?", ":", "<", ">", "=" -> true;
+            default -> false;
+        };
+    }
+    
+    private static boolean isUnaryOperator(String op) {
+        return switch (op) {
+            case "++", "--", "~", "!", "+", "-" -> true;
+            default -> false;
+        };
     }
     
     private static BinaryOpNode.BinaryOperator getBinaryOperator(String symbol) {
@@ -393,11 +385,5 @@ final class ExpressionParser {
             }
         }
         return null;
-    }
-    
-    private static boolean isUnaryOperator(String op) {
-        return "++".equals(op) || "--".equals(op) ||
-               "~".equals(op) || "!".equals(op) ||
-               "+".equals(op) || "-".equals(op);
     }
 }

@@ -207,11 +207,14 @@ final class BinaryOpNode extends ExprNode {
      * @throws ExpressionException if evaluation fails
      */
     @Override
-    int evaluate(Function<String, Number> varResolver) {
+    ExprValue evaluate(Function<String, Number> varResolver) {
         try {
-            int leftValue = evaluateChild(left, varResolver);
-            int rightValue = evaluateChild(right, varResolver);
-            return operator.evaluate(leftValue, rightValue);
+            ExprValue leftValue = evaluateChild(left, varResolver);
+            ExprValue rightValue = evaluateChild(right, varResolver);
+            
+            int result = operator.evaluate(leftValue.asInt(), rightValue.asInt());
+            return ExprValue.number(result);
+            
         } catch (ArithmeticException e) {
             throw new ExpressionException(
                 String.format("Arithmetic error in %s operation at position %d: %s",

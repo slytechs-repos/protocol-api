@@ -108,7 +108,7 @@ public final class ExpressionPattern {
      * @throws ExpressionException if evaluation fails
      * @throws NullPointerException if varResolver is null
      */
-    public int evaluate(Function<String, Number> varResolver) {
+    public ExprValue evaluate(Function<String, Number> varResolver) {
         return evaluator(varResolver).run();
     }
     
@@ -122,7 +122,7 @@ public final class ExpressionPattern {
      * @throws ExpressionException if evaluation fails
      * @throws NullPointerException if varResolver is null
      */
-    public int evaluate(Function<String, Number> varResolver, int initialValue) {
+    public ExprValue evaluate(Function<String, Number> varResolver, int initialValue) {
         return evaluator(varResolver).run(initialValue);
     }
     

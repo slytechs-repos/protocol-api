@@ -20,7 +20,7 @@ IPv4:
           template: "\{header[0]:$ip_ver} = Version: \{value}"
 
         - name: hdrLen
-		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes = $0 * 4} (\{value})"
+		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes %= 4} (\{value})"
  #         template: "\{header[0]:/.... 1111/} = Header Length: \{hdrLenBytes} bytes (\{value})"
 
         - name: trafficClass
@@ -38,7 +38,7 @@ IPv4:
         - name: flags
           defaults:
             indent: 0 # Sets the group bitfield indentiation to 0, to align with template
-          template:     "\{:$ip_flag = ($0 << 5)} = Flags: \{:0x%X}, \{flagsInfo}"
+          template:     "\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}"
 #          fields:
 #            - template: "\{:/1... ..../} = Reserved bit: \{:BIT_SET_OR_NOT_SET}"
 #            - template: "\{:/.1.. ..../} = Don't fragment: \{:BIT_SET_OR_NOT_SET}"

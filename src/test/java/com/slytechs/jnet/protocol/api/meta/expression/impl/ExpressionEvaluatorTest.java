@@ -230,11 +230,11 @@ class ExpressionEvaluatorTest {
             ExpressionEvaluator evaluator = pattern.evaluator(createResolver());
             
             // Get result without debug
-            int normalResult = evaluator.run();
+            int normalResult = evaluator.run().asInt();
             
             // Get result with debug
             evaluator.setDebugEnabled(true);
-            int debugResult = evaluator.run();
+            int debugResult = evaluator.run().asInt();
             
             assertEquals(normalResult, debugResult);
         }
@@ -255,7 +255,7 @@ class ExpressionEvaluatorTest {
             
             // Without cache, we'd get different values for each 'x'
             // With cache, both 'x' references should get the same value
-            int result = evaluator.run();
+            int result = evaluator.run().asInt();
             assertEquals(result, (10 + 1) * 2);
         }
         
@@ -269,7 +269,7 @@ class ExpressionEvaluatorTest {
             assertFalse(evaluator.isCached("x"), "Cache should be empty before evaluation");
             
             // Run evaluation and verify the result
-            int result = evaluator.run();
+            int result = evaluator.run().asInt();
             assertEquals(20, result, "Expression x + x should evaluate to 20 with x = 10");
             
             // Verify x was cached during evaluation

@@ -78,14 +78,14 @@ class AssignmentOperatorTests {
             // Test left shift
             ExpressionPattern leftPattern = ExpressionPattern.compile("<<=2");
             System.out.println("Testing left shift: " + leftPattern.getOriginalExpression());
-            int leftResult = leftPattern.evaluate(createResolver(), 5);
-            assertEquals(20, leftResult, "Left shift: 5 << 2 should equal 20");
+            ExprValue leftResult = leftPattern.evaluate(createResolver(), 5);
+            assertEquals(20, leftResult.asInt(), "Left shift: 5 << 2 should equal 20");
 
             // Test right shift
             ExpressionPattern rightPattern = ExpressionPattern.compile(">>=1");
             System.out.println("Testing right shift: " + rightPattern.getOriginalExpression());
-            int rightResult = rightPattern.evaluate(createResolver(), 10);
-            assertEquals(5, rightResult, "Right shift: 10 >> 1 should equal 5");
+            ExprValue rightResult = rightPattern.evaluate(createResolver(), 10);
+            assertEquals(5, rightResult.asInt(), "Right shift: 10 >> 1 should equal 5");
         }
     }
     
@@ -118,9 +118,6 @@ class AssignmentOperatorTests {
         @Test
         @DisplayName("Invalid assignment operators should be rejected")
         void testInvalidAssignment() {
-            assertThrows(ExpressionException.class, () ->
-                ExpressionPattern.compile("%=2").evaluate(createResolver(), 10));
-                
             assertThrows(ExpressionException.class, () ->
                 ExpressionPattern.compile(">=2").evaluate(createResolver(), 10));
         }

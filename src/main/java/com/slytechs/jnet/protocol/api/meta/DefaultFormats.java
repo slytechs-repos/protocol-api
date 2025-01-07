@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.format.BitFormat;
+import com.slytechs.jnet.protocol.api.meta.expression.impl.ExprValue;
 import com.slytechs.jnet.protocol.api.meta.expression.impl.ExpressionPattern;
 import com.slytechs.jnet.protocol.tcpip.ethernet.EtherType;
 import com.slytechs.jnet.protocol.tcpip.ethernet.MacAddress;
@@ -37,7 +38,7 @@ import com.slytechs.jnet.protocol.tcpip.tcp.TcpFlag;
  * @author Sly Technologies Inc.
  */
 public class DefaultFormats implements FormatRegistry {
-	
+
 	public static final String ANY = "any";
 
 	public static String any(Object value) {
@@ -151,7 +152,10 @@ public class DefaultFormats implements FormatRegistry {
 	}
 
 	private static final Pattern BITFORMAT_REGEX = Pattern.compile("^\\s*/(.+)/\\s*$");
-	private static final Pattern EXPR_REGEX = Pattern.compile("^(.*?)\s*(=.*)$");
+//	private static final Pattern EXPR_REGEX = Pattern.compile("^(.*?)\s*(=.*)$");
+
+	private static final String EXPR = "^(.*?)\\s*(=|[+\\-*/%&|^]=|<<=|>>=|>>>=)\\s*(.*)$";
+	private static final Pattern EXPR_REGEX = Pattern.compile(EXPR);
 
 	/**
 	 * @see com.slytechs.jnet.protocol.api.meta.FormatRegistry#resolveFormat(java.lang.String)
@@ -174,16 +178,33 @@ public class DefaultFormats implements FormatRegistry {
 		}
 
 		/* Handle formatters with expression FORMAT? = EXPRESSION */
-		var exprMatcher = EXPR_REGEX.matcher(formatName);
-		if (exprMatcher.find()) {
+		var expressionMatcher = EXPR_REGEX.matcher(formatName);
+		if (expressionMatcher.find()) {
 
-			SpecificValueFormatter leftSide = exprMatcher.groupCount() == 2
-					? resolveFormat(exprMatcher.group(1))
-					: DefaultFormats::any;
+			// If 3 groups, we have both format reference (left) and expression
+			// (middle+right)
+			boolean hasLeft = expressionMatcher.groupCount() == 3;
+			String left = hasLeft ? expressionMatcher.group(1) : ANY;
+			String middle = hasLeft ? expressionMatcher.group(2) : expressionMatcher.group(1);
+			String right = hasLeft ? expressionMatcher.group(3) : expressionMatcher.group(2);
 
-			String rightSide = exprMatcher.group(exprMatcher.groupCount() == 2 ? 2 : 1);
+			SpecificValueFormatter leftSide = resolveFormat(left);
 
-			ExpressionPattern exp = ExpressionPattern.compile(rightSide);
+			String expression = middle + " " + right;
+			ExpressionPattern pattern;
+			try {
+				pattern = ExpressionPattern.compile(expression);
+			} catch (RuntimeException e) {
+				System.err.println("ERROR: DefaultFormats:: regex=\"" + EXPR + "\"");
+				System.err.println("ERROR: DefaultFormats:: input=" + formatName);
+				System.err.println("ERROR: DefaultFormats:: matcher=" + expressionMatcher);
+				System.err.println("ERROR: DefaultFormats:: left=" + left);
+				System.err.println("ERROR: DefaultFormats:: middle=" + middle);
+				System.err.println("ERROR: DefaultFormats:: right=" + right);
+				System.err.println("ERROR: DefaultFormats:: expression=\"" + expression + "\"");
+				e.printStackTrace();
+				throw e;
+			}
 
 			return o -> {
 				Function<String, Number> resolver = varName -> {
@@ -194,10 +215,10 @@ public class DefaultFormats implements FormatRegistry {
 					};
 				};
 
-				var eval = exp.evaluator(resolver);
-				int expressionResult = eval.run(o);
+				var eval = pattern.evaluator(resolver);
+				ExprValue expressionResult = eval.run(o);
 
-				return leftSide.applyFormat(expressionResult);
+				return leftSide.applyFormat(expressionResult.get());
 			};
 
 		}
@@ -229,5 +250,5 @@ public class DefaultFormats implements FormatRegistry {
 
 	}
 
-	private static final String UNRESOLVED = "%s #!FORMAT(%s)";
+	private static final String UNRESOLVED = "%s <==!FORMAT(\":%s\")!";
 }

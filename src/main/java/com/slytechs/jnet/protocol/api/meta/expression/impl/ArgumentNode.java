@@ -20,21 +20,12 @@ package com.slytechs.jnet.protocol.api.meta.expression.impl;
 import java.util.function.Function;
 
 /**
- * Represents a reference to an argument passed to the evaluator.
- * Handles $0 for value and $1, $2, etc. for additional arguments.
+ * Represents a reference to an argument ($0, $1, etc).
  */
 final class ArgumentNode extends ExprNode {
     
-    /** The index of the argument to reference */
     private final int argIndex;
     
-    /**
-     * Creates a new argument reference node.
-     *
-     * @param argName the argument reference (e.g., "$0", "$1")
-     * @param sourcePosition position in source where this reference appears
-     * @throws ExpressionException if the argument name is invalid
-     */
     ArgumentNode(String argName, int sourcePosition) {
         super(sourcePosition);
         
@@ -54,15 +45,8 @@ final class ArgumentNode extends ExprNode {
         }
     }
     
-    /**
-     * Evaluates this node by retrieving the referenced argument.
-     *
-     * @param varResolver unused for argument nodes
-     * @return the value of the referenced argument
-     * @throws ExpressionException if argument index is out of bounds
-     */
     @Override
-    int evaluate(Function<String, Number> varResolver) {
+    ExprValue evaluate(Function<String, Number> varResolver) {
         Object[] args = ExpressionEvaluator.getCurrentArguments();
         if (args == null || argIndex >= args.length) {
             throw new ExpressionException(
@@ -77,18 +61,18 @@ final class ArgumentNode extends ExprNode {
                     argIndex, getSourcePosition()));
         }
         
-        if (arg instanceof Number) {
-            return ((Number) arg).intValue();
+        // If it's already an ExprValue, return it
+        if (arg instanceof ExprValue) {
+            return (ExprValue) arg;
         }
         
-        try {
-            // Try to convert string or other types to number
-            return Integer.parseInt(arg.toString());
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(
-                String.format("Cannot convert argument $%d value '%s' to integer at position %d",
-                    argIndex, arg, getSourcePosition()));
+        // If it's a number, convert to ExprValue
+        if (arg instanceof Number n) {
+            return ExprValue.number(n.intValue());
         }
+        
+        // Otherwise, treat as string
+        return ExprValue.string(arg.toString());
     }
     
     @Override
