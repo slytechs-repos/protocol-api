@@ -192,6 +192,16 @@ public class DefaultFormats implements FormatRegistry {
 
 			String expression = middle + " " + right;
 			ExpressionPattern pattern;
+			
+//			System.err.println();
+//			System.err.println("INFO: DefaultFormats:: regex=\"" + EXPR + "\"");
+//			System.err.println("INFO: DefaultFormats:: input=" + formatName);
+//			System.err.println("INFO: DefaultFormats:: matcher=" + expressionMatcher);
+//			System.err.println("INFO: DefaultFormats:: left=" + left);
+//			System.err.println("INFO: DefaultFormats:: middle=" + middle);
+//			System.err.println("INFO: DefaultFormats:: right=" + right);
+//			System.err.println("INFO: DefaultFormats:: expression=\"" + expression + "\"");
+
 			try {
 				pattern = ExpressionPattern.compile(expression);
 			} catch (RuntimeException e) {
@@ -217,6 +227,9 @@ public class DefaultFormats implements FormatRegistry {
 
 				var eval = pattern.evaluator(resolver);
 				ExprValue expressionResult = eval.run(o);
+				
+//				System.err.println("INFO: DefaultFormats:: expressionResult=\"" + expressionResult + "\"");
+
 
 				return leftSide.applyFormat(expressionResult.get());
 			};
@@ -250,5 +263,5 @@ public class DefaultFormats implements FormatRegistry {
 
 	}
 
-	private static final String UNRESOLVED = "%s <==!FORMAT(\":%s\")!";
+	private static final String UNRESOLVED = "%s <=!FORMAT(\":%s\")!";
 }

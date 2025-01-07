@@ -1,3 +1,61 @@
+# Sly Technologies Free License
+# 
+# Copyright 2025 Sly Technologies Inc.
+#
+# This YAML file defines meta-template structures for instrumenting and formatting
+# Meta* objects, which represent protocol, header, field, and attribute data in a
+# traversable hierarchy. The MetaTemplate system provides a powerful way to
+# define reusable templates, macros, and formatting rules to produce human-readable
+# representations of complex data structures.
+#
+# ## Overview of MetaTemplate System:
+#
+# 1. **Meta* Objects**:
+#    - Meta* objects include MetaPacket, MetaHeader, MetaField, MetaAttribute, 
+#      and more to represent protocol data hierarchies.
+#    - They provide a structural view of protocols, stacks, and data relationships.
+#    - Accessors for these objects are defined by protocol-specific classes, 
+#      enabling precise control over field extraction and formatting.
+#
+# 2. **Macros**:
+#    - Macros simplify template definitions by substituting reusable patterns.
+#    - Defined as key-value pairs in the form `$macro_name: "REPLACEMENT"`.
+#    - Names start with `$` (e.g., `$ip_ver`), and macros can reference other macros recursively.
+#    - Reserved `$<digit>` macros (e.g., `$0`, `$1`) are for runtime arguments 
+#      and are context-specific, such as referencing bit offsets or field lengths.
+#
+# 3. **Defaults**:
+#    - Default values can be specified at multiple levels: protocol, header, field, 
+#      or sub-field. Each level inherits unspecified properties from its parent.
+#    - Built-in defaults are provided via the `MetaTemplate.Defaults` class, ensuring 
+#      consistent output styles across definitions.
+#
+# 4. **Templates**:
+#    - Templates use placeholders in the format `\{value_reference : value_format}` 
+#      to define how data should be formatted.
+#    - Examples:
+#      - `\{header[0]:$macro}`: Accesses a macro for the first header byte.
+#      - `\{value:bytes = $0 << 2}`: Applies an expression and formats the result.
+#    - Templates are evaluated at runtime, combining static and dynamic content.
+#
+# 5. **Expression Evaluation**:
+#    - Expressions in templates are written using standard operators like `=`, `+=`, `*=`, etc.
+#    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
+#    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
+#      are available for reference in expressions.
+#
+# ## Getting Started with MetaTemplates:
+#
+# - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
+# - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
+# - **Write Templates**: Use templates to define how protocol or field data is displayed.
+# - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
+#   ensuring consistency with protocol-specific class accessors.
+#
+# This system is designed for flexibility and extensibility, allowing it to support 
+# any protocol or data structure represented as a Meta* object. Use this file to 
+# provide clear and customizable output for your specific use case.
+
 IPv4:
   defaults:
     indent: 4
@@ -20,7 +78,7 @@ IPv4:
           template: "\{header[0]:$ip_ver} = Version: \{value}"
 
         - name: hdrLen
-		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes %= 4} (\{value})"
+		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes <<= 2} (\{value})"
  #         template: "\{header[0]:/.... 1111/} = Header Length: \{hdrLenBytes} bytes (\{value})"
 
         - name: trafficClass
