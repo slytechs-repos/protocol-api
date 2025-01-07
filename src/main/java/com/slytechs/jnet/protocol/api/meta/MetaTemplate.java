@@ -814,7 +814,7 @@ public interface MetaTemplate {
 		 *       to expression evaluator
 		 * </pre>
 		 */
-		private static final Pattern MACRO_REGEX = Pattern.compile("(\\$[_\\w][\\w\\d_]*)");
+		private static final Pattern MACRO_REGEX = Pattern.compile("(\\$[_a-zA-Z][\\w\\d_]*)");
 
 		/**
 		 * Replaces all macros within the given line with their resolved values, or
@@ -868,7 +868,11 @@ public interface MetaTemplate {
 			// Append any remaining text after the last match
 			result.append(line, lastMatchEnd, line.length());
 
-			return result.toString();
+			String str = result.toString();
+			if (lastMatchEnd > 0) // At least 1 replacement
+				return replaceOrDefault(str, orDefault);
+
+			return str;
 		}
 
 	}

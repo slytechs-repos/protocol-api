@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.slytechs.jnet.protocol.api.meta.DefaultFormatters;
+import com.slytechs.jnet.protocol.api.meta.DefaultFormats;
 import com.slytechs.jnet.protocol.api.meta.FormatRegistry;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
@@ -83,7 +83,7 @@ public class DefaultMetaPattern implements MetaPattern {
 	}
 
 	public DefaultMetaPattern(String template, Macros macros) {
-		this(new DefaultFormatters(), template, macros);
+		this(new DefaultFormats(), template, macros);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class DefaultMetaPattern implements MetaPattern {
 				if (split.length == 1)
 					split = new String[] {
 							split[0],
-							"ANY"
+							DefaultFormats.ANY
 					};
 
 				args.add(new SplitArg(argContent, split));
@@ -208,8 +208,8 @@ public class DefaultMetaPattern implements MetaPattern {
 					var ref = arg.referenceName().trim();
 					var fmt = arg.formatName();
 
-					String newRef = macros.replaceOrDefault(ref, "value");
-					String newFmt = macros.replaceOrDefault(fmt, "any");
+					String newRef = macros.replaceOrDefault(ref, VALUE);
+					String newFmt = macros.replaceOrDefault(fmt, DefaultFormats.ANY);
 
 					if (newRef == null && newFmt == null)
 						return arg;

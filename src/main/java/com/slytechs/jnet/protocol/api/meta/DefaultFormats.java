@@ -36,7 +36,9 @@ import com.slytechs.jnet.protocol.tcpip.tcp.TcpFlag;
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public class DefaultFormatters implements FormatRegistry {
+public class DefaultFormats implements FormatRegistry {
+	
+	public static final String ANY = "any";
 
 	public static String any(Object value) {
 		if (value == null)
@@ -64,6 +66,10 @@ public class DefaultFormatters implements FormatRegistry {
 
 	public static String etherType(Object value) {
 		return EtherType.resolve(value);
+	}
+
+	public static String macAddress(Object value) {
+		return MacAddress.toMacAddressString((byte[]) value);
 	}
 
 	public static String bitLeftShift(Object value, int shiftCount) {
@@ -127,7 +133,7 @@ public class DefaultFormatters implements FormatRegistry {
 		};
 	}
 
-	public DefaultFormatters() {
+	public DefaultFormats() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -173,7 +179,7 @@ public class DefaultFormatters implements FormatRegistry {
 
 			SpecificValueFormatter leftSide = exprMatcher.groupCount() == 2
 					? resolveFormat(exprMatcher.group(1))
-					: DefaultFormatters::any;
+					: DefaultFormats::any;
 
 			String rightSide = exprMatcher.group(exprMatcher.groupCount() == 2 ? 2 : 1);
 
@@ -201,25 +207,27 @@ public class DefaultFormatters implements FormatRegistry {
 
 		return switch (formatName) {
 
-		case "any" -> DefaultFormatters::any;
+		case "any" -> DefaultFormats::any;
 		case "bits" -> o -> "" + any(((Number) o).longValue() << 3) + " bits";
 		case "bytes" -> o -> "" + any(o) + " bytes";
+		case "ETHER_MAC" -> DefaultFormats::macAddress;
 		case "ETHER_TYPE" -> EtherType::resolve;
 		case "ETHER_MAC_OUI_NAME" -> MacOuiAssignments::resolveMacOuiName;
 		case "ETHER_MAC_OUI_NAME_PREFIXED" -> MacOuiAssignments::formatMacPrefixWithOuiName;
 		case "ETHER_MAC_OUI_DESCRIPTION" -> MacOuiAssignments::resolveMacOuiDescription;
 		case "IP_TYPE" -> IpType::resolve;
-		case "PORT_LOOKUP" -> DefaultFormatters::commonPortNumbers;
+		case "PORT_LOOKUP" -> DefaultFormats::commonPortNumbers;
 		case "TCP_BITS" -> TcpFlag::resolveBitFormat;
 		case "TCP_FLAGS" -> TcpFlag::resolve;
 		case "DOUBLE_QUOTES" -> o -> new StringBuilder("\"").append(o.toString()).append('"').toString();
 		case "SINGLE_QUOTES" -> o -> new StringBuilder("\'").append(o.toString()).append('\'').toString();
 		case "BACK_QUOTES", "BACK_TICKS" -> o -> new StringBuilder("`").append(o.toString()).append('`').toString();
-		case "BIT_SET_OR_NOT_SET" -> DefaultFormatters::bitSetOrNotSet;
+		case "BIT_SET_OR_NOT_SET" -> DefaultFormats::bitSetOrNotSet;
 
-		default -> DefaultFormatters::any;
+		default -> o -> UNRESOLVED.formatted(DefaultFormats.any(o), formatName);
 		};
 
 	}
 
+	private static final String UNRESOLVED = "%s #!FORMAT(%s)";
 }

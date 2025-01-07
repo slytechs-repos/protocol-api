@@ -5,12 +5,12 @@ IPv4:
 	align: left
 	
   macros:
-	$ip_ver:      "/1111 ..../"
-	$ip_hlen:     "/.... 1111/"
-	$ip_flag:     "/111. ..../"
-	$ip_res:      "/.1.. ..../"
-	$ip_df:       "/..1. ..../"
-	$ip_frag_off: "/...1 1111 1111 1111/"
+	$ip_ver:    "/1111 ..../"
+	$ip_hlen:   "/.... 1111/"
+	$ip_flag:   "/111. ..../"
+	$ip_res:    "/.1.. ..../"
+	$ip_df:     "/..1. ..../"
+	$ip_offset: "/...1 1111 1111 1111/"
 
   templates:
     HIGH:
@@ -53,7 +53,7 @@ IPv4:
 #					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
 
         - name: fragOffset
-          template: "\{:$ip_frag_off} = Fragment Offset: \{fragOffset}"
+          template: "\{:$ip_offset} = Fragment Offset: \{fragOffset}"
 
         - name: ttl
           label: "Time to Live"

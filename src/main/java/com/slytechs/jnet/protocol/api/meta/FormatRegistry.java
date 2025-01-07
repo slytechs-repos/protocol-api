@@ -28,7 +28,7 @@ public interface FormatRegistry extends ValueFormatter {
 	FormatRegistry EMTPY = (value, _) -> String.valueOf(value);
 
 	static FormatRegistry valueOfString() {
-		return new DefaultFormatters();
+		return new DefaultFormats();
 	}
 
 	default SpecificValueFormatter resolveFormat(String formatName) {
