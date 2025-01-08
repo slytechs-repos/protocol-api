@@ -28,8 +28,8 @@ import com.slytechs.jnet.platform.api.util.format.DetailFormatter;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.impl.DefaultPacketPrinter;
 import com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter;
-import com.slytechs.jnet.protocol.api.meta.impl.WiresharkPacketPrinter;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
 import com.slytechs.jnet.protocol.api.meta.spi.impl.CachedHeaderTemplateService;
 
@@ -47,7 +47,7 @@ public final class PacketFormatter implements DetailFormatter {
 
 	private Detail detail;
 
-	private final PacketPrinter[] table = new WiresharkPacketPrinter().toArray();
+	private final PacketPrinter[] table = new DefaultPacketPrinter().toArray();
 
 	private DomainAccessor domain = null;
 
@@ -68,7 +68,7 @@ public final class PacketFormatter implements DetailFormatter {
 
 	private void formatFieldTo(Appendable out, MetaField field, Detail detail)
 			throws IOException {
-		printer(detail).appendField(out, field, domain);
+		printer(detail).appendField(detail, out, field, domain);
 	}
 
 	public void formatHeaderTo(Appendable out, Header header, Detail detail) throws IOException {
@@ -78,17 +78,12 @@ public final class PacketFormatter implements DetailFormatter {
 	public void formatHeaderTo(Appendable out, MetaHeader header, Detail detail) throws IOException {
 		DetailTemplate template = header.templateOrThrow(detail);
 
-		printer(detail).appendSummary(out, header, template.pattern(), domain);
+		printer(detail).appendSummary(detail, out, header, template.pattern(), domain);
 
 		if (detail.ordinal() > Detail.SUMMARY.ordinal()) {
-			printer(detail).push(4);
-			try {
-				for (var field : header.fieldsIterable(detail))
-					formatFieldTo(out, field, detail);
+			for (var field : header.fieldsIterable(detail))
+				formatFieldTo(out, field, detail);
 
-			} finally {
-				printer(detail).pop();
-			}
 		}
 
 	}
@@ -97,7 +92,7 @@ public final class PacketFormatter implements DetailFormatter {
 		this.domain = packet;
 
 		DetailTemplate template = packet.templateOrThrow(detail);
-		printer(detail).appendSummary(out, packet, template.pattern(), domain);
+		printer(detail).appendSummary(detail, out, packet, template.pattern(), domain);
 
 		for (var header : packet.headers())
 			formatHeaderTo(out, header, detail);

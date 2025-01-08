@@ -23,7 +23,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
 /**
  * Base class for all IP options in IPv4 and extension headers in IPv6.
  */
-@MetaResource("ip-opt-meta.json")
+@MetaResource("/tcpip/ip-option.yaml#IP-OPT")
 public sealed class IpOption extends Header
 		permits Ip4Option, Ip6Option {
 

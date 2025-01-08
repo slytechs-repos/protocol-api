@@ -56,65 +56,15 @@
 # any protocol or data structure represented as a Meta* object. Use this file to 
 # provide clear and customizable output for your specific use case.
 
-TCP:
-  defaults:
-    width: 50
-    align: left
-
+IP-OPT:
+  macros:
+	$opt_type: IPv4_OPT_TYPE
+	
   templates:
     HIGH:
-      summary: "Transmission Control Protocol, offset=\{offset} length=\{length}"
+      summary: "IPv4 option \{length:bytes}"
       fields:
-        - name: source
-          label: "Source Port"
-          template: "\{:PORT_LOOKUP} (\{value})"
+        - name: type
+          label: Type
+          template: "\{:$opt_type} (\{value})"
 
-        - name: destination
-          label: "Destination Port" 
-          template: "\{:PORT_LOOKUP} (\{value})"
-
-        - name: seq
-          label: "Sequence Number (raw)"
-          template: "\{value}"
-
-        - name: ack
-          label: "Acknowledgment Number (raw)"
-          template: "\{value}"
-
-        - name: dataOffset
-          label: "Header Length"
-          template: "\{length} bytes (\{value})"
-
-        - name: flags
-          label: "Flags"
-          template: "\{:0x%03x} (\{:TCP_FLAGS}) [\{:TCP_BITS}]"
-
-        - name: window
-          label: "Window"
-          template: "\{value}"
-
-        - name: checksum
-          label: "Checksum"
-          template: "\{value:0x%x}"
-
-        - name: urgent
-          label: "Urgent Pointer"
-          template: "\{value}"
-
-    MEDIUM:
-      summary: "TCP \{source:PORT_LOOKUP} → \{destination:PORT_LOOKUP}"
-      fields:
-        - name: flags
-          label: "Flags"
-          template: "\{:TCP_FLAGS}"
-
-        - name: seq
-          label: "Seq"
-          template: "\{value}"
-
-        - name: ack
-          label: "Ack"
-          template: "\{value}"
-
-    SUMMARY:
-      summary: "TCP \{destination:PORT_LOOKUP} → \{destination:PORT_LOOKUP}"

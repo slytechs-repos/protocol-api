@@ -18,8 +18,8 @@
 package com.slytechs.jnet.protocol.tcpip.ip;
 
 import com.slytechs.jnet.protocol.api.meta.Meta;
-import com.slytechs.jnet.protocol.api.meta.MetaResource;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
 
 /**
  * IPv4 router alert option header.
@@ -29,7 +29,7 @@ import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
  * The router alert option is defined in RFC 2113.
  * </p>
  */
-@MetaResource("ip4-opt-router-meta.json")
+@MetaResource("/tcpip/ip4-options.yaml#IPv4-OPT-RT-ALERT")
 public final class Ip4RouterAlertOption extends Ip4Option {
 
 	/** The IPv4 Router Alert option ID constant. */

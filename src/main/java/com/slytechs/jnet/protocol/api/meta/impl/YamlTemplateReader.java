@@ -41,13 +41,21 @@ import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
+import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Node;
 import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 
 public class YamlTemplateReader implements TemplateReader {
 
 	private static final String DEFAULTS_KEYWORD = "defaults";
 	private static final String FIELDS_KEYWORD = "fields";
+	private static final String GROUP_KEYWORD = "group";
 	private static final String MACROS_KEYWORD = "macros";
+	private static final String TEMPLATE_KEYWORD = "template";
+	private static final String TEMPLATES_KEYWORD = "templates";
+	private static final String NAME_KEYWORD = "name";
+	private static final String LABEL_KEYWORD = "label";
+	private static final String SUMMARY_KEYWORD = "summary";
+	private static final String HEADERS_KEYWORD = "headers";
 
 	private Defaults defaults = Defaults.root();
 	private Macros defaultMacros = Macros.root();
@@ -280,7 +288,7 @@ public class YamlTemplateReader implements TemplateReader {
 		Macros macros = new Macros(this.defaultMacros, macroMap);
 
 		// Parse templates with inheritance
-		Map<String, Object> templates = (Map<String, Object>) protocol.get("templates");
+		Map<String, Object> templates = (Map<String, Object>) protocol.get(TEMPLATES_KEYWORD);
 		Map<Detail, DetailTemplate> details = parseDetailTemplates(templates, defaults, macros);
 
 		return new ProtocolTemplate(protocolName, details, macros, defaults);
@@ -301,7 +309,7 @@ public class YamlTemplateReader implements TemplateReader {
 			Detail detail = Detail.valueOf(entry.getKey());
 			Map<String, Object> template = (Map<String, Object>) entry.getValue();
 
-			String summary = (String) template.get("summary");
+			String summary = (String) template.get(SUMMARY_KEYWORD);
 			MetaPattern pattern = MetaPattern.compile(summary, macros);
 
 			List<FieldTemplate> fields = new ArrayList<>();
@@ -358,7 +366,7 @@ public class YamlTemplateReader implements TemplateReader {
 	private List<FieldTemplate> parseFields(
 			Detail detail,
 			Object fieldsObj,
-			String defaultName,
+			String nameFormatter,
 			Defaults defaults) {
 
 		List<FieldTemplate> fields = new ArrayList<>();
@@ -370,24 +378,24 @@ public class YamlTemplateReader implements TemplateReader {
 			for (Map<String, Object> field : fieldsList) {
 				defaults = Defaults.fromMap(defaults, (Map<String, Object>) field.get(DEFAULTS_KEYWORD));
 
-				if (field.get("name") == null)
-					field.put("name", defaultName.formatted(fieldIndex++));
+				if (field.get(NAME_KEYWORD) == null)
+					field.put(NAME_KEYWORD, nameFormatter.formatted(fieldIndex++));
 
-				String name = (String) field.get("name");
+				String name = (String) field.get(NAME_KEYWORD);
 
-				List<FieldTemplate> children = null;
+				List<Node> nodes = null;
 
 				// Process child group of fields recursively
-				if (field.containsKey(FIELDS_KEYWORD)) {
-					Object childrenObj = field.get(FIELDS_KEYWORD);
-					String childrenDefaultName = name + "/field[%d]";
+				if (field.containsKey(GROUP_KEYWORD)) {
+					Object nodesObj = field.get(GROUP_KEYWORD);
+					String nodeNameFormatter = name + "/node[%d]";
 
-					children = parseFields(detail, childrenObj, childrenDefaultName, defaults);
+//					nodes = parseGroup(null, detail, nodesObj, nodeNameFormatter, defaults);
 
-					children.forEach(System.out::println);
+//					nodes.forEach(System.out::println);
 				}
 
-				fields.add(createFieldTemplate(detail, field, children, defaults));
+				fields.add(createFieldTemplate(detail, field, nodes, defaults));
 			}
 
 		}
@@ -395,19 +403,70 @@ public class YamlTemplateReader implements TemplateReader {
 		return fields;
 	}
 
+	private static class Helper {
+
+		public final Map<String, Object> map;
+
+		public Helper(Object yamlObj) {
+			this.map = (Map<String, Object>) yamlObj;
+		}
+
+		public class Group extends Helper {
+
+			public Group(Object yamlObj) {
+				super(yamlObj);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Node> parseGroup(Node parent, Detail detail, Helper.Group groupObj, String nameFormatter,
+			Defaults defaults) {
+		List<Map<String, Object>> nodesList = (List<Map<String, Object>>) groupObj;
+
+		List<Node> nodes = new ArrayList<>(nodesList.size());
+
+		int index = 0;
+		for (var nodeMap : nodesList) {
+			defaults = Defaults.fromMap(defaults, nodeMap.get(DEFAULTS_KEYWORD));
+			String template = (String) nodeMap.get(TEMPLATE_KEYWORD);
+
+			if (nodeMap.get(NAME_KEYWORD) == null)
+				nodeMap.put(NAME_KEYWORD, nameFormatter.formatted(index++));
+
+			String name = (String) nodeMap.get(NAME_KEYWORD);
+
+			var children = new ArrayList<Node>();
+
+			var node = new Node(parent, detail, name, template, defaults, null, children);
+
+//			if (nodeMap.containsKey(GROUP_KEYWORD)) {
+//				Object childNodeObj = nodeMap.get(GROUP_KEYWORD);
+//				String childName = name + "/node[%d]";
+//
+//				var childNodeList = parseGroup(node, detail, childNodeObj, childName, defaults);
+//				children.addAll(childNodeList);
+//			}
+//
+			nodes.add(node);
+		}
+
+		return nodes;
+	}
+
 	private FieldTemplate createFieldTemplate(
 			Detail detail,
 			Map<String, Object> field,
-			List<FieldTemplate> children,
+			List<Node> nodes,
 			Defaults defaults) {
 
 		return new FieldTemplate(
 				detail,
-				Objects.requireNonNull((String) field.get("name"), "Must provide or inherit a field name"),
-				(String) field.getOrDefault("label", ""),
-				(String) field.get("template"),
-				children,
-				defaults);
+				Objects.requireNonNull((String) field.get(NAME_KEYWORD), "Must provide or inherit a field name"),
+				(String) field.getOrDefault(LABEL_KEYWORD, ""),
+				(String) field.get(TEMPLATE_KEYWORD),
+				defaults,
+				nodes);
 	}
 
 	public static void main(String[] args) {

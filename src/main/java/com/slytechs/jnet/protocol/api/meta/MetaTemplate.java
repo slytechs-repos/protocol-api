@@ -196,7 +196,7 @@ public interface MetaTemplate {
 			 * 
 			 * @return the format name, or an empty string if no format is defined.
 			 */
-			String formatName();
+			String formatLine();
 
 			/**
 			 * Applies the format associated with this argument to the given value.
@@ -232,7 +232,7 @@ public interface MetaTemplate {
 			default String applyFormatOrElse(Object value, FormatRegistry registry) {
 				var formattedValue = applyFormat(value);
 				if (formattedValue == null) {
-					return registry.applyFormat(value, formatName());
+					return registry.applyFormat(value, formatLine());
 				}
 
 				return formattedValue;
@@ -583,7 +583,7 @@ public interface MetaTemplate {
 	 * empty.</li>
 	 * <li>{@code template}: A string defining the formatting or representation of
 	 * the field.</li>
-	 * <li>{@code children}: A list of child {@code FieldTemplate} objects,
+	 * <li>{@code nodes}: A list of child {@code FieldTemplate} objects,
 	 * representing nested fields.</li>
 	 * <li>{@code defaults}: Default settings inherited or overridden for this field
 	 * (e.g., alignment, width).</li>
@@ -624,7 +624,7 @@ public interface MetaTemplate {
 	 * @param label    A human-readable label for the field, or empty if no label is
 	 *                 defined.
 	 * @param template The formatting template for the field's representation.
-	 * @param children A list of child {@code FieldTemplate} objects representing
+	 * @param nodes A list of child {@code FieldTemplate} objects representing
 	 *                 nested fields, or {@code null}.
 	 * @param defaults The default settings for the field, such as indentation or
 	 *                 alignment.
@@ -637,9 +637,9 @@ public interface MetaTemplate {
 			String name,
 			String label,
 			String template,
-			List<FieldTemplate> children,
 			Defaults defaults,
-			MetaPattern pattern) implements Named {
+			MetaPattern pattern,
+			List<Node> nodes) implements Named {
 
 		/**
 		 * Returns a string representation of this {@code FieldTemplate}, including its
@@ -656,9 +656,9 @@ public interface MetaTemplate {
 					+ ", name=" + name
 					+ (label.isBlank() ? "" : ", label=" + label)
 					+ ", template=" + template
-					+ (children == null
+					+ (nodes == null
 							? ""
-							: ", children=" + children.stream()
+							: ", nodes=" + nodes.stream()
 									.map(Named::name)
 									.limit(maxLen)
 									.collect(Collectors.joining(", ", "[", "]")))
@@ -678,7 +678,7 @@ public interface MetaTemplate {
 		 * @param name     The name of the field.
 		 * @param label    The label for the field.
 		 * @param template The formatting template for the field.
-		 * @param children The list of child fields, or {@code null}.
+		 * @param nodes The list of child fields, or {@code null}.
 		 * @param defaults The default settings for the field.
 		 */
 		public FieldTemplate(
@@ -686,9 +686,55 @@ public interface MetaTemplate {
 				String name,
 				String label,
 				String template,
-				List<FieldTemplate> children,
-				Defaults defaults) {
-			this(detail, name, label, template, children, defaults, null);
+				Defaults defaults,
+				List<Node> nodes) {
+			this(detail, name, label, template, defaults, null, nodes);
+		}
+	}
+
+	/**
+	 * Used to for formatted display content such as groups that expand and provide
+	 * more extensive information information.
+	 *
+	 * @author Mark Bednarczyk [mark@slytechs.com]
+	 * @author Sly Technologies Inc.
+	 */
+	public record Node(
+			Node parent,
+			Detail detail,
+			String name,
+			String template,
+			Defaults defaults,
+			MetaPattern pattern,
+			List<Node> nodes) implements Named {
+
+		public boolean isEmpty() {
+			return nodes == null || nodes.isEmpty();
+		}
+
+		/**
+		 * Returns a string representation of this {@code FieldTemplate}, including its
+		 * properties and a limited number of child field names (up to 10).
+		 *
+		 * @return a string representation of this instance.
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			final int maxLen = 10;
+			return "FieldTemplate ["
+					+ "detail=" + detail
+					+ ", name=" + name
+					+ ", template=" + template
+					+ (nodes == null
+							? ""
+							: ", nodes=" + nodes.stream()
+									.map(Named::name)
+									.limit(maxLen)
+									.collect(Collectors.joining(", ", "[", "]")))
+					+ ", defaults=" + defaults
+					+ (pattern == null ? "" : ", pattern=" + pattern)
+					+ "]";
 		}
 	}
 
@@ -976,6 +1022,11 @@ public interface MetaTemplate {
 		 */
 		public static Defaults root() {
 			return new Defaults(null, DEFAULT_INDENT, DEFAULT_WIDTH, DEFAULT_ALIGN, "");
+		}
+
+		@SuppressWarnings("unchecked")
+		public static Defaults fromMap(Defaults parent, Object defaultsMap) {
+			return fromMap(parent, (Map<String, Object>) defaultsMap);
 		}
 
 		/**

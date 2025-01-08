@@ -22,6 +22,12 @@ import com.slytechs.jnet.protocol.api.core.CoreId;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 import com.slytechs.jnet.protocol.tcpip.ethernet.Ethernet;
 import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4IdOptions;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4MtuProbeOption;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4MtuReplyOption;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4RouterAlertOption;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4SecurityDefunctOption;
+import com.slytechs.jnet.protocol.tcpip.ip.Ip4TimestampOption;
 import com.slytechs.jnet.protocol.tcpip.tcp.Tcp;
 import com.slytechs.jnet.protocol.tcpip.tcp.TcpMssOption;
 import com.slytechs.jnet.protocol.tcpip.tcp.TcpNopOption;
@@ -78,6 +84,7 @@ public class DummyHeaderRegistry implements HeaderRegistry {
 		return switch (parentId) {
 
 		case CoreId.CORE_ID_TCP -> lookupTcpOption(id);
+		case 0 -> lookupIp4Option(id);
 
 		default -> throw new IllegalStateException("Unknown header ID 0x%08X".formatted(parentId));
 		};
@@ -96,4 +103,20 @@ public class DummyHeaderRegistry implements HeaderRegistry {
 		};
 
 	}
+	
+
+	private Header lookupIp4Option(int optionId) {
+		return switch (optionId) {
+
+		case Ip4IdOptions.IPv4_ID_OPT_RTRALT -> new Ip4RouterAlertOption();
+		case Ip4IdOptions.IPv4_ID_OPT_TS -> new Ip4TimestampOption();
+		case Ip4IdOptions.IPv4_ID_OPT_SEC -> new Ip4SecurityDefunctOption();
+		case Ip4IdOptions.IPv4_ID_OPT_MTUP -> new Ip4MtuProbeOption();
+		case Ip4IdOptions.IPv4_ID_OPT_MTUR -> new Ip4MtuReplyOption();
+
+		default -> throw new IllegalStateException("Unknown TCP option ID 0x%08X".formatted(optionId));
+		};
+
+	}
+
 }

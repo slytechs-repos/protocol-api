@@ -23,7 +23,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
 /**
  * Base header class for all IPv4 options.
  */
-@MetaResource("ip4-opt-meta.json")
+@MetaResource("/tcpip/ip4-options.yaml#IPv4-OPT")
 public sealed class Ip4Option extends IpOption
 		permits Ip4RouterAlertOption, Ip4SecurityDefunctOption, Ip4RecordRouteOption, Ip4MtuProbeOption, Ip4MtuReplyOption, Ip4QuickStartOption,
 		Ip4TimestampOption, Ip4TracerouteOption {

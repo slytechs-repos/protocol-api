@@ -20,6 +20,7 @@ package com.slytechs.jnet.protocol.api.meta;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import com.slytechs.jnet.platform.api.util.CountUnit;
 import com.slytechs.jnet.platform.api.util.HexStrings;
 import com.slytechs.jnet.platform.api.util.format.BitFormat;
 import com.slytechs.jnet.protocol.api.meta.expression.impl.ExprValue;
@@ -87,12 +88,6 @@ public class DefaultFormats implements FormatRegistry {
 		}
 
 		return value.toString();
-	}
-
-	public static String bitSetOrNotSet(Object value) {
-		return ((Number) value).longValue() != 0
-				? "Set"
-				: "Not set";
 	}
 
 	public static String commonPortNumbers(Object o) {
@@ -192,7 +187,7 @@ public class DefaultFormats implements FormatRegistry {
 
 			String expression = middle + " " + right;
 			ExpressionPattern pattern;
-			
+
 //			System.err.println();
 //			System.err.println("INFO: DefaultFormats:: regex=\"" + EXPR + "\"");
 //			System.err.println("INFO: DefaultFormats:: input=" + formatName);
@@ -227,23 +222,50 @@ public class DefaultFormats implements FormatRegistry {
 
 				var eval = pattern.evaluator(resolver);
 				ExprValue expressionResult = eval.run(o);
-				
-//				System.err.println("INFO: DefaultFormats:: expressionResult=\"" + expressionResult + "\"");
 
+//				System.err.println("INFO: DefaultFormats:: expressionResult=\"" + expressionResult + "\"");
 
 				return leftSide.applyFormat(expressionResult.get());
 			};
-
 		}
 
 		if (formatName.contains("%"))
 			return o -> formatName.formatted(o);
 
+		if (formatName.startsWith("\"")) {
+
+			// Strip the double-qoutes
+			var str = formatName.trim();
+			str = str.substring(1, formatName.length() - 1);
+
+			var newFormat = str;
+
+			return o -> newFormat.formatted(o);
+		}
+
 		return switch (formatName) {
 
-		case "any" -> DefaultFormats::any;
-		case "bits" -> o -> "" + any(((Number) o).longValue() << 3) + " bits";
+		case "any" -> o -> DefaultFormats.any(o);
+		case "Any" -> o -> capitalizeFirstLetter(DefaultFormats.any(o));
+		case "ANY" -> o -> DefaultFormats.any(o).toUpperCase();
+
+		case "is_set" -> o -> longValue(o) != 0 ? "set" : "not set";
+		case "Is_set" -> o -> longValue(o) != 0 ? "Set" : "Not set";
+		case "Is_Set" -> o -> longValue(o) != 0 ? "Set" : "Not Set";
+		
+		case "bits" -> o -> "" + any(longValue(o) << 3) + " bits";
+		case "Bits" -> o -> "" + any(longValue(o) << 3) + " Bits";
 		case "bytes" -> o -> "" + any(o) + " bytes";
+		case "Bytes" -> o -> "" + any(o) + " Bytes";
+		
+		case "bytes-scaled" -> o -> CountUnit.formatScaled("%.1f %sbytes", longValue(o));
+		case "Bytes-scaled" -> o -> CountUnit.formatScaled("%.1f %sBytes", longValue(o));
+		case "bits-scaled" -> o -> CountUnit.formatScaled("%.1f %sbits", longValue(o));
+		case "Bits-scaled" -> o -> CountUnit.formatScaled("%.1f %sBits", longValue(o));
+		case "scaled" -> o -> CountUnit.formatScaled("%.1f %s", longValue(o));
+		case "count" -> o -> any(CountUnit.scaleUnit(longValue(o)).value1());
+		case "unit" -> o -> CountUnit.scaleUnit(longValue(o)).value2().getSymbol();
+
 		case "ETHER_MAC" -> DefaultFormats::macAddress;
 		case "ETHER_TYPE" -> EtherType::resolve;
 		case "ETHER_MAC_OUI_NAME" -> MacOuiAssignments::resolveMacOuiName;
@@ -256,11 +278,34 @@ public class DefaultFormats implements FormatRegistry {
 		case "DOUBLE_QUOTES" -> o -> new StringBuilder("\"").append(o.toString()).append('"').toString();
 		case "SINGLE_QUOTES" -> o -> new StringBuilder("\'").append(o.toString()).append('\'').toString();
 		case "BACK_QUOTES", "BACK_TICKS" -> o -> new StringBuilder("`").append(o.toString()).append('`').toString();
-		case "BIT_SET_OR_NOT_SET" -> DefaultFormats::bitSetOrNotSet;
 
 		default -> o -> UNRESOLVED.formatted(DefaultFormats.any(o), formatName);
 		};
 
+	}
+
+	public static String capitalizeFirstLetter(String str) {
+		if (str == null || str.isEmpty()) {
+			return str; // Return the original string if it's null or empty
+		}
+		char firstChar = Character.toUpperCase(str.charAt(0));
+
+		var sb = new StringBuilder(str);
+		sb.setCharAt(0, firstChar);
+
+		return sb.toString();
+	}
+
+	private static Number numberValue(Object value) {
+		return (Number) value;
+	}
+
+	private static int intValue(Object value) {
+		return numberValue(value).intValue();
+	}
+
+	private static long longValue(Object value) {
+		return numberValue(value).longValue();
 	}
 
 	private static final String UNRESOLVED = "%s <=!FORMAT(\":%s\")!";

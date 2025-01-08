@@ -216,6 +216,11 @@ class TestMetaHeader {
 
 		formatter.formatPacketTo(System.out, metaPacket, Detail.HIGH);
 
+//		var rt = new Ip4RouterAlertOption();
+//		rt.bind(ByteBuffer.allocateDirect(20));
+//		var metaRT = b.buildHeader(rt);
+//		formatter.formatHeaderTo(System.out, metaRT, Detail.HIGH);
+
 //		System.out.println(metaPacket);
 	}
 

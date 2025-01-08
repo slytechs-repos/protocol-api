@@ -29,16 +29,17 @@ public class DefaultMetaPattern implements MetaPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#formatName()
+		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#formatLine()
 		 */
 		@Override
-		public String formatName() {
+		public String formatLine() {
 			return split.length == 1 ? null : split[1];
 		}
 
 	}
 
-	record PreformattedArg(String expression, String referenceName, String formatName, SpecificValueFormatter formatter)
+	record PreformattedArg(String expression, String referenceName,
+			String formatLine, SpecificValueFormatter formatter)
 			implements Arg {
 
 		/**
@@ -146,11 +147,12 @@ public class DefaultMetaPattern implements MetaPattern {
 					argContent = VALUE + argContent;
 
 				var split = argContent.split(":", 2);
-				if (split.length == 1)
+				if (split.length == 1) {
 					split = new String[] {
 							split[0],
 							DefaultFormats.ANY
 					};
+				}
 
 				args.add(new SplitArg(argContent, split));
 				pos = closeBrace + 1;
@@ -168,31 +170,69 @@ public class DefaultMetaPattern implements MetaPattern {
 		if (formatRegistry == null)
 			return false;
 
-		AtomicInteger count = new AtomicInteger();
-
 		/* Map or copy all args to temporary list */
 		List<Arg> resolvedArgs = args.stream()
-				.map(arg -> {
-					var fmt = formatRegistry.resolveFormat(arg.formatName());
-					if (fmt == null)
-						return arg;
-
-					return new PreformattedArg(
-							arg.expression(),
-							arg.referenceName(),
-							arg.formatName(),
-							fmt);
-				})
-				.map(arg -> arg)
+				.map(this::resolveFormatters)
 				.toList();
+		
+		boolean modified = !args.equals(resolvedArgs);
 
 		/* No need to do anything if there were no changes */
-		if (count.get() > 0) {
+		if (modified) {
 			args.clear();
 			args.addAll(resolvedArgs);
 		}
 
-		return count.get() > 0;
+		return modified;
+	}
+
+	private Arg resolveFormatters(Arg arg) {
+		String[] split = arg.formatLine().split(":");
+		if (split.length == 1)
+			return resolveFormatters(arg, split[0]);
+
+		SpecificValueFormatter[] chain = new SpecificValueFormatter[split.length];
+
+		for (int i = 0; i < split.length; i++) {
+			var c = split[i];
+
+			SpecificValueFormatter fmt = formatRegistry.resolveFormat(c);
+			chain[i] = fmt;
+		}
+
+		var executeChain = new SpecificValueFormatter() {
+
+			StringBuilder sb = new StringBuilder();
+
+			@Override
+			public String applyFormat(Object value) {
+				sb.setLength(0);
+
+				for (SpecificValueFormatter formatter : chain)
+					sb.append(formatter.applyFormat(value));
+
+				return sb.toString();
+			}
+
+		};
+
+		return new PreformattedArg(
+				arg.expression(),
+				arg.referenceName(),
+				arg.formatLine(),
+				executeChain);
+	}
+
+	private Arg resolveFormatters(Arg arg, String formatComponent) {
+		SpecificValueFormatter fmt = formatRegistry.resolveFormat(formatComponent);
+		if (fmt == null)
+			return arg;
+
+		return new PreformattedArg(
+				arg.expression(),
+				arg.referenceName(),
+				formatComponent,
+				fmt);
 	}
 
 	/**
@@ -206,7 +246,7 @@ public class DefaultMetaPattern implements MetaPattern {
 		var tempList = args.stream()
 				.map(arg -> {
 					var ref = arg.referenceName().trim();
-					var fmt = arg.formatName();
+					var fmt = arg.formatLine();
 
 					String newRef = macros.replaceOrDefault(ref, VALUE);
 					String newFmt = macros.replaceOrDefault(fmt, DefaultFormats.ANY);

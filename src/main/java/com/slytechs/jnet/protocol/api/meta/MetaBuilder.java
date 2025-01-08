@@ -122,18 +122,13 @@ public final class MetaBuilder {
 	private MetaValue buildValueUsing(String name, Method method) {
 		try {
 			return new MetaValue(name, method);
+
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 
 			throw new RuntimeException(e);
 		}
 	}
-
-	private record IRField(IRField parent, String name, int index, FieldTemplate[] fieldTemplate) {}
-
-//	private IRField buildIRField(DetailTemplate detailTemp, FieldTemplate fieldTemp) {
-//
-//	}
 
 	private MetaField buildFieldFromMethod(Method method, Macros macros, List<DetailTemplate> templateList) {
 		String name = fieldNameFrom(method);

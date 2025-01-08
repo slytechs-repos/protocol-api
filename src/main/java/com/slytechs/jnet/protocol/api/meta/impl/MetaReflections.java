@@ -108,9 +108,9 @@ public final class MetaReflections {
 				field.name(),
 				field.label(),
 				field.template(),
-				field.children(),
 				field.defaults(),
-				pattern
+				pattern,
+				field.nodes()
 
 		);
 	}

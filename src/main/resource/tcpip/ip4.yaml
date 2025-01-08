@@ -63,12 +63,16 @@ IPv4:
 	align: left
 	
   macros:
+	$ip_opt:    "/tcpip/ip-option.yaml"
+	$ip4_opt:    "/tcpip/ip4-options.yaml"
 	$ip_ver:    "/1111 ..../"
 	$ip_hlen:   "/.... 1111/"
 	$ip_flag:   "/111. ..../"
 	$ip_res:    "/.1.. ..../"
 	$ip_df:     "/..1. ..../"
 	$ip_offset: "/...1 1111 1111 1111/"
+	$is_set:    "is_set"
+	$ip_type:   "IP_TYPE"
 
   templates:
     HIGH:
@@ -78,8 +82,7 @@ IPv4:
           template: "\{header[0]:$ip_ver} = Version: \{value}"
 
         - name: hdrLen
-		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes <<= 2} (\{value})"
- #         template: "\{header[0]:/.... 1111/} = Header Length: \{hdrLenBytes} bytes (\{value})"
+		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})"
 
         - name: trafficClass
           label: "Traffic Class"
@@ -96,19 +99,19 @@ IPv4:
         - name: flags
           defaults:
             indent: 0 # Sets the group bitfield indentiation to 0, to align with template
-          template:     "\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}"
-#          fields:
-#            - template: "\{:/1... ..../} = Reserved bit: \{:BIT_SET_OR_NOT_SET}"
-#            - template: "\{:/.1.. ..../} = Don't fragment: \{:BIT_SET_OR_NOT_SET}"
-#			- template: "\{:/..1. ..../} = More fragments: \{:BIT_SET_OR_NOT_SET}"
-#			  fields:
-#				- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
-#				- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
-#				  fields:
-#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
-#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
-#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
-#					- template: "\{:/111. ..../} = Flags: \{value:0x%X}, \{flagsInfo}"
+          template:     "\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}, bit is \{:$is_set = 0}"
+          group:
+            - template: "\{:/1... ..../} = Reserved bit: \{:$is_set}"
+            - template: "\{:/.1.. ..../} = Don't fragment: \{:$is_set}"
+			- template: "\{:/..1. ..../} = More fragments: \{:$is_set}"
+			  group:
+				- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+				- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+				  group:
+					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
 
         - name: fragOffset
           template: "\{:$ip_offset} = Fragment Offset: \{fragOffset}"
@@ -119,7 +122,7 @@ IPv4:
 
         - name: protocol
           label: "Protocol"
-          template: "\{:IP_TYPE} (\{value})"
+          template: "\{:$ip_type} (\{value})"
 
         - name: src
           label: "Source Address"
@@ -128,9 +131,19 @@ IPv4:
         - name: dst
           label: "Destination Address"
           template: "\{value}"
+		  
+      group:
+		- include: "$ip_opt#IP-OPT"
+		- include: "$ip4_opt#IPv4-OPT-RT-ALERT"
+		- include: "$ip4_opt#IPv4-OPT-MTU-PROBE"
+		- include: "$ip4_opt#IPv4-OPT-MTU-REPLY"
+		- include: "$ip4_opt#IPv4-OPT-SEC"
+		- include: "$ip4_opt#IPv4-OPT-QUICK"
+		- include: "$ip4_opt#IPv4-OPT-TRACE"
+		- include: "$ip4_opt#IPv4-OPT-TS"
 
     MEDIUM:
-      summary: "IPv4 \{src} → \{dst}, \{protocol}"
+	  summary: "IPv4 \{src} → \{dst} (\{protocol})"
       fields:
         - name: trafficClass
           label: "Traffic Class"
@@ -138,7 +151,7 @@ IPv4:
 
         - name: totalLength
           label: "Total Length"
-          template: "\{value} bytes"
+          template: "\{:bytes}"
 
         - name: ttl
           label: "Time to Live"
@@ -146,7 +159,7 @@ IPv4:
 
         - name: protocol
           label: "Protocol"
-          template: "\{protocol:IP_TYPE}"
+          template: "\{:$ip_type}"
 
     SUMMARY:
       summary: "IPv4 \{src} → \{dst} (\{protocol})"

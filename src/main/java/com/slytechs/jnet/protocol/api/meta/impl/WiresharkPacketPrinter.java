@@ -43,7 +43,7 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 	static class High extends Summary {
 
 		@Override
-		public void appendField(Appendable out, MetaField field, DomainAccessor domain) throws IOException {
+		public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain) throws IOException {
 			FieldTemplate template = field.template(Detail.HIGH);
 			String rightColumn = formatter.format(field, domain, template.pattern());
 
@@ -65,7 +65,7 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 		}
 
 		@Override
-		public void appendField(Appendable out, MetaField field, DomainAccessor domain, boolean openClose)
+		public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain, boolean openClose)
 				throws IOException {
 			FieldTemplate template = field.template(Detail.HIGH);
 			String rightColumn = formatter.format(field, domain, template.pattern());
@@ -90,17 +90,17 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 		}
 
 		@Override
-		public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
+		public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
 				throws IOException {
-			appendSummary(out, element, pattern, domain, OpenPredicate.level(Detail.HIGH, element));
+			appendSummary(null, out, element, pattern, domain, OpenPredicate.level(Detail.HIGH, element));
 		}
 	}
 
 	static class Medium extends Summary {
 		@Override
-		public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
+		public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
 				throws IOException {
-			appendSummary(out, element, pattern, domain, OpenPredicate.level(Detail.MEDIUM, element));
+			appendSummary(null, out, element, pattern, domain, OpenPredicate.level(Detail.MEDIUM, element));
 		}
 	}
 
@@ -108,14 +108,14 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 
 	static class Summary extends WiresharkPacketPrinter {
 		@Override
-		public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
+		public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
 				throws IOException {
-			appendSummary(out, element, pattern, domain, OpenPredicate.level(Detail.SUMMARY, element));
+			appendSummary(null, out, element, pattern, domain, OpenPredicate.level(Detail.SUMMARY, element));
 		}
 
 		@Override
-		public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain,
-				OpenPredicate openPredicate)
+		public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern,
+				DomainAccessor domain, OpenPredicate openPredicate)
 				throws IOException {
 			out.append(indentString());
 
@@ -124,6 +124,53 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 			String summary = formatter.format(element, domain, pattern);
 
 			out.append(summary);
+
+			out.append(NEW_LINE);
+		}
+
+		@Override
+		public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain) throws IOException {
+			FieldTemplate template = field.template(Detail.HIGH);
+			String rightColumn = formatter.format(field, domain, template.pattern());
+
+			out.append(indentString());
+
+			if (!template.label().isBlank()) {
+				out.append(template.label());
+				out.append(": ");
+			}
+
+			out.append(rightColumn);
+
+//			out.append(field.value().getFormatted());
+//			out.append(" ---> (");
+//			out.append(template.template());
+//			out.append(")");
+
+			out.append(NEW_LINE);
+		}
+
+		@Override
+		public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain, boolean openClose)
+				throws IOException {
+			FieldTemplate template = field.template(Detail.SUMMARY);
+			String rightColumn = formatter.format(field, domain, template.pattern());
+
+			out.append(indentString());
+
+			out.append(openCloseString(openClose));
+
+			if (!template.label().isBlank()) {
+				out.append(template.label());
+				out.append(": ");
+			}
+
+			out.append(rightColumn);
+
+//			out.append(field.value().getFormatted());
+//			out.append(" ---> (");
+//			out.append(template.template());
+//			out.append(")");
 
 			out.append(NEW_LINE);
 		}
@@ -148,40 +195,40 @@ public class WiresharkPacketPrinter implements PacketPrinter {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendField(java.lang.Appendable,
-	 *      com.slytechs.jnet.protocol.api.meta.MetaField,
-	 *      com.slytechs.jnet.protocol.api.meta.impl.PacketDomain)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendField(Detail,
+	 *      Detail,
+	 *      java.lang.Appendable, com.slytechs.jnet.protocol.api.meta.MetaField, com.slytechs.jnet.protocol.api.meta.impl.PacketDomain)
 	 */
 	@Override
-	public void appendField(Appendable out, MetaField field, DomainAccessor domain)
+	public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain)
 			throws IOException {}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendField(java.lang.Appendable,
-	 *      com.slytechs.jnet.protocol.api.meta.MetaField,
-	 *      com.slytechs.jnet.protocol.api.meta.impl.PacketDomain, boolean)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendField(Detail,
+	 *      java.lang.Appendable,
+	 *      com.slytechs.jnet.protocol.api.meta.MetaField, com.slytechs.jnet.protocol.api.meta.impl.PacketDomain, boolean)
 	 */
 	@Override
-	public void appendField(Appendable out, MetaField field, DomainAccessor domain, boolean openClose)
+	public void appendField(Detail detail, Appendable out, MetaField field, DomainAccessor domain, boolean openClose)
 			throws IOException {}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendSummary(java.lang.Appendable,
-	 *      MetaElement, java.lang.String,
-	 *      com.slytechs.jnet.protocol.api.meta.impl.PacketDomain)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendSummary(Detail,
+	 *      Detail, java.lang.Appendable,
+	 *      MetaElement, java.lang.String, com.slytechs.jnet.protocol.api.meta.impl.PacketDomain)
 	 */
 	@Override
-	public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
+	public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain)
 			throws IOException {}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendSummary(java.lang.Appendable,
-	 *      MetaElement, java.lang.String,
-	 *      com.slytechs.jnet.protocol.api.meta.impl.PacketDomain, OpenPredicate)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.PacketPrinter#appendSummary(Detail,
+	 *      java.lang.Appendable, MetaElement,
+	 *      java.lang.String, com.slytechs.jnet.protocol.api.meta.impl.PacketDomain, OpenPredicate)
 	 */
 	@Override
-	public void appendSummary(Appendable out, MetaElement element, MetaPattern pattern, DomainAccessor domain,
-			OpenPredicate openPredicate)
+	public void appendSummary(Detail detail, Appendable out, MetaElement element, MetaPattern pattern,
+			DomainAccessor domain, OpenPredicate openPredicate)
 			throws IOException {}
 
 	protected String indentString() {

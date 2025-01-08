@@ -98,11 +98,11 @@ TCP-TS:
       fields:
         - name: tsValue
           label: "Timestamp"
-          template: "\{value:HEX}"
+          template: "\{:0x%x}"
           
         - name: tsEchoReply
           label: "Timestamp Echo Reply" 
-          template: "\{value:HEX}"
+          template: "\{:0x%x}"
 
 TCP-WS:
   defaults:
