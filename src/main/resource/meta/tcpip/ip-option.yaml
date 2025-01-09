@@ -5,7 +5,7 @@
 # This YAML file defines meta-template structures for instrumenting and formatting
 # Meta* objects, which represent protocol, header, field, and attribute data in a
 # traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable templates, macros, and formatting rules to produce human-readable
+# define reusable details, macros, and formatting rules to produce human-readable
 # representations of complex data structures.
 #
 # ## Overview of MetaTemplate System:
@@ -39,7 +39,7 @@
 #    - Templates are evaluated at runtime, combining static and dynamic content.
 #
 # 5. **Expression Evaluation**:
-#    - Expressions in templates are written using standard operators like `=`, `+=`, `*=`, etc.
+#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
 #    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
 #    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
 #      are available for reference in expressions.
@@ -48,7 +48,7 @@
 #
 # - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
 # - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use templates to define how protocol or field data is displayed.
+# - **Write Templates**: Use details to define how protocol or field data is displayed.
 # - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
 #   ensuring consistency with protocol-specific class accessors.
 #
@@ -56,16 +56,15 @@
 # any protocol or data structure represented as a Meta* object. Use this file to 
 # provide clear and customizable output for your specific use case.
 
-Frame:
-  defaults:
-    width: 50
-    align: left
-
-  display: "Frame #\{Frame.frameNo}, \{IPv\d?.src} > \{IPv\d?.dst} proto=\{IPv\d?.protocol:R} len=\{Frame.captureLength} bytes info=\{IPv\d?.protocol:R}"
-  
-  meta:
-    name: "Frame"
-
-  templates:
+IP-OPT:
+  macros:
+	$opt_type: IPv4_OPT_TYPE
+	
+  details:
     HIGH:
-      summary: ""
+      summary: "IPv4 option \{length:bytes}"
+      fields:
+        - name: type
+          label: Type
+          template: "\{:$opt_type} (\{value})"
+

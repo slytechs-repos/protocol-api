@@ -56,7 +56,7 @@ import com.slytechs.jnet.protocol.tcpip.ip.impl.Ip4Struct;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("/tcpip/ip4.yaml")
+@MetaResource("/meta/tcpip/ip4.yaml")
 public final class Ip4
 		extends Ip
 		implements DiffServ, HasOption<Ip4Option>, Iterable<Ip4Option> {

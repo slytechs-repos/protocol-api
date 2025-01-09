@@ -1,11 +1,11 @@
 # Sly Technologies Free License
 # 
-# Copyright 2025 Sly Technologies Inc.
+# Copyright 2024 Sly Technologies Inc.
 #
 # This YAML file defines meta-template structures for instrumenting and formatting
 # Meta* objects, which represent protocol, header, field, and attribute data in a
 # traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable templates, macros, and formatting rules to produce human-readable
+# define reusable details, macros, and formatting rules to produce human-readable
 # representations of complex data structures.
 #
 # ## Overview of MetaTemplate System:
@@ -39,7 +39,7 @@
 #    - Templates are evaluated at runtime, combining static and dynamic content.
 #
 # 5. **Expression Evaluation**:
-#    - Expressions in templates are written using standard operators like `=`, `+=`, `*=`, etc.
+#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
 #    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
 #    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
 #      are available for reference in expressions.
@@ -48,7 +48,7 @@
 #
 # - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
 # - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use templates to define how protocol or field data is displayed.
+# - **Write Templates**: Use details to define how protocol or field data is displayed.
 # - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
 #   ensuring consistency with protocol-specific class accessors.
 #
@@ -56,43 +56,33 @@
 # any protocol or data structure represented as a Meta* object. Use this file to 
 # provide clear and customizable output for your specific use case.
 
-Ethernet:
+Frame:
+  defaults:
+    width: 50
+    align: left
 
-  macros:
-    $ether_oui:  "ETHER_MAC_OUI_NAME_PREFIXED"
-	$ether_type: "ETHER_TYPE"
-	$ether_mac:  "ETHER_MAC"
-
-  templates:
+  details:
     HIGH:
-      summary: "Ethernet II, src: \{src:$ether_oui} dst: \{dst:$ether_oui}"
+      summary: "Frame \{frameNo}: \{wireLength:bytes} on wire (\{wireLength:bits}), \{captureLength:bytes} captured (\{captureLength:bits})"
       fields:
-        - name: dst 
-          label: "Destination Address"
-          template: "\{:$ether_oui} (\{value})"
+        - name: portNo
+          label: "Interface id"
+          template: "\{value} (\{portName})"
 
-        - name: src
-          label: "Source Address"
-          template: "\{:$ether_oui} (\{value})"
+        - name: frameNo
+          label: "Frame Number"
+          template: "\{value}"
 
-        - name: type
-          label: "Type"
-          template: "\{:$ether_type} (\{:0x%X})"
-          width: 30
+        - name: timestamp
+          label: "Arrival Time"
+          template: "\{value} [\{timestampAsLong:0x%016X}]"
 
-    MEDIUM:
-      summary: "Ethernet II, src: \{src:$ether_mac} dst=\{dst:$ether_mac} type=\{type:$ether_type}"
-      fields:
-        - name: dst 
-          label: "Destination"
-          template: "\{:$ether_mac}"
-          width: 30
+        - name: captureLength 
+          label: "Capture Length"
+          template: "\{:bytes} (\{:bits})"
 
-        - name: type
-          label: "Type"
-          template: "\{:$ether_type}"
-          width: 20
+        - name: wireLength
+          label: "Frame Length"
+          template: "\{:bytes} (\{:bits})"
 
-    SUMMARY:
-      summary: "Ethernet II, type=\{type:$ether_type}"
-      # No fields, just summary
+    # MEDIUM and LOW will inherit from HIGH since they're identical

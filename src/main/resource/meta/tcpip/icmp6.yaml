@@ -5,7 +5,7 @@
 # This YAML file defines meta-template structures for instrumenting and formatting
 # Meta* objects, which represent protocol, header, field, and attribute data in a
 # traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable templates, macros, and formatting rules to produce human-readable
+# define reusable details, macros, and formatting rules to produce human-readable
 # representations of complex data structures.
 #
 # ## Overview of MetaTemplate System:
@@ -39,7 +39,7 @@
 #    - Templates are evaluated at runtime, combining static and dynamic content.
 #
 # 5. **Expression Evaluation**:
-#    - Expressions in templates are written using standard operators like `=`, `+=`, `*=`, etc.
+#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
 #    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
 #    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
 #      are available for reference in expressions.
@@ -48,7 +48,7 @@
 #
 # - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
 # - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use templates to define how protocol or field data is displayed.
+# - **Write Templates**: Use details to define how protocol or field data is displayed.
 # - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
 #   ensuring consistency with protocol-specific class accessors.
 #
@@ -61,7 +61,7 @@ ICMPv6:
    width: 50
    align: left
 
- templates:
+ details:
    HIGH:
      summary: "Internet Control Message Protocol Version 6, offset=\{offset}, length=\{length}"
      fields:
@@ -101,7 +101,7 @@ ICMPv6:
       width: 50
       align: left
 
-    templates:
+    details:
       HIGH:
         summary: "Internet Control Message Protocol Version 6, offset=\{offset}, length=\{length}"
         fields:
@@ -119,7 +119,7 @@ ICMPv6-MLR2-Record:
     width: 50
     align: left
 
-  templates:
+  details:
     HIGH:
       summary: "Multicast Address Record \{recordType:R}: \{multicastAddress}"
       fields:
@@ -145,7 +145,7 @@ ICMPv6-NeighborAdvertisement:
     width: 50
     align: left
 
-  templates:
+  details:
     HIGH:
       summary: "Internet Control Message Protocol Version 6, offset=\{offset}, length=\{length}"
       fields:

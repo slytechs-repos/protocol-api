@@ -64,7 +64,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * larger or smaller MSS.</li>
  * </ul>
  */
-@MetaResource("/tcpip/tcp-options.yaml#TCP-MSS")
+@MetaResource("/meta/tcpip/tcp-options.yaml#TCP-MSS")
 public class TcpMssOption extends TcpOption {
 
 	/** The Constant ID. */

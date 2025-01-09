@@ -30,7 +30,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
-@MetaResource("arp-meta.json")
+@MetaResource("/meta/tcpip/arp.yaml")
 public final class Arp extends Header {
 
 	/** Core protocol pack assigned header ID. */

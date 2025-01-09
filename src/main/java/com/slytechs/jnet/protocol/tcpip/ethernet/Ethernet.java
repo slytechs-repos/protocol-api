@@ -46,7 +46,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("/tcpip/ethernet.yaml")
+@MetaResource("/meta/tcpip/ethernet.yaml")
 public final class Ethernet extends Header {
 
 	/** Core protocol pack assigned header ID. */

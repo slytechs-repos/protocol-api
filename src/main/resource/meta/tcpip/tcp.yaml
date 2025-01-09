@@ -5,7 +5,7 @@
 # This YAML file defines meta-template structures for instrumenting and formatting
 # Meta* objects, which represent protocol, header, field, and attribute data in a
 # traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable templates, macros, and formatting rules to produce human-readable
+# define reusable details, macros, and formatting rules to produce human-readable
 # representations of complex data structures.
 #
 # ## Overview of MetaTemplate System:
@@ -39,7 +39,7 @@
 #    - Templates are evaluated at runtime, combining static and dynamic content.
 #
 # 5. **Expression Evaluation**:
-#    - Expressions in templates are written using standard operators like `=`, `+=`, `*=`, etc.
+#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
 #    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
 #    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
 #      are available for reference in expressions.
@@ -48,7 +48,7 @@
 #
 # - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
 # - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use templates to define how protocol or field data is displayed.
+# - **Write Templates**: Use details to define how protocol or field data is displayed.
 # - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
 #   ensuring consistency with protocol-specific class accessors.
 #
@@ -56,19 +56,65 @@
 # any protocol or data structure represented as a Meta* object. Use this file to 
 # provide clear and customizable output for your specific use case.
 
-IPv4-OPT:
-  macros:
-	$opt_type: IPv4_OPT_TYPE
-	
-  templates:
-    HIGH:
-      summary: "IPv4 option \{length:bytes}"
-      fields:
-        - name: type
-          label: Type
-          template: "\{:$opt_type} (\{value})"
+TCP:
+  defaults:
+    width: 50
+    align: left
 
-IPv4-OPT-RT-ALERT:
-  templates:
+  details:
     HIGH:
-      summary: "Router Alert (\{length:bytes}): \{routerAlertDescription}"
+      summary: "Transmission Control Protocol, offset=\{offset} length=\{length}"
+      fields:
+        - name: source
+          label: "Source Port"
+          template: "\{:PORT_LOOKUP} (\{value})"
+
+        - name: destination
+          label: "Destination Port" 
+          template: "\{:PORT_LOOKUP} (\{value})"
+
+        - name: seq
+          label: "Sequence Number (raw)"
+          template: "\{value}"
+
+        - name: ack
+          label: "Acknowledgment Number (raw)"
+          template: "\{value}"
+
+        - name: dataOffset
+          label: "Header Length"
+          template: "\{length} bytes (\{value})"
+
+        - name: flags
+          label: "Flags"
+          template: "\{:0x%03x} (\{:TCP_FLAGS}) [\{:TCP_BITS}]"
+
+        - name: window
+          label: "Window"
+          template: "\{value}"
+
+        - name: checksum
+          label: "Checksum"
+          template: "\{value:0x%x}"
+
+        - name: urgent
+          label: "Urgent Pointer"
+          template: "\{value}"
+
+    MEDIUM:
+      summary: "TCP \{source:PORT_LOOKUP} → \{destination:PORT_LOOKUP}"
+      fields:
+        - name: flags
+          label: "Flags"
+          template: "\{:TCP_FLAGS}"
+
+        - name: seq
+          label: "Seq"
+          template: "\{value}"
+
+        - name: ack
+          label: "Ack"
+          template: "\{value}"
+
+    SUMMARY:
+      summary: "TCP \{destination:PORT_LOOKUP} → \{destination:PORT_LOOKUP}"

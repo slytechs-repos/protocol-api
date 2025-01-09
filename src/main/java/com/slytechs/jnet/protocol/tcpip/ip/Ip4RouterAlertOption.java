@@ -29,7 +29,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * The router alert option is defined in RFC 2113.
  * </p>
  */
-@MetaResource("/tcpip/ip4-options.yaml#IPv4-OPT-RT-ALERT")
+@MetaResource("/meta/tcpip/ip4-options.yaml#IPv4-OPT-RT-ALERT")
 public final class Ip4RouterAlertOption extends Ip4Option {
 
 	/** The IPv4 Router Alert option ID constant. */

@@ -51,7 +51,7 @@ public class YamlTemplateReader implements TemplateReader {
 	private static final String GROUP_KEYWORD = "group";
 	private static final String MACROS_KEYWORD = "macros";
 	private static final String TEMPLATE_KEYWORD = "template";
-	private static final String TEMPLATES_KEYWORD = "templates";
+	private static final String DETAILS_KEYWORD = "details";
 	private static final String NAME_KEYWORD = "name";
 	private static final String LABEL_KEYWORD = "label";
 	private static final String SUMMARY_KEYWORD = "summary";
@@ -198,15 +198,16 @@ public class YamlTemplateReader implements TemplateReader {
 	public ProtocolTemplate parseResource(String resourcePath) throws IOException {
 
 		try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-			if (is == null) {
+			if (is == null)
 				throw new IOException("Resource not found: " + resourcePath);
-			}
+
+			logger.debug("opening resource at url={}", getClass().getResource(resourcePath));
 
 			try (InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
 				return parseHeader(reader);
 			}
 		} catch (Throwable e) {
-			logger.error("error reading resource {}", getClass().getResource(resourcePath));
+			logger.error("error reading resource {}", resourcePath);
 			throw e;
 		}
 	}
@@ -214,15 +215,16 @@ public class YamlTemplateReader implements TemplateReader {
 	@Override
 	public Map<String, ProtocolTemplate> parseAllResources(String resourcePath) throws IOException {
 		try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-			if (is == null) {
+			if (is == null)
 				throw new IOException("Resource not found: " + resourcePath);
-			}
+
+			logger.debug("opening resource at url={}", getClass().getResource(resourcePath));
 
 			try (InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
 				return parseAllHeaders(reader);
 			}
 		} catch (Throwable e) {
-			logger.error("error reading resource {}", getClass().getResource(resourcePath));
+			logger.error("error reading resource {}", resourcePath);
 			throw e;
 		}
 	}
@@ -288,7 +290,7 @@ public class YamlTemplateReader implements TemplateReader {
 		Macros macros = new Macros(this.defaultMacros, macroMap);
 
 		// Parse templates with inheritance
-		Map<String, Object> templates = (Map<String, Object>) protocol.get(TEMPLATES_KEYWORD);
+		Map<String, Object> templates = (Map<String, Object>) protocol.get(DETAILS_KEYWORD);
 		Map<Detail, DetailTemplate> details = parseDetailTemplates(templates, defaults, macros);
 
 		return new ProtocolTemplate(protocolName, details, macros, defaults);
@@ -403,24 +405,8 @@ public class YamlTemplateReader implements TemplateReader {
 		return fields;
 	}
 
-	private static class Helper {
-
-		public final Map<String, Object> map;
-
-		public Helper(Object yamlObj) {
-			this.map = (Map<String, Object>) yamlObj;
-		}
-
-		public class Group extends Helper {
-
-			public Group(Object yamlObj) {
-				super(yamlObj);
-			}
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	private List<Node> parseGroup(Node parent, Detail detail, Helper.Group groupObj, String nameFormatter,
+	private List<Node> parseGroup(Node parent, Detail detail, Map<String, Object> groupObj, String nameFormatter,
 			Defaults defaults) {
 		List<Map<String, Object>> nodesList = (List<Map<String, Object>>) groupObj;
 

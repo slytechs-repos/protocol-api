@@ -62,7 +62,7 @@ import com.slytechs.jnet.protocol.api.pack.PackId;
  * @author Sly Technologies
  * @author repos@slytechs.com
  */
-@MetaResource("/core/packet.yaml")
+@MetaResource("/meta/core/packet.yaml")
 public final class Packet
 		extends MemoryBinding
 		implements HasHeader, Cloneable, Stringable, ToHexdump, HasTimestamp {

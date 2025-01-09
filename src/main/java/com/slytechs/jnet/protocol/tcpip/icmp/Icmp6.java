@@ -27,7 +27,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
-@MetaResource("icmp6-meta.json")
+@MetaResource("/meta/tcpip/icmp6.yaml")
 public sealed class Icmp6
 		extends Icmp
 		permits Icmp6Echo, Icmp6Mlr2, Icmp6OptionsHeader, Icmp6NeighborAdvertisement {

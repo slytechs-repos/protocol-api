@@ -74,7 +74,7 @@ import com.slytechs.jnet.protocol.api.meta.MetaResource;
  * @author Sly Technologies Inc
  * @author repos@slytechs.com
  */
-@MetaResource("icmp4-meta.json")
+@MetaResource("/meta/tcpip/icmp4.yaml")
 public sealed class Icmp4 extends Icmp
 		permits Icmp4Echo {
 
