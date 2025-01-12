@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 
 /**
  * The Class MetaHeader.
@@ -39,7 +39,7 @@ public record MetaHeader(
 		List<MetaHeader> subHeaders,
 		List<MetaField> fields,
 		List<MetaAttribute> attributes,
-		ProtocolTemplate template)
+		Template template)
 		implements MetaElement {
 
 	/**
@@ -51,7 +51,7 @@ public record MetaHeader(
 	 * @param attributes
 	 * @param template
 	 */
-	MetaHeader(Header header, List<MetaField> fields, List<MetaAttribute> attributes, ProtocolTemplate template) {
+	MetaHeader(Header header, List<MetaField> fields, List<MetaAttribute> attributes, Template template) {
 		this(new MetaParent(), header, List.of(), fields, attributes, template);
 	}
 

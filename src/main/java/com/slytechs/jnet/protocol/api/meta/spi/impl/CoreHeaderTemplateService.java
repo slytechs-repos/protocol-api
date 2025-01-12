@@ -17,12 +17,16 @@
  */
 package com.slytechs.jnet.protocol.api.meta.spi.impl;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
-import com.slytechs.jnet.protocol.api.meta.impl.TemplateReader;
-import com.slytechs.jnet.protocol.api.meta.impl.YamlTemplateReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.slytechs.jnet.protocol.api.meta.impl.YamlTemplateReaderDEPRECATED;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.TemplateReader;
 
 /**
  * 
@@ -31,23 +35,31 @@ import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
  * @author Sly Technologies Inc.
  */
 public class CoreHeaderTemplateService implements HeaderTemplateService {
-	private TemplateReader parser = new YamlTemplateReader();
+	private static final Logger logger = LoggerFactory.getLogger(YamlTemplateReaderDEPRECATED.class.getSimpleName());
 
-	/**
-	 * 
-	 */
+	private TemplateReader reader = new TemplateReader();
+
 	public CoreHeaderTemplateService() {}
 
 	/**
+	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @see com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService#loadHeaderTemplate(java.lang.String)
 	 */
 	@Override
-	public ProtocolTemplate loadHeaderTemplate(String resource, String name) {
+	public Template loadHeaderTemplate(String resource, String name) {
+
 		try {
-			return parser.parseResource(resource, name);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+			var in = CoreHeaderTemplateService.class.getResourceAsStream(resource);
+			if (in == null)
+				throw new FileNotFoundException(resource);
+
+			Template protocol = TemplateReader.parseYamlTemplate(in);
+
+			return protocol;
+		} catch (Throwable e) {
+			logger.error("unable to load {} at resource {}, error={}", name, resource, e.getMessage());
+			return null;
 		}
 	}
 

@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 import com.slytechs.jnet.platform.api.domain.DomainAccessor;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 
 /**
  * The Class MetaPacket.
@@ -38,7 +38,7 @@ public record MetaPacket(
 		Packet packet,
 		List<MetaHeader> headers,
 		List<MetaAttribute> attributes,
-		ProtocolTemplate template)
+		Template template)
 		implements MetaElement, DomainAccessor {
 
 	/**
@@ -50,7 +50,7 @@ public record MetaPacket(
 	 * @param attributes the attributes
 	 * @param template   the template
 	 */
-	MetaPacket(MetaBuilder builder, List<MetaAttribute> attributes, ProtocolTemplate template) {
+	MetaPacket(MetaBuilder builder, List<MetaAttribute> attributes, Template template) {
 		this(builder, null, null, attributes, template);
 	}
 

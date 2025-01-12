@@ -2,132 +2,116 @@
 # 
 # Copyright 2025 Sly Technologies Inc.
 #
-# This YAML file defines meta-template structures for instrumenting and formatting
-# Meta* objects, which represent protocol, header, field, and attribute data in a
-# traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable details, macros, and formatting rules to produce human-readable
-# representations of complex data structures.
+# This YAML file defines TCP option meta-templates for parsing and formatting 
+# TCP header options. Includes definitions for MSS, SACK, Timestamps, Window 
+# Scale and NOP options with their respective fields and formatting rules.
 #
-# ## Overview of MetaTemplate System:
-#
-# 1. **Meta* Objects**:
-#    - Meta* objects include MetaPacket, MetaHeader, MetaField, MetaAttribute, 
-#      and more to represent protocol data hierarchies.
-#    - They provide a structural view of protocols, stacks, and data relationships.
-#    - Accessors for these objects are defined by protocol-specific classes, 
-#      enabling precise control over field extraction and formatting.
-#
-# 2. **Macros**:
-#    - Macros simplify template definitions by substituting reusable patterns.
-#    - Defined as key-value pairs in the form `$macro_name: "REPLACEMENT"`.
-#    - Names start with `$` (e.g., `$ip_ver`), and macros can reference other macros recursively.
-#    - Reserved `$<digit>` macros (e.g., `$0`, `$1`) are for runtime arguments 
-#      and are context-specific, such as referencing bit offsets or field lengths.
-#
-# 3. **Defaults**:
-#    - Default values can be specified at multiple levels: protocol, header, field, 
-#      or sub-field. Each level inherits unspecified properties from its parent.
-#    - Built-in defaults are provided via the `MetaTemplate.Defaults` class, ensuring 
-#      consistent output styles across definitions.
-#
-# 4. **Templates**:
-#    - Templates use placeholders in the format `\{value_reference : value_format}` 
-#      to define how data should be formatted.
-#    - Examples:
-#      - `\{header[0]:$macro}`: Accesses a macro for the first header byte.
-#      - `\{value:bytes = $0 << 2}`: Applies an expression and formats the result.
-#    - Templates are evaluated at runtime, combining static and dynamic content.
-#
-# 5. **Expression Evaluation**:
-#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
-#    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
-#    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
-#      are available for reference in expressions.
-#
-# ## Getting Started with MetaTemplates:
-#
-# - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
-# - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use details to define how protocol or field data is displayed.
-# - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
-#   ensuring consistency with protocol-specific class accessors.
-#
-# This system is designed for flexibility and extensibility, allowing it to support 
-# any protocol or data structure represented as a Meta* object. Use this file to 
-# provide clear and customizable output for your specific use case.
+# The template provides consistent formatting across all TCP options while
+# maintaining specific requirements for each option type. Priority settings
+# ensure proper option processing order during packet analysis.
 
-TCP-MSS:
+Overview:
+  description: >
+    Defines templates and structures for TCP protocol options formatting and analysis.
+
   defaults:
+    indent: 4
     width: 50
     align: left
 
-  meta:
-    priority: 200
+Templates:
+  - header: TcpEolOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpEolOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "End of Option List"
 
-  details:
-    HIGH:
-      summary: "Maximum Segment Size Option"
-      fields:
-        - name: mss
-          label: "Max segment size"
-          template: "\{value}"
+  - header: TcpFastOpenOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpFastOpenOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "TCP Fast Open"
 
-TCP-SACK-PERM:
-  defaults:
-    width: 50
-    align: left
+  - header: TcpMssOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpMssOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Maximum Segment Size Option"
+        items:
+          - field: mss
+            label: "Max segment size"
+            template: '\{value}'
 
-  meta:
-    priority: 200
+  - header: TcpNopOption 
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpNopOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "No Operation (Padding)"
 
-  details:
-    HIGH:
-      summary: "Sack Permitted Option"
+  - header: TcpOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "TCP Option"
 
-TCP-TS:
-  defaults:
-    width: 50
-    align: left
+  - header: TcpOptionId 
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpOptionId
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "TCP Option ID"
 
-  meta:
-    priority: 200
+  - header: TcpSackOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpSackOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Selective ACK Option"
 
-  details:
-    HIGH:
-      summary: "Timestamp Option"
-      fields:
-        - name: tsValue
-          label: "Timestamp"
-          template: "\{:0x%x}"
-          
-        - name: tsEchoReply
-          label: "Timestamp Echo Reply" 
-          template: "\{:0x%x}"
+  - header: TcpSackPermittedOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpSackPermittedOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "SACK Permitted Option"
 
-TCP-WS:
-  defaults:
-    width: 50
-    align: left
+  - header: TcpTimestampOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpTimestampOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Timestamp Option"
+        items:
+          - field: tsValue
+            label: "Timestamp"
+            template: '\{:0x%x}'
+            
+          - field: tsEchoReply
+            label: "Timestamp Echo Reply" 
+            template: '\{:0x%x}'
 
-  meta:
-    priority: 200
-
-  details:
-    HIGH:
-      summary: "Window Scale Option (bitshift)"
-      fields:
-        - name: shiftCount
-          label: "Window scale"
-          template: "\{value} (multiply by \{multiplier})"
-
-TCP-NOP:
-  defaults:
-    width: 50
-    align: left
-
-  meta:
-    priority: 200
-
-  details:
-    HIGH:
-      summary: "Tcp No Option (padding)"
+  - header: TcpWindowScaleOption
+    class: com.slytechs.jnet.protocol.tcpip.tcp.TcpWindowScaleOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Window Scale Option (bitshift)"
+        items:
+          - field: shiftCount
+            label: "Window scale"
+            template: '\{value} (multiply by \{multiplier})'

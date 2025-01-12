@@ -81,7 +81,7 @@ public class IpxAddress implements NetAddress {
 
 		b.append(IPX_ADDR_FIELD_SEPARATOR);
 
-		// Node number (6 bytes)
+		// Item number (6 bytes)
 		for (int i = 4; i < IPX_ADDRESS_SIZE; i++) {
 			appendHex(src[offset + i] & 0xFF, b);
 			if (i < IPX_ADDRESS_SIZE - 1)

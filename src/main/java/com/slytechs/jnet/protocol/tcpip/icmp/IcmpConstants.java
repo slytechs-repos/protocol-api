@@ -133,10 +133,10 @@ public interface IcmpConstants {
 	/** ICMPv6 Router Renumbering message type. */
 	int ICMPv6_TYPE_ROUTER_RENUMBER = 138;
 
-	/** ICMPv6 Node Information Query message type. */
+	/** ICMPv6 Item Information Query message type. */
 	int ICMPv6_TYPE_NODE_INFO_QUERY = 139;
 
-	/** ICMPv6 Node Information Response message type. */
+	/** ICMPv6 Item Information Response message type. */
 	int ICMPv6_TYPE_NODE_INFO_RESPONSE = 140;
 
 	/** ICMPv6 Inverse Neighbor Solicitation message type. */

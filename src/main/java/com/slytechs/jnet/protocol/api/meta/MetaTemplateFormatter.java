@@ -4,25 +4,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.slytechs.jnet.platform.api.domain.DomainAccessor;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder;
 
 public class MetaTemplateFormatter {
 	private static final Logger logger = LoggerFactory.getLogger(MetaTemplateFormatter.class);
 
 	public static final String VALUE = "value";
 
-	private FormatRegistry formatRegistry = FormatRegistry.valueOfString();
+	private FormatRegistry formatRegistry = FormatRegistry.of();
 
 	public MetaTemplateFormatter() {
 
 	}
 
-	public String format(Object cwd, DomainAccessor domain, MetaPattern metaPattern) {
+	public String format(Object cwd, DomainAccessor domain, PlaceholderPattern placeholderPattern) {
 
 		StringBuilder sb = new StringBuilder();
-		var frags = metaPattern.fragments();
-		var args = metaPattern.args();
+		var frags = placeholderPattern.fragments();
+		var args = placeholderPattern.placeholders();
 
 		for (int i = 0; i < frags.length; i++) {
 			String frag = frags[i];
@@ -32,14 +32,14 @@ public class MetaTemplateFormatter {
 				continue;
 
 			try {
-				Arg arg = args[i];
-				Object refValue = domain.resolve(arg.referenceName(), cwd);
+				Placeholder placeholder = args[i];
+				Object refValue = domain.resolve(placeholder.referenceName(), cwd);
 
-				String formatted = arg.applyFormatOrElse(refValue, formatRegistry);
+				String formatted = placeholder.applyFormatOrElse(refValue, formatRegistry);
 
 				sb.append(formatted);
 			} catch (Throwable e) {
-				logger.error("arg=%s".formatted(metaPattern.toString()));
+				logger.error("arg=%s".formatted(placeholderPattern.toString()));
 				
 				throw e;
 			}

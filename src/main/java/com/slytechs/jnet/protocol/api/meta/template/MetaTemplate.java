@@ -15,18 +15,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.template;
+
+import static java.util.Objects.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.slytechs.jnet.platform.api.domain.DomainAccessor;
 import com.slytechs.jnet.platform.api.util.Named;
 import com.slytechs.jnet.platform.api.util.format.Detail;
-import com.slytechs.jnet.protocol.api.meta.impl.DefaultMetaPattern;
+import com.slytechs.jnet.protocol.api.meta.FormatRegistry;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder;
 
 /**
  * Represents a meta-template structure that defines or processes template
@@ -49,7 +55,7 @@ import com.slytechs.jnet.protocol.api.meta.impl.DefaultMetaPattern;
  * String[] fragments = template.fragments();
  * 
  * // Retrieve template arguments
- * Arg[] args = template.args();
+ * Placeholder[] args = template.args();
  * 
  * // Use fragments and arguments to evaluate the template at runtime
  * String result = ...; // Combine fragments and resolved argument values
@@ -98,11 +104,15 @@ public interface MetaTemplate {
 	 */
 	String MACRO_PREFIX = "" + MACRO_PREFIX_CHAR;
 
+	interface Items {
+
+	}
+
 	/**
-	 * Represents a compiled pattern for processing templates, combining static
-	 * fragments and dynamic arguments.
+	 * Represents a compiled placeholderPattern for processing templates, combining
+	 * static fragments and dynamic arguments.
 	 * <p>
-	 * A {@code MetaPattern} provides methods to access:
+	 * A {@code PlaceholderPattern} provides methods to access:
 	 * <ul>
 	 * <li>Static fragments of the template that do not change during
 	 * evaluation.</li>
@@ -116,29 +126,29 @@ public interface MetaTemplate {
 	 * Example Usage:
 	 * 
 	 * <pre>{@code
-	 * // Compile a template into a MetaPattern
-	 * MetaPattern pattern = MetaTemplate.compile("Hello, ${name}!", macros);
+	 * // Compile a template into a PlaceholderPattern
+	 * PlaceholderPattern placeholderPattern = MetaTemplate.compile("Hello, ${name}!", macros);
 	 * 
 	 * // Retrieve static fragments
-	 * String[] fragments = pattern.fragments();
+	 * String[] fragments = placeholderPattern.fragments();
 	 * 
 	 * // Retrieve dynamic arguments
-	 * Arg[] args = pattern.args();
+	 * Placeholder[] args = placeholderPattern.args();
 	 * 
-	 * // Process the pattern with resolved arguments
+	 * // Process the placeholderPattern with resolved arguments
 	 * String result = ...; // Some logic to combine fragments and resolved arguments
 	 * System.out.println(result); // Outputs: "Hello, John!" (example resolution)
 	 * }</pre>
 	 * </p>
 	 */
-	interface MetaPattern {
+	interface PlaceholderPattern {
 
 		/**
 		 * Represents an argument that can hold an expression, a reference name, and an
 		 * optional format. This interface provides methods to check for format
 		 * presence, manipulate expressions, and apply formatting.
 		 */
-		public interface Arg {
+		public interface Placeholder {
 
 			/**
 			 * Checks whether the argument's expression is empty.
@@ -240,13 +250,13 @@ public interface MetaTemplate {
 		}
 
 		/**
-		 * Compiles the given template string into a {@link MetaPattern} using the
-		 * specified macros.
+		 * Compiles the given template string into a {@link PlaceholderPattern} using
+		 * the specified macros.
 		 * <p>
 		 * The {@code compile} method parses the input template and processes any macros
-		 * within it, returning a {@link MetaPattern} object that separates static
-		 * fragments from dynamic arguments. This allows for efficient evaluation of the
-		 * template at runtime.
+		 * within it, returning a {@link PlaceholderPattern} object that separates
+		 * static fragments from dynamic arguments. This allows for efficient evaluation
+		 * of the template at runtime.
 		 * </p>
 		 *
 		 * <p>
@@ -254,13 +264,13 @@ public interface MetaTemplate {
 		 * 
 		 * <pre>{@code
 		 * Macros macros = Macros.root();
-		 * MetaPattern pattern = MetaTemplate.compile("Hello, ${name}!", macros);
+		 * PlaceholderPattern placeholderPattern = MetaTemplate.compile("Hello, ${name}!", macros);
 		 *
 		 * // Retrieve static fragments
-		 * String[] fragments = pattern.fragments(); // ["Hello, ", "!"]
+		 * String[] fragments = placeholderPattern.fragments(); // ["Hello, ", "!"]
 		 *
 		 * // Retrieve dynamic arguments
-		 * Arg[] args = pattern.args(); // [Arg representing ${name}]
+		 * Placeholder[] args = placeholderPattern.args(); // [Placeholder representing ${name}]
 		 * }</pre>
 		 * </p>
 		 *
@@ -268,14 +278,14 @@ public interface MetaTemplate {
 		 *                 dynamic components.
 		 * @param macros   the {@link Macros} instance used to resolve any macros in the
 		 *                 template.
-		 * @return a {@link MetaPattern} representing the compiled template.
+		 * @return a {@link PlaceholderPattern} representing the compiled template.
 		 * @throws IllegalArgumentException if the template is invalid or cannot be
 		 *                                  parsed.
-		 * @see MetaPattern
+		 * @see PlaceholderPattern
 		 * @see Macros
 		 */
-		static MetaPattern compile(String template, Macros macros) {
-			return new DefaultMetaPattern(template, macros);
+		static PlaceholderPattern compile(String template, Macros macros) {
+			return new DefaultTemplatePattern(template, macros);
 		}
 
 		/**
@@ -291,7 +301,8 @@ public interface MetaTemplate {
 		String[] fragments();
 
 		/**
-		 * Returns the dynamic arguments defined in the compiled template.
+		 * Returns the dynamic placeholders (arguments) defined in the compiled
+		 * template.
 		 * <p>
 		 * Arguments represent the variable or dynamic components of the template that
 		 * are resolved or formatted at runtime. For example, in the template
@@ -299,10 +310,86 @@ public interface MetaTemplate {
 		 * {@code ${name}}.
 		 * </p>
 		 *
-		 * @return an array of {@link Arg} objects representing the dynamic components
-		 *         of the template.
+		 * @return an array of {@link Placeholder} objects representing the dynamic
+		 *         components of the template.
 		 */
-		Arg[] args();
+		Placeholder[] placeholders();
+	}
+
+	/**
+	 * A meta template, similar to JDK PlaceholderPattern, where a precompiled
+	 * string template with placeholders (args) is able to substitute and format all
+	 * references values, and substibute in place of the placeholder arguments. It
+	 * further allows expression parsing with specialized placeholder (arg) syntax.
+	 * 
+	 * <p>
+	 * The format registry is typically provided from some global definitions, so
+	 * its available during construction of the skeleton template and must always be
+	 * provided.
+	 * </p>
+	 * 
+	 * <p>
+	 * The parsed placeholderPattern
+	 *
+	 * @param template           the template
+	 * @param formats            the formats
+	 * @param placeholderPattern the placeholderPattern
+	 * @author Mark Bednarczyk
+	 */
+	public record TemplatePattern(String template, FormatRegistry formats, PlaceholderPattern pattern) {
+
+		public TemplatePattern(String template) {
+			this(requireNonNull(template), FormatRegistry.of(), PlaceholderPattern.compile(template, Macros.root()));
+		}
+
+		public TemplatePattern(String template, Macros macros) {
+			this(requireNonNull(template), FormatRegistry.of(), PlaceholderPattern.compile(template, macros));
+		}
+
+		private static final Logger logger = LoggerFactory.getLogger(TemplatePattern.class);
+
+		@Override
+		public String toString() {
+			return template;
+		}
+
+		public String[] fragments() {
+			return pattern.fragments();
+		}
+
+		public Placeholder[] placeholders() {
+			return pattern.placeholders();
+		}
+
+		public String toString(Object cwd, DomainAccessor domain) {
+
+			StringBuilder sb = new StringBuilder();
+			var frags = pattern.fragments();
+			var args = pattern.placeholders();
+
+			for (int i = 0; i < frags.length; i++) {
+				String frag = frags[i];
+				sb.append(frag);
+
+				if (i >= args.length)
+					continue;
+
+				try {
+					Placeholder placeholder = args[i];
+					Object refValue = domain.resolve(placeholder.referenceName(), cwd);
+
+					String formatted = placeholder.applyFormatOrElse(refValue, formats);
+
+					sb.append(formatted);
+				} catch (Throwable e) {
+					logger.error("arg=%s".formatted(pattern.toString()));
+
+					throw e;
+				}
+			}
+
+			return sb.toString();
+		}
 	}
 
 	/**
@@ -339,7 +426,7 @@ public interface MetaTemplate {
 	 *     Detail.DETAILED, new DetailTemplate(Detail.DETAILED, "Detailed Summary", List.of(...), defaults, null)
 	 * );
 	 *
-	 * ProtocolTemplate protocolTemplate = new ProtocolTemplate(
+	 * Template protocolTemplate = new Template(
 	 *     "ExampleProtocol",
 	 *     detailMap,
 	 *     new Macros(null, Map.of("$example", "Example Macro")),
@@ -363,7 +450,7 @@ public interface MetaTemplate {
 	 *                    indentation.
 	 * @see MetaTemplate
 	 */
-	public record ProtocolTemplate(
+	public record Template(
 			String name,
 			Map<Detail, DetailTemplate> detailMap,
 			DetailTemplate[] detailArray,
@@ -412,7 +499,7 @@ public interface MetaTemplate {
 		}
 
 		/**
-		 * Constructs a {@code ProtocolTemplate} from a name, a detail map, macros, and
+		 * Constructs a {@code Template} from a name, a detail map, macros, and
 		 * defaults.
 		 * <p>
 		 * The {@code detailMap} is automatically converted into an array and list for
@@ -427,7 +514,7 @@ public interface MetaTemplate {
 		 * @param defaults  Default settings for the protocol, such as alignment and
 		 *                  indentation.
 		 */
-		public ProtocolTemplate(
+		public Template(
 				String name,
 				Map<Detail, DetailTemplate> detailMap,
 				Macros macros,
@@ -452,6 +539,8 @@ public interface MetaTemplate {
 		}
 	}
 
+	public record Details(DetailTemplate[] details) {}
+
 	/**
 	 * Represents a detailed template configuration containing a summary, a list of
 	 * field templates, a map of field templates for fast lookup, default settings,
@@ -469,8 +558,8 @@ public interface MetaTemplate {
 	 * lookups.</li>
 	 * <li>{@code defaults}: Default settings, such as alignment, width, or
 	 * indentation.</li>
-	 * <li>{@code pattern}: An optional {@link MetaPattern} for additional
-	 * processing or validation.</li>
+	 * <li>{@code placeholderPattern}: An optional {@link PlaceholderPattern} for
+	 * additional processing or validation.</li>
 	 * </ul>
 	 * The {@code fieldMap} is automatically derived from the {@code fieldList} and
 	 * provides an immutable view of the fields by name.
@@ -510,25 +599,24 @@ public interface MetaTemplate {
 	 * }</pre>
 	 * </p>
 	 *
-	 * @param detail    Metadata describing the detail level or context for the
-	 *                  template.
-	 * @param summary   A textual summary describing the template.
-	 * @param fieldList An ordered list of {@link FieldTemplate} objects defining
-	 *                  the fields in this template.
-	 * @param fieldMap  An immutable map of field templates keyed by their name,
-	 *                  derived from {@code fieldList}.
-	 * @param defaults  Default settings for this template, such as alignment or
-	 *                  indentation.
-	 * @param pattern   An optional {@link MetaPattern} for additional validation or
-	 *                  processing.
+	 * @param detail             Metadata describing the detail level or context for
+	 *                           the template.
+	 * @param summary            A textual summary describing the template.
+	 * @param fieldList          An ordered list of {@link FieldTemplate} objects
+	 *                           defining the fields in this template.
+	 * @param fieldMap           An immutable map of field templates keyed by their
+	 *                           name, derived from {@code fieldList}.
+	 * @param defaults           Default settings for this template, such as
+	 *                           alignment or indentation.
+	 * @param placeholderPattern An optional {@link PlaceholderPattern} for
+	 *                           additional validation or processing.
 	 */
 	public record DetailTemplate(
 			Detail detail,
-			String summary,
+			TemplatePattern summary,
 			List<FieldTemplate> fieldList,
 			Map<String, FieldTemplate> fieldMap,
-			Defaults defaults,
-			MetaPattern pattern) {
+			Defaults defaults) implements MetaTemplate {
 
 		/**
 		 * Converts a list of {@link FieldTemplate} objects into an immutable map, where
@@ -549,23 +637,22 @@ public interface MetaTemplate {
 		 * is immutable.
 		 * </p>
 		 *
-		 * @param detail    Metadata describing the detail level or context for the
-		 *                  template.
-		 * @param summary   A textual summary describing the template.
-		 * @param fieldList An ordered list of {@link FieldTemplate} objects defining
-		 *                  the fields in this template.
-		 * @param defaults  Default settings for this template, such as alignment or
-		 *                  indentation.
-		 * @param pattern   An optional {@link MetaPattern} for additional validation or
-		 *                  processing.
+		 * @param detail             Metadata describing the detail level or context for
+		 *                           the template.
+		 * @param summary            A textual summary describing the template.
+		 * @param fieldList          An ordered list of {@link FieldTemplate} objects
+		 *                           defining the fields in this template.
+		 * @param defaults           Default settings for this template, such as
+		 *                           alignment or indentation.
+		 * @param placeholderPattern An optional {@link PlaceholderPattern} for
+		 *                           additional validation or processing.
 		 */
 		public DetailTemplate(
 				Detail detail,
-				String summary,
+				TemplatePattern summary,
 				List<FieldTemplate> fieldList,
-				Defaults defaults,
-				MetaPattern pattern) {
-			this(detail, summary, fieldList, listToMap(fieldList), defaults, pattern);
+				Defaults defaults) {
+			this(detail, summary, fieldList, listToMap(fieldList), defaults);
 		}
 	}
 
@@ -583,12 +670,12 @@ public interface MetaTemplate {
 	 * empty.</li>
 	 * <li>{@code template}: A string defining the formatting or representation of
 	 * the field.</li>
-	 * <li>{@code nodes}: A list of child {@code FieldTemplate} objects,
+	 * <li>{@code items}: A list of child {@code FieldTemplate} objects,
 	 * representing nested fields.</li>
 	 * <li>{@code defaults}: Default settings inherited or overridden for this field
 	 * (e.g., alignment, width).</li>
-	 * <li>{@code pattern}: An optional {@link MetaPattern} for additional
-	 * processing or validation.</li>
+	 * <li>{@code placeholderPattern}: An optional {@link PlaceholderPattern} for
+	 * additional processing or validation.</li>
 	 * </ul>
 	 * This structure allows for defining hierarchical templates where fields can be
 	 * nested and rendered based on customizable templates and default values.
@@ -619,17 +706,19 @@ public interface MetaTemplate {
 	 * }</pre>
 	 * </p>
 	 *
-	 * @param detail   Provides additional details or metadata about the field.
-	 * @param name     The unique name of the field.
-	 * @param label    A human-readable label for the field, or empty if no label is
-	 *                 defined.
-	 * @param template The formatting template for the field's representation.
-	 * @param nodes A list of child {@code FieldTemplate} objects representing
-	 *                 nested fields, or {@code null}.
-	 * @param defaults The default settings for the field, such as indentation or
-	 *                 alignment.
-	 * @param pattern  An optional {@link MetaPattern} for validating or formatting
-	 *                 the field's value.
+	 * @param detail             Provides additional details or metadata about the
+	 *                           field.
+	 * @param name               The unique name of the field.
+	 * @param label              A human-readable label for the field, or empty if
+	 *                           no label is defined.
+	 * @param template           The formatting template for the field's
+	 *                           representation.
+	 * @param items              A list of child {@code FieldTemplate} objects
+	 *                           representing nested fields, or {@code null}.
+	 * @param defaults           The default settings for the field, such as
+	 *                           indentation or alignment.
+	 * @param placeholderPattern An optional {@link PlaceholderPattern} for
+	 *                           validating or formatting the field's value.
 	 * @see Named
 	 */
 	public record FieldTemplate(
@@ -638,8 +727,8 @@ public interface MetaTemplate {
 			String label,
 			String template,
 			Defaults defaults,
-			MetaPattern pattern,
-			List<Node> nodes) implements Named {
+			PlaceholderPattern placeholderPattern,
+			List<Item> items) implements Named, MetaTemplate {
 
 		/**
 		 * Returns a string representation of this {@code FieldTemplate}, including its
@@ -656,29 +745,29 @@ public interface MetaTemplate {
 					+ ", name=" + name
 					+ (label.isBlank() ? "" : ", label=" + label)
 					+ ", template=" + template
-					+ (nodes == null
+					+ (items == null
 							? ""
-							: ", nodes=" + nodes.stream()
+							: ", items=" + items.stream()
 									.map(Named::name)
 									.limit(maxLen)
 									.collect(Collectors.joining(", ", "[", "]")))
 					+ ", defaults=" + defaults
-					+ (pattern == null ? "" : ", pattern=" + pattern)
+					+ (placeholderPattern == null ? "" : ", placeholderPattern=" + placeholderPattern)
 					+ "]";
 		}
 
 		/**
-		 * Constructs a {@code FieldTemplate} without a {@link MetaPattern}.
+		 * Constructs a {@code FieldTemplate} without a {@link PlaceholderPattern}.
 		 * <p>
 		 * This constructor allows for creating a {@code FieldTemplate} when no
-		 * {@code MetaPattern} is required, while retaining all other attributes.
+		 * {@code PlaceholderPattern} is required, while retaining all other attributes.
 		 * </p>
 		 *
 		 * @param detail   The detail metadata for the field.
 		 * @param name     The name of the field.
 		 * @param label    The label for the field.
 		 * @param template The formatting template for the field.
-		 * @param nodes The list of child fields, or {@code null}.
+		 * @param items    The list of child fields, or {@code null}.
 		 * @param defaults The default settings for the field.
 		 */
 		public FieldTemplate(
@@ -687,8 +776,8 @@ public interface MetaTemplate {
 				String label,
 				String template,
 				Defaults defaults,
-				List<Node> nodes) {
-			this(detail, name, label, template, defaults, null, nodes);
+				List<Item> items) {
+			this(detail, name, label, template, defaults, null, items);
 		}
 	}
 
@@ -699,17 +788,17 @@ public interface MetaTemplate {
 	 * @author Mark Bednarczyk [mark@slytechs.com]
 	 * @author Sly Technologies Inc.
 	 */
-	public record Node(
-			Node parent,
+	public record Item(
+			Item parent,
 			Detail detail,
 			String name,
 			String template,
 			Defaults defaults,
-			MetaPattern pattern,
-			List<Node> nodes) implements Named {
+			PlaceholderPattern placeholderPattern,
+			List<Item> items) implements Named, MetaTemplate {
 
 		public boolean isEmpty() {
-			return nodes == null || nodes.isEmpty();
+			return items == null || items.isEmpty();
 		}
 
 		/**
@@ -722,18 +811,18 @@ public interface MetaTemplate {
 		@Override
 		public String toString() {
 			final int maxLen = 10;
-			return "FieldTemplate ["
+			return "Item ["
 					+ "detail=" + detail
 					+ ", name=" + name
 					+ ", template=" + template
-					+ (nodes == null
+					+ (items == null
 							? ""
-							: ", nodes=" + nodes.stream()
+							: ", items=" + items.stream()
 									.map(Named::name)
 									.limit(maxLen)
 									.collect(Collectors.joining(", ", "[", "]")))
 					+ ", defaults=" + defaults
-					+ (pattern == null ? "" : ", pattern=" + pattern)
+					+ (placeholderPattern == null ? "" : ", placeholderPattern=" + placeholderPattern)
 					+ "]";
 		}
 	}
@@ -760,7 +849,7 @@ public interface MetaTemplate {
 	 * }</pre>
 	 * </p>
 	 */
-	record Macros(Macros parent, Map<String, String> macroMap) {
+	record Macros(Macros parent, Map<String, String> macroMap) implements MetaTemplate {
 
 		/**
 		 * Returns a string representation of the macro map.
@@ -795,6 +884,16 @@ public interface MetaTemplate {
 					"$bytes", "bytes"
 
 			));
+		}
+
+		public static Macros fromContainer(Macros parent, Map<String, Object> container) {
+			if (container == null)
+				return parent;
+
+			@SuppressWarnings("unchecked")
+			Map<String, String> macroMap = (Map<String, String>) container.get("macros");
+
+			return fromMap(parent, macroMap);
 		}
 
 		/**
@@ -851,7 +950,7 @@ public interface MetaTemplate {
 		}
 
 		/**
-		 * Macro pattern $macro:
+		 * Macro placeholderPattern $macro:
 		 * 
 		 * <pre>
 		 * 1) first char can be `_` or a word character
@@ -860,14 +959,15 @@ public interface MetaTemplate {
 		 *       to expression evaluator
 		 * </pre>
 		 */
-		private static final Pattern MACRO_REGEX = Pattern.compile("(\\$[_a-zA-Z][\\w\\d_]*)");
+		private static final java.util.regex.Pattern MACRO_REGEX = java.util.regex.Pattern.compile(
+				"(\\$[_a-zA-Z][\\w\\d_]*)");
 
 		/**
 		 * Replaces all macros within the given line with their resolved values, or
 		 * returns a default value if the line is null.
 		 * <p>
-		 * A macro is defined as a sequence of characters matching the pattern
-		 * {@code $[_\w][\w\d_]*}, where:
+		 * A macro is defined as a sequence of characters matching the
+		 * placeholderPattern {@code $[_\w][\w\d_]*}, where:
 		 * <ul>
 		 * <li>The macro begins with a dollar sign ({@code $}).</li>
 		 * <li>The first character after the dollar sign must be a letter or underscore
@@ -915,8 +1015,8 @@ public interface MetaTemplate {
 			result.append(line, lastMatchEnd, line.length());
 
 			String str = result.toString();
-			if (lastMatchEnd > 0) // At least 1 replacement
-				return replaceOrDefault(str, orDefault);
+//			if (lastMatchEnd > 0) // At least 1 replacement
+//				return replaceOrDefault(str, orDefault);
 
 			return str;
 		}
@@ -957,7 +1057,7 @@ public interface MetaTemplate {
 	 * }</pre>
 	 * </p>
 	 */
-	public record Defaults(Defaults parent, int indent, int width, Align align, String prefix) {
+	public record Defaults(Defaults parent, int indent, int width, Align align, String prefix) implements MetaTemplate {
 
 		/**
 		 * Returns a string representation of this {@code Defaults} instance, including
@@ -1027,6 +1127,16 @@ public interface MetaTemplate {
 		@SuppressWarnings("unchecked")
 		public static Defaults fromMap(Defaults parent, Object defaultsMap) {
 			return fromMap(parent, (Map<String, Object>) defaultsMap);
+		}
+
+		public static Defaults fromContainer(Defaults parent, Map<String, Object> container) {
+			if (container == null)
+				return parent;
+
+			@SuppressWarnings("unchecked")
+			Map<String, Object> defaultsMap = (Map<String, Object>) container.get("defaults");
+			return fromMap(parent, defaultsMap);
+
 		}
 
 		/**

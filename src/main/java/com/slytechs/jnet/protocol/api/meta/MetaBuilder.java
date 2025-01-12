@@ -33,15 +33,15 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 import com.slytechs.jnet.protocol.api.meta.impl.DummyHeaderRegistry;
 import com.slytechs.jnet.protocol.api.meta.impl.HeaderRegistry;
 import com.slytechs.jnet.protocol.api.meta.impl.MetaReflections;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
 import com.slytechs.jnet.protocol.api.meta.spi.impl.CachedHeaderTemplateService;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**
@@ -91,7 +91,7 @@ public final class MetaBuilder {
 				? registry.lookupOption(id, parentId)
 				: registry.lookupHeader(id);
 
-		ProtocolTemplate template = loadTemplate(header, header.headerName());
+		Template template = loadTemplate(header, header.headerName());
 		var hdrClass = header.getClass();
 		var attributes = MetaReflections.listAttributes(hdrClass);
 		var fields = MetaReflections.listFields(hdrClass, template);
@@ -100,7 +100,7 @@ public final class MetaBuilder {
 		return meta;
 	}
 
-	private List<MetaField> listFields(Class<?> containerClass, ProtocolTemplate template) {
+	private List<MetaField> listFields(Class<?> containerClass, Template template) {
 		var fieldMethodList = Reflections.listMethods(containerClass, Meta.class, a -> a
 				.value() == MetaType.FIELD);
 
@@ -187,7 +187,7 @@ public final class MetaBuilder {
 		return headerList;
 	}
 
-	private ProtocolTemplate loadTemplate(Object targetObjOrClass, String targetName) {
+	private Template loadTemplate(Object targetObjOrClass, String targetName) {
 		Class<?> targetClass = targetObjOrClass instanceof Class cl ? cl : targetObjOrClass.getClass();
 		var resourceAnnotation = targetClass.getAnnotation(MetaResource.class);
 		if (resourceAnnotation == null) {
@@ -205,7 +205,7 @@ public final class MetaBuilder {
 		var arr = resource.split("#");
 		var name = arr.length > 1 ? arr[1] : null;
 
-		ProtocolTemplate template = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
+		Template template = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
 		if (template == null)
 			logger.warn("{} template '{}#{}' definition not found", targetName, arr[0], name);
 

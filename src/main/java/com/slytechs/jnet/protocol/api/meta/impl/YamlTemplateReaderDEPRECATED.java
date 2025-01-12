@@ -36,32 +36,30 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import com.slytechs.jnet.platform.api.util.format.Detail;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Node;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Defaults;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Item;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.TemplatePattern;
 
-public class YamlTemplateReader implements TemplateReader {
+public class YamlTemplateReaderDEPRECATED implements TemplateReaderDEPRECATED {
 
 	private static final String DEFAULTS_KEYWORD = "defaults";
 	private static final String FIELDS_KEYWORD = "fields";
-	private static final String GROUP_KEYWORD = "group";
 	private static final String MACROS_KEYWORD = "macros";
 	private static final String TEMPLATE_KEYWORD = "template";
 	private static final String DETAILS_KEYWORD = "details";
 	private static final String NAME_KEYWORD = "name";
 	private static final String LABEL_KEYWORD = "label";
 	private static final String SUMMARY_KEYWORD = "summary";
-	private static final String HEADERS_KEYWORD = "headers";
 
 	private Defaults defaults = Defaults.root();
 	private Macros defaultMacros = Macros.root();
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReader#defaults()
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReaderDEPRECATED#defaults()
 	 */
 	@Override
 	public Defaults defaults() {
@@ -69,14 +67,14 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReader#setDefaults(com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults)
+	 * @see com.slytechs.jnet.protocol.api.meta.impl.TemplateReaderDEPRECATED#setDefaults(com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Defaults)
 	 */
 	@Override
 	public void setDefaults(Defaults newDefaults) {
 		this.defaults = newDefaults;
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(YamlTemplateReader.class.getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger(YamlTemplateReaderDEPRECATED.class.getSimpleName());
 
 	/**
 	 * Pre-process reader input stream to replace: 1) Single `\{` with double `\\{`
@@ -195,7 +193,7 @@ public class YamlTemplateReader implements TemplateReader {
 			Detail.OFF);
 
 	@Override
-	public ProtocolTemplate parseResource(String resourcePath) throws IOException {
+	public Template parseResource(String resourcePath) throws IOException {
 
 		try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
 			if (is == null)
@@ -213,7 +211,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@Override
-	public Map<String, ProtocolTemplate> parseAllResources(String resourcePath) throws IOException {
+	public Map<String, Template> parseAllResources(String resourcePath) throws IOException {
 		try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
 			if (is == null)
 				throw new IOException("Resource not found: " + resourcePath);
@@ -230,7 +228,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@Override
-	public ProtocolTemplate parseHeader(Reader reader) throws IOException {
+	public Template parseHeader(Reader reader) throws IOException {
 		reader = new YamlPreprocessorReader(reader);
 
 		Yaml yaml = new Yaml();
@@ -240,7 +238,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@Override
-	public Map<String, ProtocolTemplate> parseAllHeaders(Reader reader) {
+	public Map<String, Template> parseAllHeaders(Reader reader) {
 		reader = new YamlPreprocessorReader(reader);
 
 		Yaml yaml = new Yaml();
@@ -249,7 +247,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@Override
-	public ProtocolTemplate parseHeader(String yamlContent) {
+	public Template parseHeader(String yamlContent) {
 		yamlContent = yamlContent.replace("\\{", "\\\\{");
 
 		Yaml yaml = new Yaml();
@@ -258,8 +256,8 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, ProtocolTemplate> parseAllProtocolsFromMap(Map<String, Object> root) {
-		var map = new HashMap<String, ProtocolTemplate>();
+	private Map<String, Template> parseAllProtocolsFromMap(Map<String, Object> root) {
+		var map = new HashMap<String, Template>();
 
 		for (Map.Entry<String, Object> protocolEntry : root.entrySet()) {
 			String protocolName = protocolEntry.getKey();
@@ -273,7 +271,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ProtocolTemplate parseProtocolFromMap(Map<String, Object> root) {
+	private Template parseProtocolFromMap(Map<String, Object> root) {
 		Map.Entry<String, Object> protocolEntry = root.entrySet().iterator().next();
 		String protocolName = protocolEntry.getKey();
 		Map<String, Object> protocol = (Map<String, Object>) protocolEntry.getValue();
@@ -282,7 +280,7 @@ public class YamlTemplateReader implements TemplateReader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ProtocolTemplate parseProtocolFromMap(Map<String, Object> protocol, String protocolName) {
+	private Template parseProtocolFromMap(Map<String, Object> protocol, String protocolName) {
 		Defaults defaults = Defaults.fromMap(this.defaults, (Map<String, Object>) protocol.get(
 				DEFAULTS_KEYWORD));
 
@@ -293,7 +291,7 @@ public class YamlTemplateReader implements TemplateReader {
 		Map<String, Object> templates = (Map<String, Object>) protocol.get(DETAILS_KEYWORD);
 		Map<Detail, DetailTemplate> details = parseDetailTemplates(templates, defaults, macros);
 
-		return new ProtocolTemplate(protocolName, details, macros, defaults);
+		return new Template(protocolName, details, macros, defaults);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -311,8 +309,8 @@ public class YamlTemplateReader implements TemplateReader {
 			Detail detail = Detail.valueOf(entry.getKey());
 			Map<String, Object> template = (Map<String, Object>) entry.getValue();
 
-			String summary = (String) template.get(SUMMARY_KEYWORD);
-			MetaPattern pattern = MetaPattern.compile(summary, macros);
+			String summaryStr = (String) template.get(SUMMARY_KEYWORD);
+			TemplatePattern summary = new TemplatePattern(summaryStr, macros);
 
 			List<FieldTemplate> fields = new ArrayList<>();
 
@@ -321,7 +319,7 @@ public class YamlTemplateReader implements TemplateReader {
 				fields = parseFields(detail, fieldsObj, defaults);
 			}
 
-			details.put(detail, new DetailTemplate(detail, summary, fields, defaults, pattern));
+			details.put(detail, new DetailTemplate(detail, summary, fields, defaults));
 		}
 
 		// Second pass: apply inheritance
@@ -383,21 +381,9 @@ public class YamlTemplateReader implements TemplateReader {
 				if (field.get(NAME_KEYWORD) == null)
 					field.put(NAME_KEYWORD, nameFormatter.formatted(fieldIndex++));
 
-				String name = (String) field.get(NAME_KEYWORD);
+				List<Item> items = null;
 
-				List<Node> nodes = null;
-
-				// Process child group of fields recursively
-				if (field.containsKey(GROUP_KEYWORD)) {
-					Object nodesObj = field.get(GROUP_KEYWORD);
-					String nodeNameFormatter = name + "/node[%d]";
-
-//					nodes = parseGroup(null, detail, nodesObj, nodeNameFormatter, defaults);
-
-//					nodes.forEach(System.out::println);
-				}
-
-				fields.add(createFieldTemplate(detail, field, nodes, defaults));
+				fields.add(createFieldTemplate(detail, field, items, defaults));
 			}
 
 		}
@@ -405,45 +391,10 @@ public class YamlTemplateReader implements TemplateReader {
 		return fields;
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<Node> parseGroup(Node parent, Detail detail, Map<String, Object> groupObj, String nameFormatter,
-			Defaults defaults) {
-		List<Map<String, Object>> nodesList = (List<Map<String, Object>>) groupObj;
-
-		List<Node> nodes = new ArrayList<>(nodesList.size());
-
-		int index = 0;
-		for (var nodeMap : nodesList) {
-			defaults = Defaults.fromMap(defaults, nodeMap.get(DEFAULTS_KEYWORD));
-			String template = (String) nodeMap.get(TEMPLATE_KEYWORD);
-
-			if (nodeMap.get(NAME_KEYWORD) == null)
-				nodeMap.put(NAME_KEYWORD, nameFormatter.formatted(index++));
-
-			String name = (String) nodeMap.get(NAME_KEYWORD);
-
-			var children = new ArrayList<Node>();
-
-			var node = new Node(parent, detail, name, template, defaults, null, children);
-
-//			if (nodeMap.containsKey(GROUP_KEYWORD)) {
-//				Object childNodeObj = nodeMap.get(GROUP_KEYWORD);
-//				String childName = name + "/node[%d]";
-//
-//				var childNodeList = parseGroup(node, detail, childNodeObj, childName, defaults);
-//				children.addAll(childNodeList);
-//			}
-//
-			nodes.add(node);
-		}
-
-		return nodes;
-	}
-
 	private FieldTemplate createFieldTemplate(
 			Detail detail,
 			Map<String, Object> field,
-			List<Node> nodes,
+			List<Item> items,
 			Defaults defaults) {
 
 		return new FieldTemplate(
@@ -452,22 +403,22 @@ public class YamlTemplateReader implements TemplateReader {
 				(String) field.getOrDefault(LABEL_KEYWORD, ""),
 				(String) field.get(TEMPLATE_KEYWORD),
 				defaults,
-				nodes);
+				items);
 	}
 
 	public static void main(String[] args) {
-		TemplateReader parser = new YamlTemplateReader();
+		TemplateReaderDEPRECATED parser = new YamlTemplateReaderDEPRECATED();
 
 		try {
 			// Load and parse Ethernet template
-			ProtocolTemplate ethernet = parser.parseResource("/tcpip/ip4.yaml");
+			Template ethernet = parser.parseResource("/tcpip/ip4.yaml");
 			System.out.println("Loaded " + ethernet.name() + " template:");
 			printTemplate(ethernet);
 
 			System.out.println("\n" + "=".repeat(80) + "\n");
 
 			// Load and parse TCP template
-			ProtocolTemplate tcp = parser.parseResource("/tcpip/tcp.yaml");
+			Template tcp = parser.parseResource("/tcpip/tcp.yaml");
 			System.out.println("Loaded " + tcp.name() + " template:");
 			printTemplate(tcp);
 
@@ -477,7 +428,7 @@ public class YamlTemplateReader implements TemplateReader {
 		}
 	}
 
-	private static void printTemplate(ProtocolTemplate header) {
+	private static void printTemplate(Template header) {
 		// Print each detail level
 		for (Map.Entry<Detail, DetailTemplate> entry : header.detailMap().entrySet()) {
 			Detail detail = entry.getKey();
@@ -491,7 +442,7 @@ public class YamlTemplateReader implements TemplateReader {
 				for (FieldTemplate field : template.fieldList()) {
 					System.out.printf("  - %s:%n", field.name());
 					System.out.printf("      Label: %s%n", field.label());
-					System.out.printf("      Template: %s%n", field.template());
+					System.out.printf("      TemplatePattern: %s%n", field.template());
 					System.out.printf("      Width: %d%n", field.defaults().width());
 				}
 			}

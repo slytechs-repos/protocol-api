@@ -1,0 +1,49 @@
+# Sly Technologies Free License
+# 
+# Copyright 2025 Sly Technologies Inc.
+#
+# Reorganized YAML Configuration File for TCP Options
+
+Overview:
+  description: >
+    Defines templates and structures for formatting and displaying TCP options in a protocol tree hierarchy.
+    Each option is treated as a separate protocol and can include additional metadata and rendering rules.
+
+  defaults:
+    indent: 4
+    width: 64
+    align: left
+
+  macros:
+    $tcp_opt: "TCP_OPT_TYPE"
+
+Templates:
+  - header: TcpMssOption
+    summary: "Maximum Segment Size Option"
+    fields:
+      - field: mss
+        label: "Max segment size"
+        template: "\{value}"
+
+  - header: TcpSackPermittedOption
+    summary: "Sack Permitted Option"
+
+  - header: TcpTimestampOption
+    summary: "Timestamp Option"
+    fields:
+      - field: tsValue
+        label: "Timestamp"
+        template: "\{:0x%x}"
+      - field: tsEchoReply
+        label: "Timestamp Echo Reply"
+        template: "\{:0x%x}"
+
+  - header: TcpWindowScaleOption
+    summary: "Window Scale Option (bitshift)"
+    fields:
+      - field: shiftCount
+        label: "Window scale"
+        template: "\{value} (multiply by \{multiplier})"
+
+  - header: TcpNoOption
+    summary: "TCP No Option (padding)"

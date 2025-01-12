@@ -1,30 +1,51 @@
-Frame:
+# Sly Technologies Free License
+# 
+# Copyright 2025 Sly Technologies Inc.
+#
+# This YAML file defines meta-templates for Frame data formatting, providing
+# essential capture metadata like interface info, timestamps, and length fields.
+# The template enables consistent formatting of frame-level information across
+# all captured packets.
+
+Overview:
+  description: >
+    Defines templates and structures for Frame metadata formatting and analysis.
+
   defaults:
+    indent: 4
     width: 50
     align: left
 
-  details:
-    HIGH:
-      summary: ""
-      fields:
-        - name: portNo
-          label: "Interface id"
-          template: "\{value} (\{portName})"
+Templates:
+  - header: Frame
+    class: com.slytechs.jnet.protocol.frame.Frame
 
-        - name: frameNo
-          label: "Frame Number"
-          template: "\{value}"
+    details:
+      - detail: HIGH
+        summary: 'Frame \{frameNo}: \{wireLength:bytes} on wire (\{wireLength:bits}), \{captureLength:bytes} captured (\{captureLength:bits})'
+        items:
+          - field: portNo
+            label: "Interface id"
+            template: '\{value} (\{portName})'
 
-        - name: timestamp
-          label: "Arrival Time"
-          template: "\{value} [0x\{timestampAsLong:016X}]"
+          - field: frameNo
+            label: "Frame Number"
+            template: '\{value}'
 
-        - name: captureLength 
-          label: "Capture Length"
-          template: "\{value} bytes (\{captureLengthBits} bits)"
+          - field: timestamp
+            label: "Arrival Time"
+            template: '\{value} [\{timestampAsLong:0x%016X}]'
 
-        - name: wireLength
-          label: "Frame Length"
-          template: "\{value} bytes (\{wireLengthBits} bits)"
+          - field: captureLength
+            label: "Capture Length"  
+            template: '\{:bytes} (\{:bits})'
 
-    # MEDIUM and LOW will inherit from HIGH since they're identical
+          - field: wireLength
+            label: "Frame Length"
+            template: '\{:bytes} (\{:bits})'
+
+      - detail: MEDIUM
+        summary: 'Frame \{frameNo}: \{wireLength:bytes} on wire'
+
+      - detail: SUMMARY 
+        summary: 'Frame \{frameNo}'

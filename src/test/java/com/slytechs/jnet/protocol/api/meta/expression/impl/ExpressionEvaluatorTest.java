@@ -286,7 +286,7 @@ class ExpressionEvaluatorTest {
     }
     
     @Nested
-    @DisplayName("Pattern Reuse Tests")
+    @DisplayName("PlaceholderPattern Reuse Tests")
     class PatternReuseTests {
         
         @Test
@@ -308,7 +308,7 @@ class ExpressionEvaluatorTest {
         }
         
         @Test
-        @DisplayName("Pattern compilation should be thread-safe")
+        @DisplayName("PlaceholderPattern compilation should be thread-safe")
         void testThreadSafety() throws InterruptedException {
             ExpressionPattern pattern = ExpressionPattern.compile("x + y");
             

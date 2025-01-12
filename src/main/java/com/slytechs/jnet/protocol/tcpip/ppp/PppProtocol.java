@@ -427,7 +427,7 @@ public enum PppProtocol {
 	/** Proprietary Authentication Protocol 2 */
 	public static final int PROPRIETARY_AUTH_2_PROTOCOL = 0xc283;
 
-	/** Proprietary Node ID Authentication Protocol */
+	/** Proprietary Item ID Authentication Protocol */
 	public static final int PROPRIETARY_NODE_ID_AUTH_PROTOCOL = 0xc481;
 
 	/**

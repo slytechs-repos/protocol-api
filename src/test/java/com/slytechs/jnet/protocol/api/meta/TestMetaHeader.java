@@ -20,6 +20,7 @@ package com.slytechs.jnet.protocol.api.meta;
 import static java.nio.charset.StandardCharsets.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.stream.IntStream;
@@ -39,6 +40,9 @@ import com.slytechs.jnet.protocol.api.core.PacketDescriptorType;
 import com.slytechs.jnet.protocol.api.descriptor.DescriptorConstants;
 import com.slytechs.jnet.protocol.api.descriptor.Type2Descriptor;
 import com.slytechs.jnet.protocol.api.descriptor.impl.PacketDissector;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.TemplatePrinter;
+import com.slytechs.jnet.protocol.api.meta.template.TemplateReader;
 import com.slytechs.jnet.protocol.tcpip.ethernet.Ethernet;
 import com.slytechs.jnet.protocol.tcpip.ip.Ip4;
 import com.slytechs.test.Tests;
@@ -213,7 +217,6 @@ class TestMetaHeader {
 		MetaBuilder b = new MetaBuilder();
 		var metaPacket = b.buildPacket(packet);
 		var formatter = new PacketFormatter();
-
 		formatter.formatPacketTo(System.out, metaPacket, Detail.HIGH);
 
 //		var rt = new Ip4RouterAlertOption();
@@ -222,6 +225,22 @@ class TestMetaHeader {
 //		formatter.formatHeaderTo(System.out, metaRT, Detail.HIGH);
 
 //		System.out.println(metaPacket);
+	}
+
+	@Test
+	void dumpMetaTemplate() throws NotFound, JsonException, IOException {
+		InputStream is = TemplateReader.class.getResourceAsStream("/meta/tcpip/ip4.yaml");
+		if (is == null) {
+			System.err.println("Sample IP4 template not found in resources");
+			return;
+		}
+
+		Template header = TemplateReader.parseYamlTemplate(is);
+
+		var debug = new TemplatePrinter();
+
+		debug.print(header);
+
 	}
 
 }

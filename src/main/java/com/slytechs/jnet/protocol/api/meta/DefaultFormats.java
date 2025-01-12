@@ -147,7 +147,7 @@ public class DefaultFormats implements FormatRegistry {
 	}
 
 	private static final Pattern BITFORMAT_REGEX = Pattern.compile("^\\s*/(.+)/\\s*$");
-//	private static final Pattern EXPR_REGEX = Pattern.compile("^(.*?)\s*(=.*)$");
+//	private static final PlaceholderPattern EXPR_REGEX = PlaceholderPattern.compile("^(.*?)\s*(=.*)$");
 
 	private static final String EXPR = "^(.*?)\\s*(=|[+\\-*/%&|^]=|<<=|>>=|>>>=)\\s*(.*)$";
 	private static final Pattern EXPR_REGEX = Pattern.compile(EXPR);

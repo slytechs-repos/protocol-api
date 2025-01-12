@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import com.slytechs.jnet.platform.api.util.Named;
 import com.slytechs.jnet.platform.api.util.format.Detail;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
 
 /**
  * The Class MetaField.

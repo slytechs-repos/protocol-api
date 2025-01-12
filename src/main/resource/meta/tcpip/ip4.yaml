@@ -2,164 +2,142 @@
 # 
 # Copyright 2025 Sly Technologies Inc.
 #
-# This YAML file defines meta-template structures for instrumenting and formatting
-# Meta* objects, which represent protocol, header, field, and attribute data in a
-# traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable details, macros, and formatting rules to produce human-readable
-# representations of complex data structures.
+# This YAML file defines the IPv4 protocol meta-template structure used for packet 
+# analysis and display. The template provides field definitions, formatting rules,
+# and display configurations for various protocol fields including version, header
+# length, traffic class, fragmentation, and options.
 #
-# ## Overview of MetaTemplate System:
-#
-# 1. **Meta* Objects**:
-#    - Meta* objects include MetaPacket, MetaHeader, MetaField, MetaAttribute, 
-#      and more to represent protocol data hierarchies.
-#    - They provide a structural view of protocols, stacks, and data relationships.
-#    - Accessors for these objects are defined by protocol-specific classes, 
-#      enabling precise control over field extraction and formatting.
-#
-# 2. **Macros**:
-#    - Macros simplify template definitions by substituting reusable patterns.
-#    - Defined as key-value pairs in the form `$macro_name: "REPLACEMENT"`.
-#    - Names start with `$` (e.g., `$ip_ver`), and macros can reference other macros recursively.
-#    - Reserved `$<digit>` macros (e.g., `$0`, `$1`) are for runtime arguments 
-#      and are context-specific, such as referencing bit offsets or field lengths.
-#
-# 3. **Defaults**:
-#    - Default values can be specified at multiple levels: protocol, header, field, 
-#      or sub-field. Each level inherits unspecified properties from its parent.
-#    - Built-in defaults are provided via the `MetaTemplate.Defaults` class, ensuring 
-#      consistent output styles across definitions.
-#
-# 4. **Templates**:
-#    - Templates use placeholders in the format `\{value_reference : value_format}` 
-#      to define how data should be formatted.
-#    - Examples:
-#      - `\{header[0]:$macro}`: Accesses a macro for the first header byte.
-#      - `\{value:bytes = $0 << 2}`: Applies an expression and formats the result.
-#    - Templates are evaluated at runtime, combining static and dynamic content.
-#
-# 5. **Expression Evaluation**:
-#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
-#    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
-#    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
-#      are available for reference in expressions.
-#
-# ## Getting Started with MetaTemplates:
-#
-# - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
-# - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use details to define how protocol or field data is displayed.
-# - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
-#   ensuring consistency with protocol-specific class accessors.
-#
-# This system is designed for flexibility and extensibility, allowing it to support 
-# any protocol or data structure represented as a Meta* object. Use this file to 
-# provide clear and customizable output for your specific use case.
+# The template supports multiple detail levels (HIGH, MEDIUM, SUMMARY) with 
+# inheritance, allowing for different views of the same packet data. It uses
+# a flexible macro system for bit-field definitions and includes defaults for
+# consistent formatting across all detail levels.
 
-IPv4:
-  defaults:
-    indent: 4
-    width: 64
-	align: left
-	
-  macros:
-	$ip_opt:    "/tcpip/ip-option.yaml"
-	$ip4_opt:    "/tcpip/ip4-options.yaml"
-	$ip_ver:    "/1111 ..../"
-	$ip_hlen:   "/.... 1111/"
-	$ip_flag:   "/111. ..../"
-	$ip_res:    "/.1.. ..../"
-	$ip_df:     "/..1. ..../"
-	$ip_offset: "/...1 1111 1111 1111/"
-	$is_set:    "is_set"
-	$ip_type:   "IP_TYPE"
+description: >
+    Defines templates and structures for IPv4 protocol data formatting and analysis.
 
-  details:
-    HIGH:
-      summary: "Internet Protocol Version 4, offset=\{offset} length=\{length}"
-      fields:
-        - name: version
-          template: "\{header[0]:$ip_ver} = Version: \{value}"
+defaults:
+  indent: 4
+  width: 64
+  align: left
 
-        - name: hdrLen
-		  template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})"
+macros:
+  $ip_ver:    "/1111 ..../"
+  $ip_hlen:   "/.... 1111/"
+  $ip_flag:   "/111. ..../"
+  $ip_res:    "/.1.. ..../"
+  $ip_df:     "/..1. ..../"
+  $ip_offset: "/...1 1111 1111 1111/"
+  $is_set:    "is_set"
+  $ip_type:   "IP_TYPE"
 
-        - name: trafficClass
-          label: "Traffic Class"
-          template: "\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
+Templates:
+  - header: Ip4
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4
+    imports:
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-RT-ALERT"
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-MTU-PROBE"
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-MTU-REPLY"
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-SEC"
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-QUICK"
+      - "/tcpip/ip4-options.yaml#IPv4-OPT-TRACE"
 
-        - name: totalLength
-          label: "Total Length"
-          template: "\{:bytes}"
+    details:
+      - detail: HIGH
+        summary: 'Internet Protocol Version 4, offset=\{offset} length=\{length}'
+        defaults:
+          - width: 4
+        items:
+          - field: version
+            template: '\{header[0]:$ip_ver} = Version: \{value}'
+            tags: [important, frame]
 
-        - name: identification
-          label: "Identification"
-          template: "\{:0x%04x} (\{value})"
+          - field: hdrLen
+            template: '\{header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})'
+            tags: [important, frame]
 
-        - name: flags
-          defaults:
-            indent: 0 # Sets the group bitfield indentiation to 0, to align with template
-          template:     "\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}, bit is \{:$is_set = 0}"
-          group:
-            - template: "\{:/1... ..../} = Reserved bit: \{:$is_set}"
-            - template: "\{:/.1.. ..../} = Don't fragment: \{:$is_set}"
-			- template: "\{:/..1. ..../} = More fragments: \{:$is_set}"
-			  group:
-				- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
-				- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
-				  group:
-					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
-					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
-					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
-					- template: "\{:/111. ..../} = Flags: \{:0x%X}, \{flagsInfo}"
+          - field: trafficClass
+            label: "Traffic Class"
+            template: '\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})'
 
-        - name: fragOffset
-          template: "\{:$ip_offset} = Fragment Offset: \{fragOffset}"
+          - field: totalLength
+            label: "Total Length" 
+            template: '\{:bytes}'
 
-        - name: ttl
-          label: "Time to Live"
-          template: "\{value}"
+          - field: identification
+            label: "Identification"
+            template: '\{:0x%04x} (\{value})'
 
-        - name: protocol
-          label: "Protocol"
-          template: "\{:$ip_type} (\{value})"
+          - field: flags
+            label: "Flags"
+            summary: '\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}'
+            defaults:
+              indent: 0
+            items:
+              - template: '\{:/1... ..../} = Reserved bit: \{:$is_set}'
+              - template: '\{:/.1.. ..../} = Don''t fragment: \{:$is_set}'
+              - template: '\{:/..1. ..../} = More fragments: \{:$is_set}'
 
-        - name: src
-          label: "Source Address"
-          template: "\{value}"
+          - field: fragOffset
+            template: '\{:$ip_offset} = Fragment Offset: \{fragOffset}'
 
-        - name: dst
-          label: "Destination Address"
-          template: "\{value}"
-		  
-      group:
-		- include: "$ip_opt#IP-OPT"
-		- include: "$ip4_opt#IPv4-OPT-RT-ALERT"
-		- include: "$ip4_opt#IPv4-OPT-MTU-PROBE"
-		- include: "$ip4_opt#IPv4-OPT-MTU-REPLY"
-		- include: "$ip4_opt#IPv4-OPT-SEC"
-		- include: "$ip4_opt#IPv4-OPT-QUICK"
-		- include: "$ip4_opt#IPv4-OPT-TRACE"
-		- include: "$ip4_opt#IPv4-OPT-TS"
+          - field: ttl
+            label: "Time to Live"
+            template: '\{value}'
 
-    MEDIUM:
-	  summary: "IPv4 \{src} → \{dst} (\{protocol})"
-      fields:
-        - name: trafficClass
-          label: "Traffic Class"
-          template: "\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
+          - field: protocol
+            label: "Protocol"
+            template: '\{:$ip_type} (\{value})'
 
-        - name: totalLength
-          label: "Total Length"
-          template: "\{:bytes}"
+          - field: src
+            label: "Source Address"
+            template: '\{value}'
 
-        - name: ttl
-          label: "Time to Live"
-          template: "\{value}"
+          - field: dst
+            label: "Destination Address"
+            template: '\{value}'
 
-        - name: protocol
-          label: "Protocol"
-          template: "\{:$ip_type}"
+          - field: options
+            label: "IPv4 Options"
+            items:
+              - header: Ip4RouterAlertOption
+                summary: 'Router Alert (\{length:bytes}): \{routerAlertDescription}'
 
-    SUMMARY:
-      summary: "IPv4 \{src} → \{dst} (\{protocol})"
+              - header: Ip4MtuProbeOption
+                summary: 'MTU Probe (\{length:bytes})'
+
+              - header: Ip4MtuReplyOption
+                repeatable: true
+                summary: 'MTU Reply (\{length:bytes})'
+
+              - header: Ip4SecurityDefunctOption
+                summary: 'Security (\{length:bytes}): \{securityLevel}'
+
+              - header: Ip4QuickStartOption
+                repeatable: true
+                summary: 'Quick Start (\{length:bytes})'
+
+              - header: Ip4TracerouteOption
+                repeatable: true
+                summary: 'Trace Route (\{length:bytes})'
+
+      - detail: MEDIUM
+        summary: 'IPv4 \{src} → \{dst} (\{protocol})'
+        items:
+          - field: trafficClass
+            label: "Traffic Class"
+            template: '\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})'
+
+          - field: totalLength
+            label: "Total Length"
+            template: '\{:bytes}'
+
+          - field: ttl
+            label: "Time to Live"
+            template: '\{value}'
+
+          - field: protocol
+            label: "Protocol"
+            template: '\{:$ip_type}'
+
+      - detail: SUMMARY
+        summary: 'IPv4 \{src} → \{dst} (\{protocol})'

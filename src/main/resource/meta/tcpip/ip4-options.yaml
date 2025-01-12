@@ -2,73 +2,157 @@
 # 
 # Copyright 2025 Sly Technologies Inc.
 #
-# This YAML file defines meta-template structures for instrumenting and formatting
-# Meta* objects, which represent protocol, header, field, and attribute data in a
-# traversable hierarchy. The MetaTemplate system provides a powerful way to
-# define reusable details, macros, and formatting rules to produce human-readable
-# representations of complex data structures.
-#
-# ## Overview of MetaTemplate System:
-#
-# 1. **Meta* Objects**:
-#    - Meta* objects include MetaPacket, MetaHeader, MetaField, MetaAttribute, 
-#      and more to represent protocol data hierarchies.
-#    - They provide a structural view of protocols, stacks, and data relationships.
-#    - Accessors for these objects are defined by protocol-specific classes, 
-#      enabling precise control over field extraction and formatting.
-#
-# 2. **Macros**:
-#    - Macros simplify template definitions by substituting reusable patterns.
-#    - Defined as key-value pairs in the form `$macro_name: "REPLACEMENT"`.
-#    - Names start with `$` (e.g., `$ip_ver`), and macros can reference other macros recursively.
-#    - Reserved `$<digit>` macros (e.g., `$0`, `$1`) are for runtime arguments 
-#      and are context-specific, such as referencing bit offsets or field lengths.
-#
-# 3. **Defaults**:
-#    - Default values can be specified at multiple levels: protocol, header, field, 
-#      or sub-field. Each level inherits unspecified properties from its parent.
-#    - Built-in defaults are provided via the `MetaTemplate.Defaults` class, ensuring 
-#      consistent output styles across definitions.
-#
-# 4. **Templates**:
-#    - Templates use placeholders in the format `\{value_reference : value_format}` 
-#      to define how data should be formatted.
-#    - Examples:
-#      - `\{header[0]:$macro}`: Accesses a macro for the first header byte.
-#      - `\{value:bytes = $0 << 2}`: Applies an expression and formats the result.
-#    - Templates are evaluated at runtime, combining static and dynamic content.
-#
-# 5. **Expression Evaluation**:
-#    - Expressions in details are written using standard operators like `=`, `+=`, `*=`, etc.
-#    - `$0`, `$1`, etc., represent runtime arguments passed to the expression evaluator.
-#    - Context-specific variables such as `value`, `offset`, or protocol-defined attributes 
-#      are available for reference in expressions.
-#
-# ## Getting Started with MetaTemplates:
-#
-# - **Define Macros**: Start by defining reusable macros to simplify complex field patterns.
-# - **Set Defaults**: Configure defaults for indentation, alignment, or field grouping.
-# - **Write Templates**: Use details to define how protocol or field data is displayed.
-# - **Test and Extend**: Extend the definition to include all necessary fields and attributes, 
-#   ensuring consistency with protocol-specific class accessors.
-#
-# This system is designed for flexibility and extensibility, allowing it to support 
-# any protocol or data structure represented as a Meta* object. Use this file to 
-# provide clear and customizable output for your specific use case.
+# This YAML file defines IPv4 options meta-templates for parsing and formatting
+# various IPv4 header options including Router Alert, MTU, Security, Record Route,
+# and other standard options defined in the IPv4 protocol specification.
 
-IPv4-OPT:
+Overview:
+  description: >
+    Defines templates and structures for IPv4 options formatting and analysis.
+
+  defaults:
+    indent: 4
+    width: 50
+    align: left
+
   macros:
-	$opt_type: IPv4_OPT_TYPE
-	
-  details:
-    HIGH:
-      summary: "IPv4 option \{length:bytes}"
-      fields:
-        - name: type
-          label: Type
-          template: "\{:$opt_type} (\{value})"
+    $opt_type: IPv4_OPT_TYPE
 
-IPv4-OPT-RT-ALERT:
-  details:
-    HIGH:
-      summary: "Router Alert (\{length:bytes}): \{routerAlertDescription}"
+Templates:
+  - header: Ip4Option
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4Option
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "IPv4 option \{length:bytes}"
+        items:
+          - field: type
+            label: "Type"
+            template: "\{:$opt_type} (\{value})"
+
+  - header: Ip4RouterAlertOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4RouterAlertOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Router Alert (\{length:bytes}): \{alertValue}"
+        items:
+          - field: value
+            label: "Alert Value"
+            template: "\{value} (\{alertDescription})"
+
+  - header: Ip4MtuProbeOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4MtuProbeOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "MTU Probe (\{length:bytes})"
+        items:
+          - field: mtu
+            label: "MTU Size"
+            template: "\{value} bytes"
+
+  - header: Ip4MtuReplyOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4MtuReplyOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "MTU Reply (\{length:bytes})"
+        items:
+          - field: mtu
+            label: "MTU Size"
+            template: "\{value} bytes"
+
+  - header: Ip4QuickStartOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4QuickStartOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Quick Start (\{length:bytes})"
+        items:
+          - field: function
+            label: "Function"
+            template: "\{value} (\{functionName})"
+          - field: rate
+            label: "Rate Request"
+            template: "\{value} Kbps"
+
+  - header: Ip4RecordRouteOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4RecordRouteOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Record Route (\{length:bytes})"
+        items:
+          - field: pointer
+            label: "Pointer"
+            template: "\{value}"
+          - field: routeData
+            label: "Route Data"
+            template: "\{:IP4_ROUTE_DATA}"
+
+  - header: Ip4SecurityDefunctOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4SecurityDefunctOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Security (\{length:bytes})"
+        items:
+          - field: security
+            label: "Security Level"
+            template: "\{value} (\{securityLevelName})"
+          - field: compartments
+            label: "Compartments"
+            template: "\{value}"
+          - field: restrictions
+            label: "Handling Restrictions"
+            template: "\{value}"
+
+  - header: Ip4TimestampOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4TimestampOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Timestamp (\{length:bytes})"
+        items:
+          - field: pointer
+            label: "Pointer"
+            template: "\{value}"
+          - field: overflow
+            label: "Overflow"
+            template: "\{value}"
+          - field: flags
+            label: "Flags"
+            template: "\{value} (\{flagsDescription})"
+          - field: timestamps
+            label: "Timestamps"
+            template: "\{:TIMESTAMP_DATA}"
+
+  - header: Ip4TracerouteOption
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4TracerouteOption
+    meta:
+      priority: 200
+    details:
+      - detail: HIGH
+        summary: "Traceroute (\{length:bytes})"
+        items:
+          - field: id
+            label: "ID Number"
+            template: "\{value}"
+          - field: outbound
+            label: "Outbound Hop Count"
+            template: "\{value}"
+          - field: return
+            label: "Return Hop Count"
+            template: "\{value}"
+          - field: originator
+            label: "Originator IP"
+            template: "\{:IP4_ADDR}"

@@ -1,4 +1,4 @@
-package com.slytechs.jnet.protocol.api.meta.impl;
+package com.slytechs.jnet.protocol.api.meta.template;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,13 +7,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.slytechs.jnet.protocol.api.meta.DefaultFormats;
 import com.slytechs.jnet.protocol.api.meta.FormatRegistry;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
 import com.slytechs.jnet.protocol.api.meta.ValueFormatter.SpecificValueFormatter;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
 
-public class DefaultMetaPattern implements MetaPattern {
+public class DefaultTemplatePattern implements PlaceholderPattern {
 
-	record SplitArg(String expression, String[] split) implements Arg {
+	record SplitArg(String expression, String[] split) implements Placeholder {
 
 		@Override
 		public boolean isFormatPresent() {
@@ -21,7 +21,7 @@ public class DefaultMetaPattern implements MetaPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#referenceName()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#referenceName()
 		 */
 		@Override
 		public String referenceName() {
@@ -29,7 +29,7 @@ public class DefaultMetaPattern implements MetaPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#formatLine()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#formatLine()
 		 */
 		@Override
 		public String formatLine() {
@@ -40,10 +40,10 @@ public class DefaultMetaPattern implements MetaPattern {
 
 	record PreformattedArg(String expression, String referenceName,
 			String formatLine, SpecificValueFormatter formatter)
-			implements Arg {
+			implements Placeholder {
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#applyFormat(java.lang.Object)
+		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#applyFormat(java.lang.Object)
 		 */
 		@Override
 		public String applyFormat(Object value) {
@@ -51,7 +51,7 @@ public class DefaultMetaPattern implements MetaPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern.Arg#isFormatPresent()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#isFormatPresent()
 		 */
 		@Override
 		public boolean isFormatPresent() {
@@ -59,51 +59,51 @@ public class DefaultMetaPattern implements MetaPattern {
 		}
 	}
 
-	record PatternRecord(String template, String[] fragments, Arg[] args) implements MetaPattern {}
+	record PatternRecord(String template, String[] fragments, Placeholder[] placeholders) implements PlaceholderPattern {}
 
 	public static final String VALUE = "value";
 
 	private final FormatRegistry formatRegistry;
 	private final String[] fragments;
-	private final Arg[] args;
+	private final Placeholder[] placeholders;
 	private final String template;
 
-	public DefaultMetaPattern(FormatRegistry formatRegistry, String template, Macros macros) {
+	public DefaultTemplatePattern(FormatRegistry formatRegistry, String template, Macros macros) {
 		this.template = template;
 		this.formatRegistry = formatRegistry;
 
 		List<String> fragments = new ArrayList<>();
-		List<Arg> args = new ArrayList<>();
+		List<Placeholder> placeholders = new ArrayList<>();
 
-		parseTemplateString(template, 0, fragments, args);
-		substituteMacros(macros, args);
-		resolveFormatters(args);
+		parseTemplateString(template, 0, fragments, placeholders);
+		substituteMacros(macros, placeholders);
+		resolveFormatters(placeholders);
 
 		this.fragments = fragments.toArray(String[]::new);
-		this.args = args.toArray(Arg[]::new);
+		this.placeholders = placeholders.toArray(Placeholder[]::new);
 	}
 
-	public DefaultMetaPattern(String template, Macros macros) {
+	public DefaultTemplatePattern(String template, Macros macros) {
 		this(new DefaultFormats(), template, macros);
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern#args()
+	 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern#placeholders()
 	 */
 	@Override
-	public Arg[] args() {
-		return args;
+	public Placeholder[] placeholders() {
+		return placeholders;
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern#fragments()
+	 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern#fragments()
 	 */
 	@Override
 	public String[] fragments() {
 		return fragments;
 	}
 
-	private int parseTemplateString(String str, int start, List<String> frags, List<Arg> args) {
+	private int parseTemplateString(String str, int start, List<String> frags, List<Placeholder> placeholders) {
 		if (str == null || str.isEmpty()) {
 			frags.add("");
 			return start;
@@ -154,7 +154,7 @@ public class DefaultMetaPattern implements MetaPattern {
 					};
 				}
 
-				args.add(new SplitArg(argContent, split));
+				placeholders.add(new SplitArg(argContent, split));
 				pos = closeBrace + 1;
 			} else {
 				currentFrag.append(str.charAt(pos));
@@ -166,30 +166,30 @@ public class DefaultMetaPattern implements MetaPattern {
 		return pos;
 	}
 
-	private boolean resolveFormatters(List<Arg> args) {
+	private boolean resolveFormatters(List<Placeholder> placeholders) {
 		if (formatRegistry == null)
 			return false;
 
-		/* Map or copy all args to temporary list */
-		List<Arg> resolvedArgs = args.stream()
+		/* Map or copy all placeholders to temporary list */
+		List<Placeholder> resolvedArgs = placeholders.stream()
 				.map(this::resolveFormatters)
 				.toList();
 		
-		boolean modified = !args.equals(resolvedArgs);
+		boolean modified = !placeholders.equals(resolvedArgs);
 
 		/* No need to do anything if there were no changes */
 		if (modified) {
-			args.clear();
-			args.addAll(resolvedArgs);
+			placeholders.clear();
+			placeholders.addAll(resolvedArgs);
 		}
 
 		return modified;
 	}
 
-	private Arg resolveFormatters(Arg arg) {
-		String[] split = arg.formatLine().split(":");
+	private Placeholder resolveFormatters(Placeholder placeholder) {
+		String[] split = placeholder.formatLine().split(":");
 		if (split.length == 1)
-			return resolveFormatters(arg, split[0]);
+			return resolveFormatters(placeholder, split[0]);
 
 		SpecificValueFormatter[] chain = new SpecificValueFormatter[split.length];
 
@@ -217,33 +217,33 @@ public class DefaultMetaPattern implements MetaPattern {
 		};
 
 		return new PreformattedArg(
-				arg.expression(),
-				arg.referenceName(),
-				arg.formatLine(),
+				placeholder.expression(),
+				placeholder.referenceName(),
+				placeholder.formatLine(),
 				executeChain);
 	}
 
-	private Arg resolveFormatters(Arg arg, String formatComponent) {
+	private Placeholder resolveFormatters(Placeholder placeholder, String formatComponent) {
 		SpecificValueFormatter fmt = formatRegistry.resolveFormat(formatComponent);
 		if (fmt == null)
-			return arg;
+			return placeholder;
 
 		return new PreformattedArg(
-				arg.expression(),
-				arg.referenceName(),
+				placeholder.expression(),
+				placeholder.referenceName(),
 				formatComponent,
 				fmt);
 	}
 
 	/**
 	 * @param macros
-	 * @param args
+	 * @param placeholders
 	 * @param rawArgs
 	 */
-	private boolean substituteMacros(Macros macros, List<Arg> args) {
+	private boolean substituteMacros(Macros macros, List<Placeholder> placeholders) {
 
 		AtomicInteger replacedCount = new AtomicInteger();
-		var tempList = args.stream()
+		var tempList = placeholders.stream()
 				.map(arg -> {
 					var ref = arg.referenceName().trim();
 					var fmt = arg.formatLine();
@@ -266,8 +266,8 @@ public class DefaultMetaPattern implements MetaPattern {
 				.toList();
 
 		if (replacedCount.get() > 0) {
-			args.clear();
-			args.addAll(tempList);
+			placeholders.clear();
+			placeholders.addAll(tempList);
 		}
 
 		return replacedCount.get() > 0;
@@ -279,9 +279,9 @@ public class DefaultMetaPattern implements MetaPattern {
 	@Override
 	public String toString() {
 		final int maxLen = 5;
-		return "MetaPattern ["
+		return "PlaceholderPattern ["
 				+ "frags=" + Arrays.asList(fragments).subList(0, Math.min(fragments.length, maxLen))
-				+ ", args=" + Arrays.asList(args).subList(0, Math.min(args.length, maxLen))
+				+ ", placeholders=" + Arrays.asList(placeholders).subList(0, Math.min(placeholders.length, maxLen))
 				+ "]";
 	}
 

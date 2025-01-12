@@ -1,0 +1,122 @@
+# Sly Technologies Free License
+# 
+# Copyright 2025 Sly Technologies Inc.
+#
+# Reorganized YAML Configuration File for Improved Readability
+
+Overview:
+  description: >
+    Defines structures for instrumenting and formatting protocol data hierarchies.
+    Provides reusable templates, macros, and formatting rules.
+
+  defaults:
+    indent: 4
+    width: 64
+    align: left
+
+  macros:
+    $ip_opt:    "/tcpip/ip-option.yaml"
+    $ip4_opt:   "/tcpip/ip4-options.yaml"
+    $ip_ver:    "/1111 ..../"
+    $ip_hlen:   "/.... 1111/"
+    $ip_flag:   "/111. ..../"
+    $ip_res:    "/.1.. ..../"
+    $ip_df:     "/..1. ..../"
+    $ip_offset: "/...1 1111 1111 1111/"
+    $is_set:    "is_set"
+    $ip_type:   "IP_TYPE"
+
+  imports:
+    - "$ip_opt#IP-OPT"
+
+Templates:
+  - name: IPv4
+    header: Ip4
+    class: com.slytechs.jnet.protocol.tcpip.ip.Ip4
+
+    imports:
+      - "$ip4_opt#IPv4-OPT-RT-ALERT"
+      - "$ip4_opt#IPv4-OPT-MTU-PROBE"
+      - "$ip4_opt#IPv4-OPT-MTU-REPLY"
+      - "$ip4_opt#IPv4-OPT-SEC"
+      - "$ip4_opt#IPv4-OPT-QUICK"
+      - "$ip4_opt#IPv4-OPT-TRACE"
+
+    HIGH:
+      summary: "High level detail for IPv4"
+      tree:
+        - field: version
+          template: "\{header[0]:$ip_ver} = Version: \{value}"
+          tags:
+            - important
+            - frame
+
+        - field: hdrLen
+          template: "\{header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})"
+          tags:
+            - important
+            - frame
+
+        - field: trafficClass
+          label: "Traffic Class"
+          template: "\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})"
+
+        - field: totalLength
+          label: "Total Length"
+          template: "\{:bytes}"
+
+        - field: identification
+          label: "Identification"
+          template: "\{:0x%04x} (\{value})"
+
+        - subtree: flags
+          summary: "\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}, bit is \{:$is_set = 0}"
+          templates:
+            - "\{:/1... ..../} = Reserved bit: \{:$is_set}"
+            - "\{:/.1.. ..../} = Don't fragment: \{:$is_set}"
+            - "\{:/..1. ..../} = More fragments: \{:$is_set}"
+
+        - field: fragOffset
+          template: "\{:$ip_offset} = Fragment Offset: \{fragOffset}"
+
+        - field: ttl
+          label: "Time to Live"
+          template: "\{value}"
+
+        - field: protocol
+          label: "Protocol"
+          template: "\{:$ip_type} (\{value})"
+
+        - field: src
+          label: "Source Address"
+          template: "\{value}"
+
+        - field: dst
+          label: "Destination Address"
+          template: "\{value}"
+
+        - subtree: options
+          summary: "IPv4 Options"
+          items:
+            - template: "Just a single line out of output \{headerName} in protocol context"
+			
+            - header: Ip4RouterAlertOption
+              summary: "Router Alert (\{length:bytes}): \{routerAlertDescription}"
+
+            - header: Ip4MtuProbeOption
+              summary: "MTU Probe (\{length:bytes})"
+
+            - header: Ip4MtuReplyOption
+              repeatable: true
+              summary: "MTU Reply (\{length:bytes})"
+
+            - header: Ip4SecurityDefunctOption
+              summary: "Security (\{length:bytes}): \{securityLevel}"
+
+            - header: Ip4QuickStartOption
+              repeatable: true
+              summary: "Quick Start (\{length:bytes})"
+
+            - header: Ip4TracerouteOption
+              repeatable: true
+              summary: "Trace Route (\{length:bytes})"

@@ -27,13 +27,13 @@ import com.slytechs.jnet.platform.api.util.Reflections;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 import com.slytechs.jnet.protocol.api.meta.MetaAttribute;
 import com.slytechs.jnet.protocol.api.meta.MetaField;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.MetaPattern;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
 import com.slytechs.jnet.protocol.api.meta.MetaValue;
 
 /**
@@ -62,7 +62,7 @@ public final class MetaReflections {
 
 	}
 
-	private static MetaField buildField(Method method, ProtocolTemplate template) {
+	private static MetaField buildField(Method method, Template template) {
 		Meta meta = method.getAnnotation(Meta.class);
 		String name = meta.name().isBlank()
 				? method.getName()
@@ -101,7 +101,7 @@ public final class MetaReflections {
 		if (field == null)
 			return null;
 
-		MetaPattern pattern = MetaPattern.compile(field.template(), macros);
+		PlaceholderPattern placeholderPattern = PlaceholderPattern.compile(field.template(), macros);
 
 		return new FieldTemplate(
 				field.detail(),
@@ -109,8 +109,8 @@ public final class MetaReflections {
 				field.label(),
 				field.template(),
 				field.defaults(),
-				pattern,
-				field.nodes()
+				placeholderPattern,
+				field.items()
 
 		);
 	}
@@ -128,7 +128,7 @@ public final class MetaReflections {
 		return list;
 	}
 
-	public static List<MetaField> listFields(Class<?> containerClass, ProtocolTemplate template) {
+	public static List<MetaField> listFields(Class<?> containerClass, Template template) {
 		var list = new ArrayList<MetaField>();
 
 		var fieldMethods = Reflections.listMethods(containerClass, Meta.class, a -> a

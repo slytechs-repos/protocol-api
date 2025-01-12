@@ -21,22 +21,22 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.Defaults;
-import com.slytechs.jnet.protocol.api.meta.MetaTemplate.ProtocolTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Defaults;
+import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 
-public interface TemplateReader {
+public interface TemplateReaderDEPRECATED {
 
 	/**
 	 * Parse header template from a classpath resource
 	 * 
 	 * @param resourcePath path to the resource (e.g., "/templates/ethernet.yml")
-	 * @return parsed ProtocolTemplate
+	 * @return parsed Template
 	 * @throws IOException if resource cannot be read
 	 */
-	ProtocolTemplate parseResource(String resourcePath) throws IOException;
+	Template parseResource(String resourcePath) throws IOException;
 
-	default ProtocolTemplate parseResource(String resourcePath, String name) throws IOException {
+	default Template parseResource(String resourcePath, String name) throws IOException {
 		if (name == null)
 			return parseResource(resourcePath);
 
@@ -45,20 +45,20 @@ public interface TemplateReader {
 		return map.get(name);
 	}
 
-	Map<String, ProtocolTemplate> parseAllResources(String resourcePath) throws IOException;
+	Map<String, Template> parseAllResources(String resourcePath) throws IOException;
 
 	/**
 	 * Parse header template from a Reader
 	 * @throws IOException 
 	 */
-	ProtocolTemplate parseHeader(Reader reader) throws IOException;
+	Template parseHeader(Reader reader) throws IOException;
 
-	Map<String, ProtocolTemplate> parseAllHeaders(Reader reader);
+	Map<String, Template> parseAllHeaders(Reader reader);
 
 	/**
 	 * Parse header template from a String
 	 */
-	ProtocolTemplate parseHeader(String content);
+	Template parseHeader(String content);
 
 	MetaTemplate.Defaults defaults();
 	

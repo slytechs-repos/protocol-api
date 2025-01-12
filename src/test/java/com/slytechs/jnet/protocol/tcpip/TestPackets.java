@@ -757,8 +757,8 @@ public enum TestPackets {
 
 	/**
 	 * Sample ETH_IPX_SPX packet with SPX protocol inside. Frame: ETH_IPX_SPX: Checksum: 0xFFFF,
-	 * Length: 96 bytes Src Network: 0x00000002, Node: 00:40:05:40:ef:24, Socket:
-	 * 0x4003 Dst Network: 0x00000001, Node: 00:60:08:9f:b1:f3, Socket: 0x1234 Type:
+	 * Length: 96 bytes Src Network: 0x00000002, Item: 00:40:05:40:ef:24, Socket:
+	 * 0x4003 Dst Network: 0x00000001, Item: 00:60:08:9f:b1:f3, Socket: 0x1234 Type:
 	 * SPX (5)
 	 */
 	IPX_SPX(""
@@ -767,10 +767,10 @@ public enum TestPackets {
 			+ "00" // Transport Control
 			+ "05" // Type (SPX)
 			+ "00000001" // Dst Network
-			+ "0060089fb1f3" // Dst Node
+			+ "0060089fb1f3" // Dst Item
 			+ "1234" // Dst Socket
 			+ "00000002" // Src Network
-			+ "00400540ef24" // Src Node
+			+ "00400540ef24" // Src Item
 			+ "4003" // Src Socket
 			+ "00000000" // SPX payload
 			+ ";sample-ipx-spx.cap#1"),
@@ -781,8 +781,8 @@ public enum TestPackets {
 	 *   Src: 00:40:05:40:ef:24, Dst: 00:60:08:9f:b1:f3, Type: IPX (0x8137)
 	 * IPX:
 	 *   Checksum: 0xFFFF, Length: 96 bytes, Type: SPX (5)
-	 *   Dst Network: 0x00000001, Node: 00:60:08:9f:b1:f3, Socket: 0x1234
-	 *   Src Network: 0x00000002, Node: 00:40:05:40:ef:24, Socket: 0x4003
+	 *   Dst Network: 0x00000001, Item: 00:60:08:9f:b1:f3, Socket: 0x1234
+	 *   Src Network: 0x00000002, Item: 00:40:05:40:ef:24, Socket: 0x4003
 	 */
 	ETH_IPX_SPX(""
 	        + "0060089fb1f3"  // Eth Dst
@@ -793,10 +793,10 @@ public enum TestPackets {
 	        + "00"            // Transport Control
 	        + "05"            // IPX Type (SPX)
 	        + "00000001"      // Dst Network
-	        + "0060089fb1f3"  // Dst Node
+	        + "0060089fb1f3"  // Dst Item
 	        + "1234"          // Dst Socket
 	        + "00000002"      // Src Network
-	        + "00400540ef24"  // Src Node
+	        + "00400540ef24"  // Src Item
 	        + "4003"          // Src Socket
 //			+ "00000000" // SPX payload
 	        + ";eth-ipx-spx.cap#1"),

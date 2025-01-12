@@ -1,7 +1,7 @@
 /*
  * Sly Technologies Free License
  * 
- * Copyright 2024 Sly Technologies Inc.
+ * Copyright 2025 Sly Technologies Inc.
  *
  * Licensed under the Sly Technologies Free License (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta.spi;
-
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+package com.slytechs.jnet.protocol.api.meta.template;
 
 /**
- * @author Mark Bednarczyk [mark@slytechs.com]
- * @author Sly Technologies Inc.
+ * Interface for determining whether to traverse deeper into the model hierarchy.
  */
-public interface HeaderTemplateService {
-
-	Template loadHeaderTemplate(String resource, String name);
-
+@FunctionalInterface
+public interface OpenPredicate {
+    /**
+     * Determine if a branch should be traversed.
+     * @param model The current model being processed
+     * @return true if the branch should be traversed, false otherwise
+     */
+    boolean isOpen(Object model);
 }
