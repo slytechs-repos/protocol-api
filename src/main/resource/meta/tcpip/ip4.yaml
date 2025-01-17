@@ -3,24 +3,25 @@
 # Copyright 2025 Sly Technologies Inc.
 #
 # This YAML file defines the IPv4 protocol meta-template structure used for packet 
-# analysis and display. The template provides field definitions, formatting rules,
-# and display configurations for various protocol fields including version, header
+# analysis and display. The template provides Field definitions, formatting rules,
+# and display configurations for various protocol fields including version, Header
 # length, traffic class, fragmentation, and options.
 #
 # The template supports multiple detail levels (HIGH, MEDIUM, SUMMARY) with 
 # inheritance, allowing for different views of the same packet data. It uses
-# a flexible macro system for bit-field definitions and includes defaults for
+# a flexible macro system for bit-Field definitions and includes defaults for
 # consistent formatting across all detail levels.
 
-description: >
+Overview:
+  description: >
     Defines templates and structures for IPv4 protocol data formatting and analysis.
 
-defaults:
+Defaults:
   indent: 4
   width: 64
   align: left
 
-macros:
+Macros:
   $ip_ver:    "/1111 ..../"
   $ip_hlen:   "/.... 1111/"
   $ip_flag:   "/111. ..../"
@@ -31,9 +32,9 @@ macros:
   $ip_type:   "IP_TYPE"
 
 Templates:
-  - header: Ip4
+  - Header: Ip4
     class: com.slytechs.jnet.protocol.tcpip.ip.Ip4
-    imports:
+    Imports:
       - "/tcpip/ip4-options.yaml#IPv4-OPT-RT-ALERT"
       - "/tcpip/ip4-options.yaml#IPv4-OPT-MTU-PROBE"
       - "/tcpip/ip4-options.yaml#IPv4-OPT-MTU-REPLY"
@@ -41,103 +42,103 @@ Templates:
       - "/tcpip/ip4-options.yaml#IPv4-OPT-QUICK"
       - "/tcpip/ip4-options.yaml#IPv4-OPT-TRACE"
 
-    details:
-      - detail: HIGH
+    Details:
+      - Detail: high
         summary: 'Internet Protocol Version 4, offset=\{offset} length=\{length}'
-        defaults:
+        Defaults:
           - width: 4
-        items:
-          - field: version
-            template: '\{header[0]:$ip_ver} = Version: \{value}'
-            tags: [important, frame]
+        Items:
+          - Field: version
+            template: '\{Header[0]:$ip_ver} = Version: \{value}'
+            Tags: [important, frame]
 
-          - field: hdrLen
-            template: '\{header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})'
-            tags: [important, frame]
+          - Field: hdrLen
+            template: '\{Header[0]:$ip_hlen} = Header Length: \{:bytes *= 4} (\{value})'
+            Tags: [important, frame]
 
-          - field: trafficClass
+          - Field: trafficClass
             label: "Traffic Class"
             template: '\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})'
 
-          - field: totalLength
+          - Field: totalLength
             label: "Total Length" 
             template: '\{:bytes}'
 
-          - field: identification
+          - Field: identification
             label: "Identification"
             template: '\{:0x%04x} (\{value})'
 
-          - field: flags
+          - Field: flags
             label: "Flags"
-            summary: '\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}'
-            defaults:
-              indent: 0
-            items:
+            template: '\{:$ip_flag <<= 5} = Flags: \{:0x%X}, \{flagsInfo}'
+            Items:
               - template: '\{:/1... ..../} = Reserved bit: \{:$is_set}'
               - template: '\{:/.1.. ..../} = Don''t fragment: \{:$is_set}'
               - template: '\{:/..1. ..../} = More fragments: \{:$is_set}'
+            Defaults:
+              indent: 0
 
-          - field: fragOffset
+          - Field: fragOffset
             template: '\{:$ip_offset} = Fragment Offset: \{fragOffset}'
 
-          - field: ttl
+          - Field: ttl
             label: "Time to Live"
             template: '\{value}'
 
-          - field: protocol
+          - Field: protocol
             label: "Protocol"
             template: '\{:$ip_type} (\{value})'
 
-          - field: src
+          - Field: src
             label: "Source Address"
             template: '\{value}'
 
-          - field: dst
+          - Field: dst
             label: "Destination Address"
             template: '\{value}'
 
-          - field: options
+          - Field: options
             label: "IPv4 Options"
-            items:
-              - header: Ip4RouterAlertOption
+            Items:
+              - Header: Ip4RouterAlertOption
                 summary: 'Router Alert (\{length:bytes}): \{routerAlertDescription}'
 
-              - header: Ip4MtuProbeOption
+              - Header: Ip4MtuProbeOption
                 summary: 'MTU Probe (\{length:bytes})'
 
-              - header: Ip4MtuReplyOption
+              - Header: Ip4MtuReplyOption
                 repeatable: true
                 summary: 'MTU Reply (\{length:bytes})'
 
-              - header: Ip4SecurityDefunctOption
+              - Header: Ip4SecurityDefunctOption
                 summary: 'Security (\{length:bytes}): \{securityLevel}'
 
-              - header: Ip4QuickStartOption
+              - Header: Ip4QuickStartOption
                 repeatable: true
                 summary: 'Quick Start (\{length:bytes})'
 
-              - header: Ip4TracerouteOption
+              - Header: Ip4TracerouteOption
                 repeatable: true
                 summary: 'Trace Route (\{length:bytes})'
 
-      - detail: MEDIUM
+      - Detail: medium
         summary: 'IPv4 \{src} → \{dst} (\{protocol})'
-        items:
-          - field: trafficClass
+        Items:
+          - Field: trafficClass
             label: "Traffic Class"
             template: '\{:0x%02x} (DSCP: \{trafficDscpName}, ECN: \{trafficDscpAbbr})'
 
-          - field: totalLength
+          - Field: totalLength
             label: "Total Length"
             template: '\{:bytes}'
 
-          - field: ttl
+          - Field: ttl
             label: "Time to Live"
             template: '\{value}'
 
-          - field: protocol
+          - Field: protocol
             label: "Protocol"
             template: '\{:$ip_type}'
 
-      - detail: SUMMARY
+      - Detail: summary
         summary: 'IPv4 \{src} → \{dst} (\{protocol})'

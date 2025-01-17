@@ -24,7 +24,7 @@ import java.util.Map;
 import com.slytechs.jnet.protocol.api.meta.template.Defaults;
 import com.slytechs.jnet.protocol.api.meta.template.HeaderTemplate;
 
-public interface TemplateReaderDEPRECATED {
+public interface TemplateReaderDEPRECATED2 {
 
 	/**
 	 * Parse header template from a classpath resource

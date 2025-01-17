@@ -22,19 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.slytechs.jnet.platform.api.util.Reflections;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
 import com.slytechs.jnet.protocol.api.meta.MetaAttribute;
 import com.slytechs.jnet.protocol.api.meta.MetaField;
 import com.slytechs.jnet.protocol.api.meta.MetaValue;
+import com.slytechs.jnet.protocol.api.meta.template.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate;
 
 /**
  * 
@@ -62,16 +62,16 @@ public final class MetaReflections {
 
 	}
 
-	private static MetaField buildField(Method method, Template template) {
+	private static MetaField buildField(Method method, HeaderTemplate headerTemplate) {
 		Meta meta = method.getAnnotation(Meta.class);
 		String name = meta.name().isBlank()
 				? method.getName()
 				: meta.name();
 
-		Macros macros = template.macros();
+		Macros macros = headerTemplate.macros();
 
 		var fieldTemplateArray = Arrays.stream(Detail.values())
-				.map(detail -> template.detail(detail))
+				.map(detail -> headerTemplate.detail(detail))
 				.map(detailTemplate -> buildFieldTemplate(name, detailTemplate, macros))
 				.toArray(FieldTemplate[]::new);
 
@@ -97,11 +97,10 @@ public final class MetaReflections {
 	}
 
 	private static FieldTemplate buildFieldTemplate(String name, DetailTemplate detailTemplate, Macros macros) {
-		FieldTemplate field = detailTemplate == null ? null : detailTemplate.fieldMap().get(name);
+		Map<String, FieldTemplate> map = detailTemplate.fieldMap();
+		FieldTemplate field = detailTemplate == null ? null : map.get(name);
 		if (field == null)
 			return null;
-
-		PlaceholderPattern placeholderPattern = PlaceholderPattern.compile(field.template(), macros);
 
 		return new FieldTemplate(
 				field.detail(),
@@ -109,7 +108,6 @@ public final class MetaReflections {
 				field.label(),
 				field.template(),
 				field.defaults(),
-				placeholderPattern,
 				field.items()
 
 		);
@@ -128,14 +126,14 @@ public final class MetaReflections {
 		return list;
 	}
 
-	public static List<MetaField> listFields(Class<?> containerClass, Template template) {
+	public static List<MetaField> listFields(Class<?> containerClass, HeaderTemplate headerTemplate) {
 		var list = new ArrayList<MetaField>();
 
 		var fieldMethods = Reflections.listMethods(containerClass, Meta.class, a -> a
 				.value() == MetaType.FIELD);
 
 		fieldMethods.stream()
-				.map(method -> buildField(method, template))
+				.map(method -> buildField(method, headerTemplate))
 				.forEach(list::add);
 
 		return list;

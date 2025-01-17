@@ -29,7 +29,7 @@ import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
 import com.slytechs.jnet.protocol.api.meta.spi.impl.CachedHeaderTemplateService;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.DetailTemplate;
 
 /**
  * The Class PacketFormatter.

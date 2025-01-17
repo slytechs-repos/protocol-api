@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.HeaderTemplate;
 
 /**
  * The Class MetaHeader.
@@ -39,7 +39,7 @@ public record MetaHeader(
 		List<MetaHeader> subHeaders,
 		List<MetaField> fields,
 		List<MetaAttribute> attributes,
-		Template template)
+		HeaderTemplate headerTemplate)
 		implements MetaElement {
 
 	/**
@@ -49,10 +49,10 @@ public record MetaHeader(
 	 * @param header
 	 * @param fields
 	 * @param attributes
-	 * @param template
+	 * @param headerTemplate
 	 */
-	MetaHeader(Header header, List<MetaField> fields, List<MetaAttribute> attributes, Template template) {
-		this(new MetaParent(), header, List.of(), fields, attributes, template);
+	public MetaHeader(Header header, List<MetaField> fields, List<MetaAttribute> attributes, HeaderTemplate headerTemplate) {
+		this(new MetaParent(), header, List.of(), fields, attributes, headerTemplate);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public record MetaHeader(
 
 	public Stream<MetaField> fieldsStream(Detail detail) {
 
-		var temp = template.detail(detail)
+		var temp = headerTemplate.detail(detail)
 				.fieldList();
 
 		return temp.stream()
@@ -102,13 +102,13 @@ public record MetaHeader(
 	}
 
 	public DetailTemplate template(Detail detail) {
-		return template.detail(detail);
+		return headerTemplate.detail(detail);
 	}
 
 	public DetailTemplate templateOrThrow(Detail detail) throws IllegalStateException {
-		DetailTemplate d = (template == null) ? null : template.detail(detail);
+		DetailTemplate d = (headerTemplate == null) ? null : headerTemplate.detail(detail);
 		if (d == null)
-			throw new IllegalStateException("missing meta header template [%s]".formatted(name()));
+			throw new IllegalStateException("missing meta header headerTemplate [%s]".formatted(name()));
 
 		return d;
 	}
@@ -133,7 +133,7 @@ public record MetaHeader(
 				.map(a -> a.bindTo(header))
 				.toList();
 
-		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, template);
+		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, headerTemplate);
 
 		newFields.forEach(fld -> fld.parent().setParent(meta));
 		newAttributes.forEach(att -> att.parent().setParent(meta));
@@ -147,7 +147,7 @@ public record MetaHeader(
 	 * 
 	 * <p>
 	 * Note: if a competely different header was bound to this meta object, the meta
-	 * template data would no longer match the new header.
+	 * headerTemplate data would no longer match the new header.
 	 * </p>
 	 *
 	 * @param header the header
@@ -164,7 +164,7 @@ public record MetaHeader(
 				.map(a -> a.bindTo(header))
 				.toList();
 
-		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, template);
+		var meta = new MetaHeader(new MetaParent(), header, subHeaders, newFields, newAttributes, headerTemplate);
 
 		newFields.forEach(fld -> fld.parent().setParent(meta));
 		newAttributes.forEach(att -> att.parent().setParent(meta));

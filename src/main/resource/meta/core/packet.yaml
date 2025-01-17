@@ -17,31 +17,24 @@ Overview:
     align: left
 
 Templates:
-  - header: Frame
-    class: com.slytechs.jnet.protocol.frame.Frame
-
+  - Packet: packet
     details:
       - detail: HIGH
         summary: 'Frame \{frameNo}: \{wireLength:bytes} on wire (\{wireLength:bits}), \{captureLength:bytes} captured (\{captureLength:bits})'
         items:
-          - field: portNo
-            label: "Interface id"
+          - label: "Interface id"
             template: '\{value} (\{portName})'
 
-          - field: frameNo
-            label: "Frame Number"
+          - label: "Frame Number"
             template: '\{value}'
 
-          - field: timestamp
-            label: "Arrival Time"
+          - label: "Arrival Time"
             template: '\{value} [\{timestampAsLong:0x%016X}]'
 
-          - field: captureLength
-            label: "Capture Length"  
+          - label: "Capture Length"  
             template: '\{:bytes} (\{:bits})'
 
-          - field: wireLength
-            label: "Frame Length"
+          - label: "Frame Length"
             template: '\{:bytes} (\{:bits})'
 
       - detail: MEDIUM

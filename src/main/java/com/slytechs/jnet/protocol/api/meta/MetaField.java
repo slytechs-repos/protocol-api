@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import com.slytechs.jnet.platform.api.util.Named;
 import com.slytechs.jnet.platform.api.util.format.Detail;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.Item.FieldItem;
 
 /**
  * The Class MetaField.
@@ -40,11 +40,11 @@ public record MetaField(
 		String name,
 		List<MetaAttribute> attributes,
 		MetaValue value,
-		FieldTemplate[] templateArray,
+		FieldItem[] templateArray,
 		Map<Detail, MetaField[]> children)
 		implements MetaElement, Named {
 
-	public MetaField(String name, MetaValue value, FieldTemplate[] templateArray, Map<Detail, MetaField[]> children) {
+	public MetaField(String name, MetaValue value, FieldItem[] templateArray, Map<Detail, MetaField[]> children) {
 		this(null, name, List.of(), value, templateArray, children);
 	}
 
@@ -52,7 +52,7 @@ public record MetaField(
 		return templateArray[detail.ordinal()] != null;
 	}
 
-	public FieldTemplate template(Detail detail) {
+	public FieldItem template(Detail detail) {
 		return templateArray[detail.ordinal()];
 	}
 

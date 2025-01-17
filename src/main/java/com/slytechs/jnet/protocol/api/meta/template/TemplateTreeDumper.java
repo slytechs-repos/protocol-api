@@ -24,12 +24,9 @@ import java.util.Objects;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.platform.api.util.format.Indentation;
 import com.slytechs.jnet.platform.api.util.format.IndentationStack;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Defaults;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Item;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.Item.FieldItem;
+import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate.Details.HeaderDetail;
 
 /**
  * 
@@ -37,7 +34,7 @@ import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public final class TemplatePrinter {
+public final class TemplateTreeDumper {
 
 	private interface Fmts {
 
@@ -68,16 +65,16 @@ public final class TemplatePrinter {
 
 	private final Indentation stack = new IndentationStack();
 
-	public TemplatePrinter() {
+	public TemplateTreeDumper() {
 		this(System.out, Detail.DEFAULT);
 	}
 
-	public TemplatePrinter(Appendable out, Detail detail) {
+	public TemplateTreeDumper(Appendable out, Detail detail) {
 		this.printerDetail = detail;
 		this.out = Objects.requireNonNull(out);
 	}
 
-	public TemplatePrinter(Detail detail) {
+	public TemplateTreeDumper(Detail detail) {
 		this(System.out, detail);
 	}
 
@@ -86,9 +83,9 @@ public final class TemplatePrinter {
 		stack.push(INDENT);
 		try {
 			switch (obj) {
-			case Template p -> printProtocolTemplate(p);
-			case DetailTemplate d -> printDetailTemplate(d);
-			case FieldTemplate f -> printField(f);
+			case HeaderTemplate p -> printProtocolTemplate(p);
+			case HeaderDetail d -> printDetailTemplate(d);
+			case FieldItem f -> printField(f);
 			case Item i -> printItem(i);
 			case List<?> l -> l.forEach(this::printe);
 
@@ -120,9 +117,9 @@ public final class TemplatePrinter {
 
 		switch (obj) {
 		case String str -> println(str);
-		case Template p -> branch(p);
-		case DetailTemplate d -> branch(d);
-		case FieldTemplate d -> branch(d);
+		case HeaderTemplate p -> branch(p);
+		case HeaderDetail d -> branch(d);
+		case FieldItem d -> branch(d);
 		case Defaults d -> printDefaults(d);
 		case Macros m -> printMacros(m);
 		case Item i -> branch(i);
@@ -154,7 +151,7 @@ public final class TemplatePrinter {
 
 	}
 
-	private void printDetailTemplate(DetailTemplate detail) throws IOException {
+	private void printDetailTemplate(HeaderDetail detail) throws IOException {
 		stack.pushAndPrint(out, "- ");
 		try {
 			if (detail == null) {
@@ -164,9 +161,8 @@ public final class TemplatePrinter {
 
 			println("detail: %s", detail.detail());
 			println("summary: %s", detail.summary());
-			print(detail.defaults());
 			println("items");
-			print(detail.fieldList(), "items");
+			print(detail.items().list(), "items");
 		} finally {
 			stack.pop();
 		}
@@ -180,7 +176,7 @@ public final class TemplatePrinter {
 		}
 	}
 
-	private void printField(FieldTemplate field) throws IOException {
+	private void printField(FieldItem field) throws IOException {
 		if (field == null)
 			return;
 
@@ -190,7 +186,7 @@ public final class TemplatePrinter {
 			println("label: %s", field.label());
 
 			if (field.template() != null)
-				println("template: %s", Fmts.dq(field.template()));
+				println("template: %s", Fmts.dq(field.template().toString()));
 
 			println("items:");
 			branch(field.items());
@@ -208,7 +204,7 @@ public final class TemplatePrinter {
 		try {
 			println("name: %s", item.name());
 			if (item.template() != null)
-				println("template: %s", Fmts.dq(item.template()));
+				println("template: %s", Fmts.dq(item.template().toString()));
 
 			print(item.defaults());
 
@@ -234,7 +230,7 @@ public final class TemplatePrinter {
 		println("macros: " + macros.macroMap().size() + " entries");
 	}
 
-	private void printProtocolTemplate(Template header) throws IOException {
+	private void printProtocolTemplate(HeaderTemplate header) throws IOException {
 		for (Detail detail : Detail.values()) {
 
 			stack.pushAndPrint(out, "- ");
@@ -243,7 +239,7 @@ public final class TemplatePrinter {
 
 				println("details:");
 
-				DetailTemplate d = header.detail(detail);
+				HeaderDetail d = header.templateDetail(detail);
 				print(d, detail.toString());
 			} finally {
 				stack.pop();

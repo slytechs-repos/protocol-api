@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.slytechs.jnet.platform.api.incubator.StableValue;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.HeaderTemplate;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class CachedHeaderTemplateService implements HeaderTemplateService {
 	public static final StableValue<CachedHeaderTemplateService> CACHED = StableValue
 			.ofSupplier(CachedHeaderTemplateService::new);
 
-	private final static Map<String, Reference<Template>> cache = new HashMap<>();
+	private final static Map<String, Reference<HeaderTemplate>> cache = new HashMap<>();
 
 	private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
@@ -48,7 +48,7 @@ public class CachedHeaderTemplateService implements HeaderTemplateService {
 	 * @see com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService#loadHeaderTemplate(java.lang.String)
 	 */
 	@Override
-	public Template loadHeaderTemplate(String resource, String name) {
+	public HeaderTemplate loadHeaderTemplate(String resource, String name) {
 		rwLock.readLock().lock();
 
 		try {
@@ -75,7 +75,7 @@ public class CachedHeaderTemplateService implements HeaderTemplateService {
 		return sb.toString();
 	}
 
-	private Template loadFromAnyProvider(String resource, String name) {
+	private HeaderTemplate loadFromAnyProvider(String resource, String name) {
 
 		var template = ServiceLoader.load(HeaderTemplateService.class).stream()
 				.map(s -> s.get().loadHeaderTemplate(resource, name))

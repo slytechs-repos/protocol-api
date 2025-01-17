@@ -1,7 +1,7 @@
 /*
  * Sly Technologies Free License
  * 
- * Copyright 2024 Sly Technologies Inc.
+ * Copyright 2025 Sly Technologies Inc.
  *
  * Licensed under the Sly Technologies Free License (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta.spi;
+package com.slytechs.jnet.protocol.api.meta.template;
 
-import com.slytechs.jnet.protocol.api.meta.template.Template;
+import java.util.List;
 
 /**
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public interface HeaderTemplateService {
-
-	Template loadHeaderTemplate(String resource, String name);
+public record Tags(List<String> tags) {
 
 }

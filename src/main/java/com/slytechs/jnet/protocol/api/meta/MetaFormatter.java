@@ -15,12 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta.template;
+package com.slytechs.jnet.protocol.api.meta;
 
 /**
  * Interface defining the core formatting operations for protocol data.
  */
-public interface TemplateFormatter {
+public interface MetaFormatter {
     /**
      * Format a summary line for the protocol data.
      * @param model The data model to format

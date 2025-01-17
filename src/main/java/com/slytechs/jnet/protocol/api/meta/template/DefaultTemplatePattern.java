@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.slytechs.jnet.protocol.api.meta.DefaultFormats;
 import com.slytechs.jnet.protocol.api.meta.FormatRegistry;
 import com.slytechs.jnet.protocol.api.meta.ValueFormatter.SpecificValueFormatter;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
 
 public class DefaultTemplatePattern implements PlaceholderPattern {
 
@@ -21,7 +19,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#referenceName()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern.Placeholder#referenceName()
 		 */
 		@Override
 		public String referenceName() {
@@ -29,7 +27,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#formatLine()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern.Placeholder#formatLine()
 		 */
 		@Override
 		public String formatLine() {
@@ -43,7 +41,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 			implements Placeholder {
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#applyFormat(java.lang.Object)
+		 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern.Placeholder#applyFormat(java.lang.Object)
 		 */
 		@Override
 		public String applyFormat(Object value) {
@@ -51,7 +49,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 		}
 
 		/**
-		 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder#isFormatPresent()
+		 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern.Placeholder#isFormatPresent()
 		 */
 		@Override
 		public boolean isFormatPresent() {
@@ -88,7 +86,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern#placeholders()
+	 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern#placeholders()
 	 */
 	@Override
 	public Placeholder[] placeholders() {
@@ -96,7 +94,7 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 	}
 
 	/**
-	 * @see com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern#fragments()
+	 * @see com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern#fragments()
 	 */
 	@Override
 	public String[] fragments() {

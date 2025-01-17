@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.slytechs.jnet.platform.api.domain.DomainAccessor;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.PlaceholderPattern.Placeholder;
+import com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern;
+import com.slytechs.jnet.protocol.api.meta.template.PlaceholderPattern.Placeholder;
 
 public class MetaTemplateFormatter {
 	private static final Logger logger = LoggerFactory.getLogger(MetaTemplateFormatter.class);
@@ -40,7 +40,7 @@ public class MetaTemplateFormatter {
 				sb.append(formatted);
 			} catch (Throwable e) {
 				logger.error("arg=%s".formatted(placeholderPattern.toString()));
-				
+
 				throw e;
 			}
 		}

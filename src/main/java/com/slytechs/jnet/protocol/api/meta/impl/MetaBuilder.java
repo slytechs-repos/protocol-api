@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta;
+package com.slytechs.jnet.protocol.api.meta.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,16 +32,19 @@ import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Header;
 import com.slytechs.jnet.protocol.api.common.HeaderNotFound;
 import com.slytechs.jnet.protocol.api.common.Packet;
+import com.slytechs.jnet.protocol.api.meta.Meta;
 import com.slytechs.jnet.protocol.api.meta.Meta.MetaType;
-import com.slytechs.jnet.protocol.api.meta.impl.DummyHeaderRegistry;
-import com.slytechs.jnet.protocol.api.meta.impl.HeaderRegistry;
-import com.slytechs.jnet.protocol.api.meta.impl.MetaReflections;
+import com.slytechs.jnet.protocol.api.meta.MetaField;
+import com.slytechs.jnet.protocol.api.meta.MetaHeader;
+import com.slytechs.jnet.protocol.api.meta.MetaPacket;
+import com.slytechs.jnet.protocol.api.meta.MetaResource;
+import com.slytechs.jnet.protocol.api.meta.MetaValue;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
 import com.slytechs.jnet.protocol.api.meta.spi.impl.CachedHeaderTemplateService;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Macros;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.Item.FieldItem;
+import com.slytechs.jnet.protocol.api.meta.template.Macros;
+import com.slytechs.jnet.protocol.api.meta.template.Template;
+import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate;
 import com.slytechs.jnet.protocol.api.pack.PackId;
 
 /**
@@ -91,21 +94,21 @@ public final class MetaBuilder {
 				? registry.lookupOption(id, parentId)
 				: registry.lookupHeader(id);
 
-		Template template = loadTemplate(header, header.headerName());
+		Template headerTemplate = loadTemplate(header, header.headerName());
 		var hdrClass = header.getClass();
 		var attributes = MetaReflections.listAttributes(hdrClass);
-		var fields = MetaReflections.listFields(hdrClass, template);
+		var fields = MetaReflections.listFields(hdrClass, headerTemplate);
 
-		var meta = new MetaHeader(header, fields, attributes, template);
+		var meta = new MetaHeader(header, fields, attributes, headerTemplate);
 		return meta;
 	}
 
-	private List<MetaField> listFields(Class<?> containerClass, Template template) {
+	private List<MetaField> listFields(Class<?> containerClass, HeaderTemplate headerTemplate) {
 		var fieldMethodList = Reflections.listMethods(containerClass, Meta.class, a -> a
 				.value() == MetaType.FIELD);
 
 		return fieldMethodList.stream()
-				.map(method -> buildFieldFromMethod(method, template.macros(), template.detailList()))
+				.map(method -> buildFieldFromMethod(method, headerTemplate.macros(), headerTemplate.detailList()))
 				.toList();
 
 	}
@@ -140,7 +143,7 @@ public final class MetaBuilder {
 	private MetaField buildField(MetaValue value, Macros macros, List<DetailTemplate> templateList) {
 
 		String name = value.name();
-		FieldTemplate[] fieldTemplateArray = null;
+		FieldItem[] fieldTemplateArray = null;
 		Map<Detail, MetaField[]> children = null;
 
 		return new MetaField(name, value, fieldTemplateArray, children);
@@ -153,7 +156,7 @@ public final class MetaBuilder {
 		return new MetaPacket(this, attributes, template);
 	}
 
-	List<MetaHeader> listHeaders(Packet packet) {
+	public List<MetaHeader> listHeaders(Packet packet) {
 
 //		System.out.println(packet.descriptor().toString(Detail.HIGH));
 
@@ -205,11 +208,11 @@ public final class MetaBuilder {
 		var arr = resource.split("#");
 		var name = arr.length > 1 ? arr[1] : null;
 
-		Template template = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
-		if (template == null)
+		var headerTemplate = TEMPLATE_SERVICE.loadHeaderTemplate(arr[0], name);
+		if (headerTemplate == null)
 			logger.warn("{} template '{}#{}' definition not found", targetName, arr[0], name);
 
-		return template;
+		return headerTemplate;
 	}
 
 }

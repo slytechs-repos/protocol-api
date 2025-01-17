@@ -44,6 +44,7 @@ module com.slytechs.jnet.protocol.api {
 	exports com.slytechs.jnet.protocol.api.common;
 	exports com.slytechs.jnet.protocol.api.descriptor;
 	exports com.slytechs.jnet.protocol.api.meta;
+	exports com.slytechs.jnet.protocol.api.meta.template;
 	exports com.slytechs.jnet.protocol.api.pack;
 	exports com.slytechs.jnet.protocol.api.core;
 	exports com.slytechs.jnet.protocol.tcpip;

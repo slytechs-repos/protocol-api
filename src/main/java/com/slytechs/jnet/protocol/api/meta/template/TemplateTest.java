@@ -18,13 +18,11 @@
 package com.slytechs.jnet.protocol.api.meta.template;
 
 import java.io.IOException;
-import java.io.InputStream;
 
+import com.slytechs.jnet.platform.api.common.NotFound;
 import com.slytechs.jnet.platform.api.util.format.Detail;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.FieldTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Item;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.template.Template.TemplateDetail;
+import com.slytechs.jnet.protocol.api.meta.template.impl.ResourceReader;
 
 /**
  * Test class for validating template loading and parsing.
@@ -34,69 +32,66 @@ import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
  */
 public class TemplateTest {
 
-    private static void dumpItem(Item item, String indent) {
-        if (item == null)
-            return;
-            
-        System.out.printf("%sItem [%s]%n", indent, item.name());
-        System.out.printf("%s  template: %s%n", indent, item.template());
-        System.out.printf("%s  defaults: %s%n", indent, item.defaults());
-        
-        if (item.items() != null) {
-            for (Item child : item.items()) {
-                dumpItem(child, indent + "    ");
-            }
-        }
-    }
+	private static void dumpItem(Item item, String indent) {
+		if (item == null)
+			return;
 
-    private static void dumpField(FieldTemplate field, String indent) {
-        if (field == null)
-            return;
-            
-        System.out.printf("%sField [%s]%n", indent, field.name());
-        System.out.printf("%s  label: %s%n", indent, field.label());
-        System.out.printf("%s  template: %s%n", indent, field.template());
-        System.out.printf("%s  defaults: %s%n", indent, field.defaults());
-        
-        if (field.items() != null) {
-            for (Item item : field.items()) {
-                dumpItem(item, indent + "    ");
-            }
-        }
-    }
+		System.out.printf("%sItem [%s]%n", indent, item.name());
+		System.out.printf("%s  template: %s%n", indent, item.template());
+		System.out.printf("%s  defaults: %s%n", indent, item.defaults());
 
-    private static void dumpDetailTemplate(DetailTemplate dt, String indent) {
-        if (dt == null)
-            return;
-            
-        System.out.printf("%sDetail [%s]%n", indent, dt.detail());
-        System.out.printf("%s  summary: %s%n", indent, dt.summary());
-        System.out.printf("%s  defaults: %s%n", indent, dt.defaults());
-        System.out.printf("%s  fields:%n", indent);
-        
-        for (FieldTemplate field : dt.fieldList()) {
-            dumpField(field, indent + "    ");
-        }
-        System.out.println();
-    }
+		if (item.items() != null) {
+			for (Item child : item.items()) {
+				dumpItem(child, indent + "    ");
+			}
+		}
+	}
 
-    public static void main(String[] args) throws IOException {
-        InputStream is = TemplateReader.class.getResourceAsStream("/meta/tcpip/ip4.yaml");
-        if (is == null) {
-            System.err.println("Sample IP4 template not found in resources");
-            return;
-        }
+	private static void dumpField(Item field, String indent) {
+		if (field == null)
+			return;
 
-        Template proto = TemplateReader.parseYamlTemplate(is);
-        System.out.printf("Protocol [%s]%n", proto.name());
-        System.out.printf("  Macros: %s%n", proto.macros());
-        System.out.printf("  Defaults: %s%n%n", proto.defaults());
+		System.out.printf("%sField [%s]%n", indent, field.name());
+		System.out.printf("%s  label: %s%n", indent, field.label());
+		System.out.printf("%s  template: %s%n", indent, field.template());
+		System.out.printf("%s  defaults: %s%n", indent, field.defaults());
 
-        for (Detail detail : Detail.values()) {
-            DetailTemplate dt = proto.detail(detail);
-            if (dt != null) {
-                dumpDetailTemplate(dt, "");
-            }
-        }
-    }
+		if (field.items() != null) {
+			for (Item item : field.items()) {
+				dumpItem(item, indent + "    ");
+			}
+		}
+	}
+
+	private static void dumpDetailTemplate(TemplateDetail dt, String indent) {
+		if (dt == null)
+			return;
+
+		System.out.printf("%sDetail [%s]%n", indent, dt.detail());
+		System.out.printf("%s  summary: %s%n", indent, dt.summary());
+		System.out.printf("%s  defaults: %s%n", indent, dt.defaults());
+		System.out.printf("%s  fields:%n", indent);
+
+		for (var field : dt.items()) {
+			dumpField(field, indent + "    ");
+		}
+		System.out.println();
+	}
+
+	public static void main(String[] args) throws IOException, NotFound {
+		String RESOURCE = "/meta/tcpip/ip4.yaml";
+		ResourceReader reader = new ResourceReader();
+
+		Template template = reader.resolveTemplate(RESOURCE);
+		System.out.printf("Template [%s]%n", template.name());
+		System.out.printf("  Macros: %s%n", template.macros());
+		System.out.printf("  Defaults: %s%n%n", template.defaults());
+
+		for (Detail detail : Detail.values()) {
+			TemplateDetail dt = template.templateDetail(detail);
+			if (dt != null) {
+				dumpDetailTemplate(dt, "");
+			}
+		}
+	}
 }

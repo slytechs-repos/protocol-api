@@ -23,10 +23,9 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.slytechs.jnet.protocol.api.meta.impl.YamlTemplateReaderDEPRECATED;
 import com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
-import com.slytechs.jnet.protocol.api.meta.template.TemplateReader;
+import com.slytechs.jnet.protocol.api.meta.template.HeaderTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.impl.TemplateReader;
 
 /**
  * 
@@ -35,7 +34,7 @@ import com.slytechs.jnet.protocol.api.meta.template.TemplateReader;
  * @author Sly Technologies Inc.
  */
 public class CoreHeaderTemplateService implements HeaderTemplateService {
-	private static final Logger logger = LoggerFactory.getLogger(YamlTemplateReaderDEPRECATED.class.getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger(CoreHeaderTemplateService.class.getSimpleName());
 
 	private TemplateReader reader = new TemplateReader();
 
@@ -47,14 +46,14 @@ public class CoreHeaderTemplateService implements HeaderTemplateService {
 	 * @see com.slytechs.jnet.protocol.api.meta.spi.HeaderTemplateService#loadHeaderTemplate(java.lang.String)
 	 */
 	@Override
-	public Template loadHeaderTemplate(String resource, String name) {
+	public HeaderTemplate loadHeaderTemplate(String resource, String name) {
 
 		try {
 			var in = CoreHeaderTemplateService.class.getResourceAsStream(resource);
 			if (in == null)
 				throw new FileNotFoundException(resource);
 
-			Template protocol = TemplateReader.parseYamlTemplate(in);
+			HeaderTemplate protocol = TemplateReader.readFirst(in);
 
 			return protocol;
 		} catch (Throwable e) {

@@ -1,7 +1,7 @@
 /*
  * Sly Technologies Free License
  * 
- * Copyright 2024 Sly Technologies Inc.
+ * Copyright 2025 Sly Technologies Inc.
  *
  * Licensed under the Sly Technologies Free License (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.slytechs.jnet.protocol.api.meta.spi;
+package com.slytechs.jnet.protocol.api.meta.template;
 
-import com.slytechs.jnet.protocol.api.meta.template.Template;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Mark Bednarczyk [mark@slytechs.com]
  * @author Sly Technologies Inc.
  */
-public interface HeaderTemplateService {
+public record Import(String path) {
 
-	Template loadHeaderTemplate(String resource, String name);
+	/**
+	 * @author Mark Bednarczyk [mark@slytechs.com]
+	 * @author Sly Technologies Inc.
+	 */
+	public record Imports(List<Import> imports) implements Iterable<Import> {
+
+		/**
+		 * @see java.lang.Iterable#iterator()
+		 */
+		@Override
+		public Iterator<Import> iterator() {
+			return imports.iterator();
+		}
+
+	}
 
 }

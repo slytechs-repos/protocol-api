@@ -23,8 +23,9 @@ import java.util.regex.Pattern;
 import com.slytechs.jnet.platform.api.domain.DomainAccessor;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.common.Packet;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.DetailTemplate;
-import com.slytechs.jnet.protocol.api.meta.template.MetaTemplate.Template;
+import com.slytechs.jnet.protocol.api.meta.impl.MetaBuilder;
+import com.slytechs.jnet.protocol.api.meta.template.DetailTemplate;
+import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate;
 
 /**
  * The Class MetaPacket.
@@ -38,7 +39,7 @@ public record MetaPacket(
 		Packet packet,
 		List<MetaHeader> headers,
 		List<MetaAttribute> attributes,
-		Template template)
+		HeaderTemplate headerTemplate)
 		implements MetaElement, DomainAccessor {
 
 	/**
@@ -48,20 +49,20 @@ public record MetaPacket(
 	 *
 	 * @param builder    the builder
 	 * @param attributes the attributes
-	 * @param template   the template
+	 * @param headerTemplate   the headerTemplate
 	 */
-	MetaPacket(MetaBuilder builder, List<MetaAttribute> attributes, Template template) {
-		this(builder, null, null, attributes, template);
+	public MetaPacket(MetaBuilder builder, List<MetaAttribute> attributes, HeaderTemplate headerTemplate) {
+		this(builder, null, null, attributes, headerTemplate);
 	}
 
 	public DetailTemplate template(Detail detail) {
-		return template.detail(detail);
+		return headerTemplate.detail(detail);
 	}
 
 	public DetailTemplate templateOrThrow(Detail detail) throws IllegalStateException {
-		DetailTemplate d = (template == null) ? null : template.detail(detail);
+		DetailTemplate d = (headerTemplate == null) ? null : headerTemplate.detail(detail);
 		if (d == null)
-			throw new IllegalStateException("missing meta template for packet");
+			throw new IllegalStateException("missing meta headerTemplate for packet");
 
 		return d;
 	}
@@ -81,7 +82,7 @@ public record MetaPacket(
 
 		List<MetaHeader> newHeaders = builder.listHeaders(packet);
 
-		var meta = new MetaPacket(builder, packet, newHeaders, newAttributes, template);
+		var meta = new MetaPacket(builder, packet, newHeaders, newAttributes, headerTemplate);
 
 		newAttributes.forEach(att -> att.parent().setParent(meta));
 		newHeaders.forEach(hdr -> hdr.parent().setParent(meta));
