@@ -17,8 +17,6 @@
  */
 package com.slytechs.jnet.protocol.api.meta.template;
 
-import static com.slytechs.jnet.protocol.api.meta.template.TreeBuilder.BuilderFactory.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,20 +41,81 @@ import com.slytechs.jnet.protocol.api.meta.template.Template.HeaderTemplate.Deta
  */
 public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 
+	/**
+	 * 
+	 */
+	private static final String CLASS = "class";
+
+	private static final String FORMATS = "formats";
+
+	private static final String IMPORT = "import";
+
+	private static final String VERSION = "version";
+
+	private static final String NAME = "name";
+
+	private static final String INFO = "Info";
+
+	private static final String ALL_MACROS = "all-macros";
+
+	private static final String DETAILS = "Details";
+
+	private static final String HEADER = "Header";
+
+	private static final String REPEATABLE = "repeatable";
+
+	private static final String SUMMARY = "summary";
+
+	private static final String TAGS = "Tags";
+
+	private static final String DETAIL = "Detail";
+
+	private static final String LABEL = "label";
+
+	private static final String TEMPLATE = "template";
+
+	private static final String ITEMS = "Items";
+
+	private static final String FIELD = "Field";
+
+	private static final String INDENT = "indent";
+
+	private static final String WIDTH = "width";
+
+	private static final String ALIGN = "align";
+
+	private static final String OVEVIEW = "Oveview";
+
+	private static final String TEMPLATES = "Templates";
+
+	private static final String IMPORTS = "Imports";
+
+	private static final String DEFAULTS = "Defaults";
+
+	private static final String OVERVIEW = "Overview";
+
+	private static final String DESCRIPTION = "description";
+
+	public static final String MACROS = "Macros";
+
 	private final Builder<ResourceTemplate> rootBuilder;
 
 	public ResourceTemplateBuilder() {
-		this.rootBuilder = new MapBuilder<ResourceTemplate>(Context.root()) {
+		this.rootBuilder = new MapBuilder<>(Context.root()) {
 
 			@Override
 			protected void configure(MapBuilder<ResourceTemplate> builder) {
-				builder
-						.requireField("Templates", buildTemplates())
 
-						.optionalField("Oveview", buildOverview())
-						.optionalField("Defaults", buildDefaults())
-						.optionalField("Macros", buildMacros())
-						.optionalField("Imports", buildImports())
+				context.put(MACROS, Macros.root());
+				context.put(DEFAULTS, Defaults.root());
+				
+				builder
+						.requireField(TEMPLATES, buildTemplates())
+						.requireField(OVEVIEW, buildOverview())
+
+						.optionalField(DEFAULTS, buildDefaults())
+						.optionalField(MACROS, buildMacros())
+						.optionalField(IMPORTS, buildImports())
 
 				;
 			}
@@ -65,11 +124,11 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected ResourceTemplate newInstance(Context ctx) {
 				return new ResourceTemplate(
 
-						ctx.getField("Overview", Overview.class),
-						ctx.getField("Defaults", Defaults.class),
-						ctx.getField("Macros", Macros.class),
-						ctx.getField("Imports", Imports.class),
-						ctx.getField("Templates", Templates.class)
+						ctx.requireNonNull(OVERVIEW, Overview.class),
+						ctx.requireNonNull(DEFAULTS, Defaults.class),
+						ctx.requireNonNull(MACROS, Macros.class),
+						ctx.getField(IMPORTS, Imports.class),
+						ctx.getField(TEMPLATES, Templates.class)
 
 				);
 			}
@@ -90,9 +149,9 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(MapBuilder<Defaults> builder) {
 				builder
-						.optionalField("align", Builder.buildEnum(Align.class))
-						.optionalField("width", Builder.buildNumber())
-						.optionalField("indent", Builder.buildNumber())
+						.optionalField(ALIGN, Builder.buildEnum(Align.class))
+						.optionalField(WIDTH, Builder.buildNumber())
+						.optionalField(INDENT, Builder.buildNumber())
 
 				;
 			}
@@ -106,28 +165,28 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 				return new Defaults(
 
 						defaults,
-						ctx.getField("indent", Integer.class),
-						ctx.getField("width", Integer.class),
-						ctx.getField("align", Align.class)
+						ctx.requireNonNull(INDENT, Integer.class),
+						ctx.requireNonNull(WIDTH, Integer.class),
+						ctx.requireNonNull(ALIGN, Align.class)
 
 				);
 			}
 		};
 	}
 
-	private BuilderFactory<Item> buildFieldItem() {
+	private BuilderFactory<Item> buildFieldItem(Builder<Items> itemsBuilder) {
 		return context -> new MapBuilder<>(context) {
 
 			@Override
 			protected void configure(MapBuilder<Item> builder) {
 				builder
-						.requireField("Field", Builder.buildString())
+						.requireField(FIELD, Builder.buildString())
 
-						.optionalField("template", buildTemplatePattern())
-						.optionalField("label", Builder.buildString())
-						.optionalField("Defaults", buildDefaults())
-						.optionalField("Tags", buildTags())
-						.optionalField("Items", buildItems())
+						.optionalField(TEMPLATE, buildTemplatePattern())
+						.optionalField(LABEL, Builder.buildString())
+						.optionalField(DEFAULTS, buildDefaults())
+						.optionalField(TAGS, buildTags())
+						.optionalField(ITEMS, itemsBuilder)
 
 				;
 			}
@@ -136,12 +195,12 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected FieldItem newInstance(Context ctx) {
 				return new FieldItem(
 
-						ctx.getField("Field", String.class),
-						ctx.getField("template", TemplatePattern.class),
-						ctx.getField("label", String.class),
-						ctx.getSubField("Defaults", Defaults.class),
-						ctx.getField("Tags", Tags.class),
-						ctx.getField("Items", Items.class)
+						ctx.getField(FIELD, String.class),
+						ctx.getField(TEMPLATE, TemplatePattern.class),
+						ctx.getField(LABEL, String.class),
+						ctx.requireNonNull(DEFAULTS, Defaults.class),
+						ctx.getField(TAGS, Tags.class),
+						ctx.getField(ITEMS, Items.class)
 
 				);
 			}
@@ -154,11 +213,11 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(MapBuilder<HeaderDetail> builder) {
 				builder
-						.requireField("Detail", Builder.buildEnum(Detail.class))
+						.requireField(DETAIL, Builder.buildEnum(Detail.class))
 
-						.optionalField("summary", buildTemplatePattern())
-						.optionalField("Defaults", buildDefaults())
-						.optionalField("Items", buildItems())
+						.optionalField(SUMMARY, buildTemplatePattern())
+						.optionalField(DEFAULTS, buildDefaults())
+						.optionalField(ITEMS, buildItems())
 
 				;
 			}
@@ -167,29 +226,29 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected HeaderDetail newInstance(Context ctx) {
 				return new HeaderDetail(
 
-						ctx.getField("Detail", Detail.class),
-						ctx.getSubField("summary", TemplatePattern.class),
-						ctx.getField("Items", Items.class),
-						ctx.getField("Defaults", Defaults.class)
+						ctx.getField(DETAIL, Detail.class),
+						ctx.getSubField(SUMMARY, TemplatePattern.class),
+						ctx.getField(ITEMS, Items.class),
+						ctx.requireNonNull(DEFAULTS, Defaults.class)
 
 				);
 			}
 		};
 	}
 
-	private BuilderFactory<Item> buildHeaderItem() {
+	private BuilderFactory<Item> buildHeaderItem(Builder<Items> builder) {
 		return context -> new MapBuilder<>(context) {
 
 			@Override
 			protected void configure(MapBuilder<Item> builder) {
 				builder
-						.requireField("Header", Builder.buildString())
+						.requireField(HEADER, Builder.buildString())
 
-						.optionalField("summary", buildTemplatePattern())
-						.optionalField("repeatable", Builder.buildBoolean())
-						.optionalField("Defaults", buildDefaults())
-						.optionalField("Tags", buildTags())
-						.optionalField("Items", buildItems())
+						.optionalField(SUMMARY, buildTemplatePattern())
+						.optionalField(REPEATABLE, Builder.buildBoolean())
+						.optionalField(DEFAULTS, buildDefaults())
+						.optionalField(TAGS, buildTags())
+						.optionalField(ITEMS, builder)
 
 				;
 			}
@@ -198,12 +257,12 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected HeaderItem newInstance(Context ctx) {
 				return new HeaderItem(
 
-						ctx.getField("Header", String.class),
-						ctx.getField("summary", TemplatePattern.class),
-						ctx.getField("repeatable", false),
-						ctx.getSubField("Defaults", Defaults.class),
-						ctx.getField("Tags", Tags.class),
-						ctx.getField("Items", Items.class)
+						ctx.getField(HEADER, String.class),
+						ctx.getField(SUMMARY, TemplatePattern.class),
+						ctx.getField(REPEATABLE, false),
+						ctx.requireNonNull(DEFAULTS, Defaults.class),
+						ctx.getField(TAGS, Tags.class),
+						ctx.getField(ITEMS, Items.class)
 
 				);
 			}
@@ -216,12 +275,12 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(MapBuilder<Template> builder) {
 				builder
-						.requireField("Header", Builder.buildString())
-						.requireField("Details", buildHeaderTemplateDetails())
+						.requireField(HEADER, Builder.buildString())
+						.requireField(DETAILS, buildHeaderTemplateDetails())
 
-						.optionalField("class", Builder.buildString())
-						.optionalField("Imports", buildImports())
-						.optionalField("summary", buildTemplatePattern())
+						.optionalField(CLASS, Builder.buildString())
+						.optionalField(IMPORTS, buildImports())
+						.optionalField(SUMMARY, buildTemplatePattern())
 
 				;
 			}
@@ -230,10 +289,10 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected Template newInstance(Context ctx) {
 				return new HeaderTemplate(
 
-						ctx.getField("name", String.class),
-						ctx.getField("Details", HeaderTemplate.Details.class),
-						ctx.getSubField("Macros", Macros.class),
-						ctx.getSubField("Defaults", Defaults.class)
+						ctx.getField(NAME, String.class),
+						ctx.getField(DETAILS, HeaderTemplate.Details.class),
+						ctx.requireNonNull(MACROS, Macros.class),
+						ctx.requireNonNull(DEFAULTS, Defaults.class)
 
 				);
 			}
@@ -264,7 +323,7 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 				builder.minSize(1)
 						.map(value -> {
 							if (value instanceof Map<?, ?> map)
-								value = map.get("import");
+								value = map.get(IMPORT);
 
 							return value;
 						});
@@ -279,12 +338,7 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 	}
 
 	private BuilderFactory<Items> buildItems() {
-		return context -> new ListBuilder<>(
-				context,
-				ofAnyFactory(
-						buildHeaderItem(),
-						buildFieldItem(),
-						buildInfoItem())) {
+		return context -> new ListBuilder<Items, Item>(context) {
 
 			/**
 			 * @see com.slytechs.jnet.protocol.api.meta.template.TreeBuilder.ListBuilder#configure(com.slytechs.jnet.protocol.api.meta.template.TreeBuilder.ListBuilder)
@@ -292,14 +346,18 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(ListBuilder<Items, Item> builder) {
 				builder.minSize(1)
-						.map(this::inflactInfoItems);
+						.map(this::inflateInfoItems)
+						.elementBuilder(BuilderFactory.ofAnyFactory(
+								buildHeaderItem(builder),
+								buildFieldItem(builder),
+								buildInfoItem(builder)));
 			}
 
-			private Object inflactInfoItems(Object value) {
+			private Object inflateInfoItems(Object value) {
 				if (value instanceof Map<?, ?> map
-						&& (map.containsKey("Header")
-								|| map.containsKey("Field")
-								|| map.containsKey("Info"))) {
+						&& (map.containsKey(HEADER)
+								|| map.containsKey(FIELD)
+								|| map.containsKey(INFO))) {
 					return value;
 
 				} else if (value instanceof Map map) {
@@ -307,14 +365,14 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 					// modify
 					@SuppressWarnings("unchecked")
 					var newMap = new HashMap<String, Object>(map);
-					newMap.put("Info", "");
+					newMap.put(INFO, "");
 
 					value = newMap;
 
 				} else if (value instanceof String templateString) {
 					var newMap = new HashMap<String, Object>();
-					newMap.put("Info", "");
-					newMap.put("template", templateString);
+					newMap.put(INFO, "");
+					newMap.put(TEMPLATE, templateString);
 
 					value = newMap;
 				}
@@ -329,19 +387,19 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 		};
 	}
 
-	private BuilderFactory<Item> buildInfoItem() {
+	private BuilderFactory<Item> buildInfoItem(Builder<Items> builder) {
 		return context -> new MapBuilder<>(context) {
 
 			@Override
 			protected void configure(MapBuilder<Item> builder) {
 				builder
-						.requireField("Info", Builder.buildString())
+						.requireField(INFO, Builder.buildString())
 
-						.optionalField("template", buildTemplatePattern())
-						.optionalField("label", Builder.buildString())
-						.optionalField("Defaults", buildDefaults())
-						.optionalField("Tags", buildTags())
-						.optionalField("Items", buildItems())
+						.optionalField(TEMPLATE, buildTemplatePattern())
+						.optionalField(LABEL, Builder.buildString())
+						.optionalField(DEFAULTS, buildDefaults())
+						.optionalField(TAGS, buildTags())
+						.optionalField(ITEMS, builder)
 
 				;
 			}
@@ -350,12 +408,12 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected InfoItem newInstance(Context ctx) {
 				return new InfoItem(
 
-						ctx.getField("Info", String.class),
-						ctx.getField("template", TemplatePattern.class),
-						ctx.getField("label", String.class),
-						ctx.getSubField("Defaults", Defaults.class),
-						ctx.getField("Tags", Tags.class),
-						ctx.getField("Items", Items.class)
+						ctx.getField(INFO, String.class),
+						ctx.getField(TEMPLATE, TemplatePattern.class),
+						ctx.getField(LABEL, String.class),
+						ctx.getSubField(DEFAULTS, Defaults.class),
+						ctx.getField(TAGS, Tags.class),
+						ctx.getField(ITEMS, Items.class)
 
 				);
 			}
@@ -370,10 +428,10 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(MapBuilder<Macros> builder) {
 				builder
-						.optionalField("align", Builder.buildEnum(Align.class))
-						.optionalField("width", Builder.buildNumber())
-						.optionalField("indent", Builder.buildNumber())
-						.customBuilder("all-macros", this::mapAsFieldMap)
+						.optionalField(ALIGN, Builder.buildEnum(Align.class))
+						.optionalField(WIDTH, Builder.buildNumber())
+						.optionalField(INDENT, Builder.buildNumber())
+						.customBuilder(ALL_MACROS, this::mapAsFieldMap)
 
 				;
 			}
@@ -388,13 +446,13 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected Macros newInstance(Context ctx) {
 
-				Macros macros = ctx.getSubField("macros", Macros.class);
+				Macros macros = ctx.requireNonNull(MACROS, Macros.class);
 				assert macros != null : "macros not initialized properly";
 
 				return new Macros(
 
 						macros,
-						ctx.getField("all-macros", TYPE)
+						ctx.getField(ALL_MACROS, TYPE)
 
 				);
 			}
@@ -407,9 +465,9 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			@Override
 			protected void configure(MapBuilder<Overview> builder) {
 				builder
-						.requireField("description", Builder.buildString())
-						.optionalField("name", Builder.buildString())
-						.optionalField("version", Builder.buildString())
+						.requireField(DESCRIPTION, Builder.buildString())
+						.optionalField(NAME, Builder.buildString())
+						.optionalField(VERSION, Builder.buildString())
 
 				;
 			}
@@ -418,9 +476,9 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 			protected Overview newInstance(Context ctx) {
 				return new Overview(
 
-						ctx.getField("String", String.class),
-						ctx.getField("name", String.class),
-						ctx.getField("version", String.class)
+						ctx.getField(DESCRIPTION, String.class),
+						ctx.getField(NAME, String.class),
+						ctx.getField(VERSION, String.class)
 
 				);
 			}
@@ -452,11 +510,17 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 				if (templateString == null)
 					return null;
 
+				context.streamWithDepth()
+						.forEach(System.out::println);
+
+				context.streamHierarchy()
+						.forEach(Detail.HIGH::printlnToStdout);
+
 				return new TemplatePattern(
 
 						templateString,
-						context.getSubField("formats", FormatRegistry.of()),
-						context.getSubField("Macros", Macros.class)
+						context.getSubField(FORMATS, FormatRegistry.of()),
+						context.requireNonNull(MACROS, Macros.class)
 
 				);
 			}

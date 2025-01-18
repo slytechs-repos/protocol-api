@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import com.slytechs.jnet.platform.api.common.NotFound;
@@ -33,7 +34,7 @@ import com.slytechs.jnet.protocol.api.meta.template.Template;
  * A resource reader that loads templates based on dialect and locale, with
  * support for template selection and resource resolution.
  */
-public class ResourceReader {
+public class ResourceLocator {
 
 	/**
 	 * Supported resource dialects.
@@ -81,27 +82,39 @@ public class ResourceReader {
 	private static final Pattern RESOURCE_PATTERN = Pattern.compile(
 			"^(.*?)(?:-(\\w+))?(?:_(\\w+))?\\.(\\w+)(?:#(.+))?$");
 
-	private final ClassLoader classLoader;
+	private final Function<String, InputStream> resourceLoader;
 	private final Locale defaultLocale;
 	private final ResourceDialect defaultDialect;
 	private final ResourceType defaultType;
 
 	/**
-	 * Creates a new ResourceReader using defaults.
+	 * Creates a new ResourceLocator using defaults.
 	 */
-	public ResourceReader() {
-		this(Thread.currentThread().getContextClassLoader(),
+	public ResourceLocator(Function<String, InputStream> resourceLoader) {
+		this(resourceLoader,
 				Locale.getDefault(),
 				ResourceDialect.DEFAULT,
 				ResourceType.YAML);
 	}
 
 	/**
-	 * Creates a new ResourceReader with specific configuration.
+	 * Creates a new ResourceLocator using defaults.
 	 */
-	public ResourceReader(ClassLoader classLoader, Locale defaultLocale,
+	public ResourceLocator() {
+		this(name -> Thread.currentThread()
+				.getContextClassLoader()
+				.getResourceAsStream(name),
+				Locale.getDefault(),
+				ResourceDialect.DEFAULT,
+				ResourceType.YAML);
+	}
+
+	/**
+	 * Creates a new ResourceLocator with specific configuration.
+	 */
+	public ResourceLocator(Function<String, InputStream> resourceLoader, Locale defaultLocale,
 			ResourceDialect defaultDialect, ResourceType defaultType) {
-		this.classLoader = classLoader;
+		this.resourceLoader = resourceLoader;
 		this.defaultLocale = defaultLocale;
 		this.defaultDialect = defaultDialect;
 		this.defaultType = defaultType;
@@ -123,7 +136,7 @@ public class ResourceReader {
 			throw new NotFound("No matching resource found for: " + resourcePath);
 		}
 
-		try (InputStream is = classLoader.getResourceAsStream(resolvedPath)) {
+		try (InputStream is = resourceLoader.apply(resolvedPath)) {
 			if (is == null) {
 				throw new NotFound("Resource not found: " + resolvedPath);
 			}
@@ -149,7 +162,7 @@ public class ResourceReader {
 			throw new NotFound("No matching resource found for: " + resourcePath);
 		}
 
-		try (InputStream is = classLoader.getResourceAsStream(resolvedPath)) {
+		try (InputStream is = resourceLoader.apply(resolvedPath)) {
 			if (is == null) {
 				throw new NotFound("Resource not found: " + resolvedPath);
 			}
@@ -212,7 +225,7 @@ public class ResourceReader {
 		List<String> candidates = generateCandidatePaths(info);
 
 		for (String candidate : candidates) {
-			if (classLoader.getResource(candidate) != null) {
+			if (resourceLoader.apply(candidate) != null) {
 				return candidate;
 			}
 		}
@@ -245,20 +258,12 @@ public class ResourceReader {
 		);
 	}
 
-	private static class ResourceInfo {
-		final String basePath;
-		final ResourceDialect dialect;
-		final String locale;
-		final ResourceType type;
-		final String templateName;
+	private record ResourceInfo(
+			String basePath,
+			ResourceDialect dialect,
+			String locale,
+			ResourceType type,
+			String templateName) {
 
-		ResourceInfo(String basePath, ResourceDialect dialect, String locale,
-				ResourceType type, String templateName) {
-			this.basePath = basePath;
-			this.dialect = dialect;
-			this.locale = locale;
-			this.type = type;
-			this.templateName = templateName;
-		}
 	}
 }

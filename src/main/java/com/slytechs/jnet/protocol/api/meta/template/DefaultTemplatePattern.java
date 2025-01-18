@@ -3,6 +3,7 @@ package com.slytechs.jnet.protocol.api.meta.template;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.slytechs.jnet.protocol.api.meta.DefaultFormats;
@@ -239,6 +240,8 @@ public class DefaultTemplatePattern implements PlaceholderPattern {
 	 * @param rawArgs
 	 */
 	private boolean substituteMacros(Macros macros, List<Placeholder> placeholders) {
+		
+		Objects.requireNonNull(macros, "macros");
 
 		AtomicInteger replacedCount = new AtomicInteger();
 		var tempList = placeholders.stream()

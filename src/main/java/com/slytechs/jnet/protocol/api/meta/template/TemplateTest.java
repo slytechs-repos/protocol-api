@@ -22,7 +22,7 @@ import java.io.IOException;
 import com.slytechs.jnet.platform.api.common.NotFound;
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.meta.template.Template.TemplateDetail;
-import com.slytechs.jnet.protocol.api.meta.template.impl.ResourceReader;
+import com.slytechs.jnet.protocol.api.meta.template.impl.ResourceLocator;
 
 /**
  * Test class for validating template loading and parsing.
@@ -80,7 +80,9 @@ public class TemplateTest {
 
 	public static void main(String[] args) throws IOException, NotFound {
 		String RESOURCE = "/meta/tcpip/ip4.yaml";
-		ResourceReader reader = new ResourceReader();
+		ResourceLocator reader = new ResourceLocator(TemplateTest.class::getResourceAsStream);
+
+		System.out.println(TemplateTest.class.getResource(RESOURCE));
 
 		Template template = reader.resolveTemplate(RESOURCE);
 		System.out.printf("Template [%s]%n", template.name());
