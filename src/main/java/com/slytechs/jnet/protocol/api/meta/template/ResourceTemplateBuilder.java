@@ -510,10 +510,10 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 				if (templateString == null)
 					return null;
 
-				context.streamWithDepth()
+				context.entryDetails()
 						.forEach(System.out::println);
 
-				context.streamHierarchy()
+				context.contexts()
 						.forEach(Detail.HIGH::printlnToStdout);
 
 				return new TemplatePattern(

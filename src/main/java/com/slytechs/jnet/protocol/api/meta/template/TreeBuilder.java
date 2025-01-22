@@ -187,7 +187,8 @@ public abstract class TreeBuilder<T> {
 	 * }
 	 * }</pre>
 	 */
-	public static class Context implements Iterable<Pair<String, Object>>, Named, Printable {
+	public static class Context
+			implements Iterable<Pair<String, Object>>, Named, Printable {
 
 		/**
 		 * Special implementation of Context that serves as the root of any context
@@ -267,20 +268,20 @@ public abstract class TreeBuilder<T> {
 			}
 
 			@Override
-			public Stream<Context> streamHierarchy() {
+			public Stream<Context> contexts() {
 				return Stream.of(this);
 			}
 
 			/**
-			 * @see com.slytechs.jnet.protocol.api.meta.template.TreeBuilder.Context#streamKeys()
+			 * @see com.slytechs.jnet.protocol.api.meta.template.TreeBuilder.Context#keys()
 			 */
 			@Override
-			public Stream<String> streamKeys() {
+			public Stream<String> keys() {
 				return Stream.of();
 			}
 
 			@Override
-			protected Stream<Tuple4<String, Object, Integer, String>> streamWithDepth(int level) {
+			protected Stream<Tuple4<String, Object, Integer, String>> entryDetails(int level) {
 				return Stream.of();
 			}
 		}
@@ -501,7 +502,7 @@ public abstract class TreeBuilder<T> {
 
 		@Override
 		public Iterator<Pair<String, Object>> iterator() {
-			return stream().iterator();
+			return entries().iterator();
 		}
 
 		/**
@@ -519,7 +520,10 @@ public abstract class TreeBuilder<T> {
 		@Override
 		public void printTo(Appendable out, Detail detail) throws IOException {
 			switch (detail) {
-			case HIGH -> out.append((" ".repeat(index)) + name() + " " + map.toString());
+			case HIGH -> out.append(""
+					+ (" ".repeat(index)) + name()
+					+ " size=" + size()
+					+ " " + map.toString());
 			default -> out.append(name() + " " + map.toString());
 			};
 		}
@@ -667,19 +671,20 @@ public abstract class TreeBuilder<T> {
 			return map.size();
 		}
 
-		public Stream<Pair<String, Object>> stream() {
-			return streamKeys()
+		// Hierarchical streams
+		public Stream<Pair<String, Object>> entries() {
+			return keys()
 					.map(key -> Pair.of(key, getSubField(key)));
 		}
 
-		public Stream<Context> streamHierarchy() {
-			return Stream.concat(parent.streamHierarchy(), Stream.of(this));
+		public Stream<Context> contexts() {
+			return Stream.concat(parent.contexts(), Stream.of(this));
 		}
 
-		public Stream<String> streamKeys() {
+		public Stream<String> keys() {
 			return Stream.concat(
 					map.keySet().stream(),
-					parent.streamKeys()).distinct();
+					parent.keys()).distinct();
 		}
 
 		/**
@@ -691,8 +696,8 @@ public abstract class TreeBuilder<T> {
 		 * @return a stream of Tuple3 containing key, value and depth level for each
 		 *         field
 		 */
-		public Stream<Tuple4<String, Object, Integer, String>> streamWithDepth() {
-			return streamWithDepth(0);
+		public Stream<Tuple4<String, Object, Integer, String>> entryDetails() {
+			return entryDetails(0);
 		}
 
 		/**
@@ -705,13 +710,23 @@ public abstract class TreeBuilder<T> {
 		 * @return a stream of Tuple3 containing key, value and depth level for each
 		 *         field
 		 */
-		protected Stream<Tuple4<String, Object, Integer, String>> streamWithDepth(int level) {
+		protected Stream<Tuple4<String, Object, Integer, String>> entryDetails(int level) {
 			return Stream.concat(
 					// Current level fields with depth 'level'
 					map.keySet().stream()
 							.map(key -> Tuple4.of(key, getSubField(key), level, name())),
 					// Parent fields with incremented depth
-					parent.streamWithDepth(level + 1)).distinct();
+					parent.entryDetails(level + 1)).distinct();
+		}
+
+		// Local-only streams
+		public Stream<String> localKeys() {
+			return map.keySet().stream();
+		}
+
+		public Stream<Pair<String, Object>> localEntries() {
+			return map.entrySet().stream()
+					.map(entry -> Pair.of(entry.getKey(), entry.getValue()));
 		}
 
 		@Override
@@ -734,7 +749,7 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.streamWithDepth()
+			context.entryDetails()
 					.forEach(System.out::println);
 
 		}
@@ -745,7 +760,7 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.streamWithDepth()
+			context.entryDetails()
 					.forEach(System.out::println);
 
 		}
@@ -756,7 +771,7 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.streamWithDepth()
+			context.entryDetails()
 					.forEach(System.out::println);
 
 		}
@@ -843,7 +858,7 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.streamWithDepth()
+			context.entryDetails()
 					.forEach(System.out::println);
 		}
 

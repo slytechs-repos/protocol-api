@@ -471,7 +471,7 @@ public final class Packet
 	@Override
 	public void printTo(Appendable out, Detail detail) throws IOException {
 		if (formatter != null) {
-			printToFormatted(out, formatter, detail);
+			printFormattedTo(out, formatter, detail);
 
 			return;
 		}

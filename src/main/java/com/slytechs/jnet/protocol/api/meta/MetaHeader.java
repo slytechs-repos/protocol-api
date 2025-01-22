@@ -88,7 +88,7 @@ public record MetaHeader(
 		var temp = headerTemplate.detail(detail)
 				.fieldList();
 
-		return temp.stream()
+		return temp.entries()
 				.map(ft -> getField(ft.name()));
 	}
 
