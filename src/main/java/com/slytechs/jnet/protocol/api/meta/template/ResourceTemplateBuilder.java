@@ -109,6 +109,8 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 				context.put(MACROS, Macros.root());
 				context.put(DEFAULTS, Defaults.root());
 				
+				System.out.println(context);
+				
 				builder
 						.requireField(TEMPLATES, buildTemplates())
 						.requireField(OVEVIEW, buildOverview())

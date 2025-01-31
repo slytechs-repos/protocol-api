@@ -368,6 +368,12 @@ public abstract class TreeBuilder<T> {
 			}
 
 			this.root = null;
+
+			if (isEmpty()) {
+				System.out.println("TreeBuilder::Context EMPTY! " + toString());
+			} else {
+				System.out.println("TreeBuilder::Context GOOD! " + toString());
+			}
 		}
 
 		/**
@@ -749,8 +755,8 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.entryDetails()
-					.forEach(System.out::println);
+//			context.entryDetails()
+//					.forEach(System.out::println);
 
 		}
 
@@ -760,8 +766,8 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.entryDetails()
-					.forEach(System.out::println);
+//			context.entryDetails()
+//					.forEach(System.out::println);
 
 		}
 
@@ -771,8 +777,8 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.entryDetails()
-					.forEach(System.out::println);
+//			context.entryDetails()
+//					.forEach(System.out::println);
 
 		}
 
@@ -858,8 +864,8 @@ public abstract class TreeBuilder<T> {
 
 			configure(this);
 
-			context.entryDetails()
-					.forEach(System.out::println);
+//			context.entryDetails()
+//					.forEach(System.out::println);
 		}
 
 		public T build(Map<?, ?> map) {
