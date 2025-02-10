@@ -84,8 +84,6 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 
 	private static final String ALIGN = "align";
 
-	private static final String OVEVIEW = "Oveview";
-
 	private static final String TEMPLATES = "Templates";
 
 	private static final String IMPORTS = "Imports";
@@ -105,34 +103,32 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 
 			@Override
 			protected void configure(MapBuilder<ResourceTemplate> builder) {
+				// Move initialization to root context
+				Context root = context.getRoot();
+				root.put(MACROS, Macros.root());
+				root.put(DEFAULTS, Defaults.root());
 
-				context.put(MACROS, Macros.root());
-				context.put(DEFAULTS, Defaults.root());
-				
-				System.out.println(context);
-				
 				builder
 						.requireField(TEMPLATES, buildTemplates())
-						.requireField(OVEVIEW, buildOverview())
-
+						.requireField(OVERVIEW, buildOverview())
 						.optionalField(DEFAULTS, buildDefaults())
 						.optionalField(MACROS, buildMacros())
-						.optionalField(IMPORTS, buildImports())
-
-				;
+						.optionalField(IMPORTS, buildImports());
 			}
 
 			@Override
 			protected ResourceTemplate newInstance(Context ctx) {
-				return new ResourceTemplate(
+				Defaults defaults = ctx.getSubField(DEFAULTS, Defaults.class);
+				if (defaults == null) {
+					defaults = new Defaults(null, 50, 50, Align.LEFT); // Create default instance
+				}
 
+				return new ResourceTemplate(
 						ctx.requireNonNull(OVERVIEW, Overview.class),
-						ctx.requireNonNull(DEFAULTS, Defaults.class),
+						defaults,
 						ctx.requireNonNull(MACROS, Macros.class),
 						ctx.getField(IMPORTS, Imports.class),
-						ctx.getField(TEMPLATES, Templates.class)
-
-				);
+						ctx.getField(TEMPLATES, Templates.class));
 			}
 		};
 	}
@@ -147,31 +143,30 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 
 	private BuilderFactory<Defaults> buildDefaults() {
 		return context -> new MapBuilder<>(context) {
-
 			@Override
 			protected void configure(MapBuilder<Defaults> builder) {
 				builder
 						.optionalField(ALIGN, Builder.buildEnum(Align.class))
 						.optionalField(WIDTH, Builder.buildNumber())
-						.optionalField(INDENT, Builder.buildNumber())
-
-				;
+						.optionalField(INDENT, Builder.buildNumber());
 			}
 
 			@Override
 			protected Defaults newInstance(Context ctx) {
+				// Get parent defaults first
+				Defaults parentDefaults = ctx.getSubField(DEFAULTS, Defaults.class);
 
-				Defaults defaults = ctx.getSubField("defaults", Defaults.class);
-				assert defaults != null : "defaults not initialized properly";
+				// Use parent values as defaults if not overridden locally
+				Integer width = ctx.getSubField(WIDTH, Integer.class);
+				width = (width != null) ? width : (parentDefaults != null ? parentDefaults.width() : 50);
 
-				return new Defaults(
+				Integer indent = ctx.getSubField(INDENT, Integer.class);
+				indent = (indent != null) ? indent : (parentDefaults != null ? parentDefaults.indent() : 50);
 
-						defaults,
-						ctx.requireNonNull(INDENT, Integer.class),
-						ctx.requireNonNull(WIDTH, Integer.class),
-						ctx.requireNonNull(ALIGN, Align.class)
+				Align align = ctx.getSubField(ALIGN, Align.class);
+				align = (align != null) ? align : (parentDefaults != null ? parentDefaults.align() : Align.LEFT);
 
-				);
+				return new Defaults(parentDefaults, indent, width, align);
 			}
 		};
 	}
@@ -211,28 +206,22 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 
 	private BuilderFactory<HeaderDetail> buildHeaderDetail() {
 		return context -> new MapBuilder<>(context) {
-
 			@Override
 			protected void configure(MapBuilder<HeaderDetail> builder) {
 				builder
 						.requireField(DETAIL, Builder.buildEnum(Detail.class))
-
 						.optionalField(SUMMARY, buildTemplatePattern())
 						.optionalField(DEFAULTS, buildDefaults())
-						.optionalField(ITEMS, buildItems())
-
-				;
+						.optionalField(ITEMS, buildItems());
 			}
 
 			@Override
 			protected HeaderDetail newInstance(Context ctx) {
 				return new HeaderDetail(
-
 						ctx.getField(DETAIL, Detail.class),
 						ctx.getSubField(SUMMARY, TemplatePattern.class),
 						ctx.getField(ITEMS, Items.class),
-						ctx.requireNonNull(DEFAULTS, Defaults.class)
-
+						ctx.getSubField(DEFAULTS, Defaults.class) // Changed from requireNonNull
 				);
 			}
 		};
@@ -309,7 +298,7 @@ public class ResourceTemplateBuilder extends TreeBuilder<ResourceTemplate> {
 					Context context,
 					List<HeaderDetail> list) {
 
-				return new Details(list);
+				return Details.ofInheritMissing(list);
 			}
 		};
 	}

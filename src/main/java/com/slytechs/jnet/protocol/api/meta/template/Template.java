@@ -1,7 +1,7 @@
 /*
  * Sly Technologies Free License
  * 
- * Copyright 2025 Sly Technologies Inc.
+ * Copyright 2024 Sly Technologies Inc.
  *
  * Licensed under the Sly Technologies Free License (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,11 @@
  */
 package com.slytechs.jnet.protocol.api.meta.template;
 
+import static java.util.function.Predicate.*;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.slytechs.jnet.platform.api.util.format.Detail;
 import com.slytechs.jnet.protocol.api.meta.template.Item.Items;
@@ -136,6 +140,44 @@ public interface Template {
 
 		public record Details(List<HeaderDetail> list, HeaderDetail[] array) {
 
+			/**
+			 * Fill missing details or holes within the list. Missing details are inherited
+			 * from the previous lower detail level or if only higher level details are
+			 * provided, the lower detail inherits from the higher, ensuring that all
+			 * details are provided.
+			 *
+			 * @param list the list
+			 * @return the list
+			 * @throws TemplateException if the list is empty or contains only null elements
+			 */
+			static List<HeaderDetail> fillMissingDetails(List<HeaderDetail> list) {
+
+				if (list.stream().filter(not(Objects::isNull)).count() == Detail.values().length)
+					return list;
+
+				var last = list.stream()
+						.filter(p -> p != null)
+						.filter(not(Objects::isNull))
+						.findFirst()
+						.orElseThrow(() -> new TemplateException("empty header details section"));
+
+				var array = new HeaderDetail[Detail.values().length];
+				for (HeaderDetail d : list)
+					array[d.detail.ordinal()] = d;
+
+				for (int i = 0; i < array.length; i++) {
+
+					if (array[i] == null) {
+						array[i] = last;
+
+					} else {
+						last = array[i];
+					}
+				}
+
+				return Arrays.asList(array);
+			}
+
 			public record HeaderDetail(
 					Detail detail,
 					TemplatePattern summary,
@@ -143,8 +185,17 @@ public interface Template {
 					Defaults defaults)
 					implements TemplateDetail {}
 
-			public Details(List<HeaderDetail> list) {
-				this(list, list.toArray(HeaderDetail[]::new));
+			/**
+			 * Inherits missing details from lower level or the next level if nothing else
+			 * is available.
+			 *
+			 * @param list the detail list with possibly missing detail elements
+			 * @return the details with filled in missing details
+			 */
+			public static Details ofInheritMissing(List<HeaderDetail> list) {
+				var newList = fillMissingDetails(list);
+
+				return new Details(newList, newList.toArray(HeaderDetail[]::new));
 			}
 
 			/**

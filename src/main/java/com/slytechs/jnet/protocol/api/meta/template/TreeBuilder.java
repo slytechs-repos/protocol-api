@@ -352,28 +352,20 @@ public abstract class TreeBuilder<T> {
 		 * @see #getRoot()
 		 */
 		public Context(Context parent) {
-			this.index = COUNTER.getAndIncrement();
-			this.parent = parent;
-			this.name = "Context:" + index;
-//			System.out.println("Context::init " + toString());
-
-			var root = parent;
-			if (this != ROOT) {
-				assert root != null : "parent is null";
-
-				while (!root.isRoot()) {
-					root = root.parent;
-					assert root != null;
-				}
-			}
-
-			this.root = null;
-
-			if (isEmpty()) {
-				System.out.println("TreeBuilder::Context EMPTY! " + toString());
-			} else {
-				System.out.println("TreeBuilder::Context GOOD! " + toString());
-			}
+		    this.index = COUNTER.getAndIncrement();
+		    this.parent = parent;
+		    this.name = "Context:" + index;
+		    
+		    if (this != ROOT && parent != null) {
+		        Context root = parent;
+		        while (!root.isRoot()) {
+		            root = root.parent;
+		            assert root != null;
+		        }
+		        this.root = root;
+		    } else {
+		        this.root = this;
+		    }
 		}
 
 		/**
@@ -439,6 +431,14 @@ public abstract class TreeBuilder<T> {
 			return root;
 		}
 
+		private Context findRoot() {
+			Context current = this;
+			while (!current.isRoot()) {
+				current = current.parent;
+			}
+			return current;
+		}
+
 		/**
 		 * Retrieves a value, checking parent contexts if not found locally. Searches
 		 * through the context hierarchy starting from this context up through parent
@@ -449,7 +449,17 @@ public abstract class TreeBuilder<T> {
 		 *         any parent context
 		 */
 		public Object getSubField(String key) {
-			return map.containsKey(key) ? map.get(key) : parent.getSubField(key);
+			if (map.containsKey(key))
+				return map.get(key);
+
+			if (parent == null)
+				return null;
+
+			Object value = parent.getSubField(key);
+			if (value != null)
+				map.put(key, value); // Cache for future lookups
+
+			return value;
 		}
 
 		/**
@@ -462,8 +472,8 @@ public abstract class TreeBuilder<T> {
 		 *         null if not found
 		 */
 		@SuppressWarnings("unchecked")
-		public final <T> T getSubField(String key, Class<T> valueClass) {
-			return map.containsKey(key) ? (T) map.get(key) : (T) parent.getSubField(key);
+		public <T> T getSubField(String key, Class<T> valueClass) {
+			return (T) getSubField(key);
 		}
 
 		/**
@@ -479,12 +489,14 @@ public abstract class TreeBuilder<T> {
 		 */
 		@SuppressWarnings("unchecked")
 		public <T> T getSubField(String key, T defaultValue) {
-			return map.containsKey(key) ? (T) map.get(key) : parent.getSubField(key, defaultValue);
+			T value = getSubField(key, (Class<T>) defaultValue.getClass());
+			return value != null ? value : defaultValue;
 		}
 
 		@SuppressWarnings("unchecked")
 		public final <T> T getSubField(String key, TypeLiteral<T> typeLiteral) {
-			return map.containsKey(key) ? (T) map.get(key) : (T) parent.getSubField(key);
+			Object value = getSubField(key);
+			return value != null ? (T) value : null;
 		}
 
 		/**
@@ -543,10 +555,14 @@ public abstract class TreeBuilder<T> {
 		 */
 		public void put(String key, Object value) {
 			if (key.equals(TRACE_KEY))
-				throw new IllegalArgumentException("reseved key " + TRACE_KEY);
+				throw new IllegalArgumentException("reserved key " + TRACE_KEY);
 
-			if (value == null)
-				throw new IllegalArgumentException("can not set null value for \"%s\"".formatted(key));
+			if (value == null) {
+				// Add stack trace to debug null value
+				new Exception("Stack trace for null " + key)
+						.printStackTrace(System.err);
+				throw new IllegalArgumentException("cannot set null value for \"" + key + "\"");
+			}
 
 			map.put(key, value);
 		}
@@ -863,51 +879,46 @@ public abstract class TreeBuilder<T> {
 			this.context = new Context(parent);
 
 			configure(this);
-
-//			context.entryDetails()
-//					.forEach(System.out::println);
 		}
 
 		public T build(Map<?, ?> map) {
-			this.context.clear();
+//		    System.out.println("Building map for " + context.name() + " with fields: " + map.keySet());
 
-			if (map == null || map.size() < minSize)
-				return null;
+		    // Build required fields
+		    for (Map.Entry<String, Builder<?>> entry : requiredFields.entrySet()) {
+		        String key = entry.getKey();
+		        Object val = map.get(key);
+		        
+//		        System.out.println("  Processing required field: " + key + " = " + val);
 
-			// Build required fields
-			for (Map.Entry<String, Builder<?>> entry : requiredFields.entrySet()) {
-				String key = entry.getKey();
-				Object val = map.get(key);
+		        if (val == null) {
+		            System.out.println("  Required field " + key + " is null!");
+		            continue;
+		        }
 
-				if (val == null)
-					return null;
+		        Object builtValue = entry.getValue().build(val);
+		        if (builtValue != null) {
+		            context.put(key, builtValue);
+//		            System.out.println("  Built and stored: " + key + " = " + builtValue);
+		        } else {
+//		            System.out.println("  Failed to build value for " + key);
+		        }
+		    }
 
-				context.put(key, entry.getValue().build(val));
-			}
+		    // Build optional fields
+		    for (Map.Entry<String, Builder<?>> entry : optionalFields.entrySet()) {
+		        String key = entry.getKey();
+		        Object val = map.get(key);
 
-			// Build optional fields
-			for (Map.Entry<String, Builder<?>> entry : optionalFields.entrySet()) {
-				String key = entry.getKey();
-				Object val = map.get(key);
+		        if (val != null) {
+		            Object builtValue = entry.getValue().build(val);
+		            if (builtValue != null) {
+		                context.put(key, builtValue);
+		            }
+		        }
+		    }
 
-				if (val != null)
-					context.put(key, entry.getValue().build(val));
-			}
-
-			if (customBuilders != null && !customBuilders.isEmpty()) {
-				// Build optional fields
-				for (Map.Entry<String, Builder<?>> entry : customBuilders.entrySet()) {
-					String key = entry.getKey();
-					Object val = map.get(key);
-
-					if (val != null)
-						context.put(key, entry.getValue().build(val));
-				}
-			}
-
-			T value = newInstance(context);
-
-			return value;
+		    return newInstance(context);
 		}
 
 		/**
